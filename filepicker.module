@@ -1033,7 +1033,8 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
     #$filepath = $base_url . DIRECTORY_SEPARATOR . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR . DIRECTORY_SEPARATOR . $row['uid'] . DIRECTORY_SEPARATOR . $file_name;
     $filelink = l($file_name, $filepath . $row['file_id']);
     $file_id = $row['file_id'];
-    $file_date = date('Y-m-d H:i:s', $row['file_date']);
+    #$file_date = date('Y-m-d H:i:s', $row['file_date']);
+    $file_date = format_date($row['file_date'], variable_get('filepicker_dateformat_default', 'medium'));
 
     if ($public && $src == 'admin') {
       $editpath   = $path .'/files/user/'. $row['uid'] .'/edit/';

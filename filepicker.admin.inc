@@ -104,6 +104,14 @@ function filepicker_settings_form($form_state) {
   );
   $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem(variable_get('filepicker_rows_per_page', 25));
 
+  $form['filepicker_defaults']['filepicker_dateformat_default'] = array(
+    '#type' => 'select',
+    '#title' => t('Set Date Format'),
+    '#description' => t("Select the Date format to use in tables."),
+    '#default_value' => variable_get('filepicker_dateformat_default', 'medium'),
+    '#options' => array('small' => t('Small'), 'medium' => t('Medium'), 'large' => t('Long')),
+  );
+
   $form['filepicker_defaults']['filepicker_upload_extensions'] = array(
     '#type' => 'textfield',
     '#title' => t('Permitted file extensions'),

@@ -1033,6 +1033,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
     #$filepath = $base_url . DIRECTORY_SEPARATOR . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR . DIRECTORY_SEPARATOR . $row['uid'] . DIRECTORY_SEPARATOR . $file_name;
     $filelink = l($file_name, $filepath . $row['file_id']);
     $file_id = $row['file_id'];
+    $file_date = date('Y-m-d H:i:s', $row['file_date']);
 
     if ($public && $src == 'admin') {
       $editpath   = $path .'/files/user/'. $row['uid'] .'/edit/';
@@ -1043,11 +1044,10 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
       $deletelink = ($use_icons ? _filepicker_get_icon('delete', $deletepath . $row['file_id'], array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $row['file_id']));
       $u = user_load(array('uid' => $row['uid']));
       $listlink = l($u->name, $listpath);
-
       $form['file_name'][$file_id] = array('#value' => $filelink);
       $form['file_title'][$file_id] = array('#value' => check_plain($row['file_title']));
       $form['file_list'][$file_id] = array('#value' => $listlink);
-      $form['file_date'][$file_id] = array('#value' => check_plain($row['file_date']));
+      $form['file_date'][$file_id] = array('#value' => $file_date);
       $form['file_edit'][$file_id] = array('#value' => $editlink);
       $form['file_delete'][$file_id] = array('#value' => $deletelink);
       $cols = 6;
@@ -1067,7 +1067,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
 
       $form['file_name'][$file_id] = array('#value' => $filelink);
       $form['file_title'][$file_id] = array('#value' => check_plain($row['file_title']));
-      $form['file_date'][$file_id] = array('#value' => check_plain($row['file_date']));
+      $form['file_date'][$file_id] = array('#value' => $file_date);
       $form['file_edit'][$file_id] = array('#value' => $editlink);
       $form['file_delete'][$file_id] = array('#value' => $deletelink);
       $cols = 5;
@@ -2583,7 +2583,7 @@ function filepicker_insert_file($uid, $file_name, $file_title="") {
   if (! $uid || ! $file_name) {
     return FALSE;
   }
-  $date = date('Y-m-d H:i:s');
+  $date = time();
   $result = db_query("INSERT INTO {filepicker} (uid, file_name, file_title, file_date)
   VALUES ('%d', '%s', '%s', '%s')", array($uid, $file_name, $file_title, $date));
   if ($result) {

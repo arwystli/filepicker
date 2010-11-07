@@ -102,7 +102,7 @@ function filepicker_edit_form_process($form, &$form_state) {
   if ($file) {
     if ($file['uid'] == $user->uid) {
       $title = htmlspecialchars($form_state['values']['title']);
-      $date = date('Y-m-d H:i:s');
+      $date = time();
       if (db_query("UPDATE {filepicker} SET file_title = '%s', file_date = '%s' WHERE file_id = '%d'",
           array($title, $date, $file_id))) {
         drupal_set_message(t('File was successfully updated.'));

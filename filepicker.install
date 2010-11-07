@@ -58,8 +58,10 @@ function filepicker_schema() {
         'default' => ''),
       'file_date' => array(
         'description' => t('The file date'),
-        'type' => 'datetime',
-        'not null' => TRUE),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
     ),
     'indexes' => array(
       'uid' => array('uid'),

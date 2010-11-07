@@ -26,7 +26,7 @@ function filepicker_user_upload() {
   if (variable_get('filepicker_upload_progress_enabled', 1)) {
     $content = filepicker_upload_progress_get_script(variable_get('filepicker_upload_progress_delay', 0));
   }
-  $content .= filepicker_quota_ok('user', $user, '', t('Upload files. You can give them a title and description'));
+  $content .= filepicker_quota_ok('user', $user, '', t('Upload files. You can give them a Link text'));
   return $content;
 }
 

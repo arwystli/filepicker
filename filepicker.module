@@ -515,7 +515,7 @@ function filepicker_form_alter(&$form, $form_state, $form_id) {
     }
 
     if (($node_type && preg_match('/node_form$/i', $form_id) ) || $comment ) {
-      $form['body_field']['body_filter']['file_upload'] = array(
+      $form['body_field']['body_filter']['filepicker_file_upload'] = array(
         '#type' => 'fieldset',
         '#title' => t('File picker'),
         '#collapsible' => 1,
@@ -524,21 +524,21 @@ function filepicker_form_alter(&$form, $form_state, $form_id) {
       );
 
       $form['body_field']['body_filter']['#weight'] = 2;
-      $form['body_field']['body_filter']['file_upload']['mpframe'] = array(
+      $form['body_field']['body_filter']['filepicker_file_upload']['mpframe'] = array(
         '#type' => 'markup',
         '#value' => '<div id="filep_tb">'. $iurl .'</div>',
       );
       $form['body_field']['#prefix'] = '<a name="body_hash"></a>'. $form['body_field']['#prefix'];
     }
     elseif ($block) {
-      $form['block_settings']['file_upload'] = array(
+      $form['block_settings']['filepicker_file_upload'] = array(
         '#type' => 'fieldset',
         '#title' => t('File picker'),
         '#collapsible' => TRUE,
         '#collapsed' => (isset($user->filepicker_advanced_collapsed) ? $user->filepicker_advanced_collapsed : variable_get('filepicker_advanced_collapsed', 0)),
         '#weight' => $weight,
       );
-      $form['block_settings']['file_upload']['mpframe'] = array(
+      $form['block_settings']['filepicker_file_upload']['mpframe'] = array(
         '#type' => 'markup',
         '#value' => '<div id="filep_tb">'. $iurl .'</div>',
       );

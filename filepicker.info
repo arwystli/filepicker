@@ -1,0 +1,5 @@
+; $Id$
+name = Filepicker
+description = "Upload, browse and add links to files to your nodes."
+package = Other
+core = 6.x

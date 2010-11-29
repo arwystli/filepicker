@@ -13,7 +13,7 @@
 // iframe
 function filepicker_file_edit($file_id) {
   $content = _filepicker_edit_file($file_id, 'iframe');
-  return theme('filepicker_iframe', $content);
+  return theme('filepicker_iframe', array('content' => $content));
 }
 
 // account
@@ -22,20 +22,20 @@ function filepicker_user_file_edit($file_id) {
   return $content;
 }
 
-function filepicker_edit_form(&$form_state, $file, $src='iframe', $account=FALSE) {
+function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $account=FALSE) {
 
-  $form['file_name'] = array('#value' => $file['file_name']);
+  $form['file_name'] = array('#value' => $file->file_name);
 
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Link text'),
     '#description' => t('Edit link text of your file'),
-    '#default_value' => htmlspecialchars_decode($file['file_title']),
+    '#default_value' => htmlspecialchars_decode($file->file_title),
   );
   if ($account) {
     $form['account'] = array('#type' => 'value', '#value' => $account->uid);
   }
-  $form['file_id'] = array('#type' => 'value', '#value' => $file['file_id']);
+  $form['file_id'] = array('#type' => 'value', '#value' => $file->file_id);
   $form['src'] = array('#type' => 'value', '#value' => $src);
   $form['submit'] = array(
     '#type' => 'submit',
@@ -56,21 +56,21 @@ function filepicker_edit_form(&$form_state, $file, $src='iframe', $account=FALSE
 function filepicker_edit_form_cancel($form, &$form_state) {
   $file_id = $form_state['values']['file_id'];
   if ($form_state['values']['account'] && $form_state['values']['src'] == 'admin') {
-    $user = user_load(array('uid' => $form_state['values']['account'] ));
+    $user = user_load($form_state['values']['account']);
   }
   else {
     global $user;
   }
 
   if ($form_state['values']['src'] == 'admin') {
-    $outpath = FILEPICKER_ADMIN_PATH .'/files/user/'. $user->uid .'/list/'. $file_id;
+    $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
 
   }
   elseif ($form_state['values']['src'] == 'account') {
-    $outpath = 'user/'. $user->uid .'/filepicker/files/list/'. $file_id;
+    $outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;
   }
   else {
-    $outpath = 'filepicker/list/'. $file_id;
+    $outpath = 'filepicker/list/' . $file_id;
   }
   drupal_set_message(t('Cancelled.'));
   drupal_goto($outpath);
@@ -88,23 +88,33 @@ function filepicker_edit_form_process($form, &$form_state) {
   }
 
   if ($src == 'admin') {
-    $outpath = FILEPICKER_ADMIN_PATH .'/files/user/'. $user->uid .'/list/'. $file_id;
+    $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
   }
   elseif ($src == 'account') {
-    $outpath = 'user/'. $user->uid .'/filepicker/files/list/'. $file_id;
+    $outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;
   }
   else {
-    $outpath = 'filepicker/list/'. $file_id;
+    $outpath = 'filepicker/list/' . $file_id;
   }
 
-  $result = db_query_range("SELECT uid, file_name FROM {filepicker} WHERE file_id = '%d'", $file_id, 0, 1);
-  $file = db_fetch_array($result);
+  $query = db_select('filepicker', 'i');
+  $query->fields('i', array('uid', 'file_name'));
+  $query->range(0, 1);
+  $query->condition('file_id', $file_id);
+  $file = $query->execute()->fetchObject();
+
   if ($file) {
-    if ($file['uid'] == $user->uid) {
+    if ($file->uid == $user->uid) {
       $title = htmlspecialchars($form_state['values']['title']);
       $date = time();
-      if (db_query("UPDATE {filepicker} SET file_title = '%s', file_date = '%s' WHERE file_id = '%d'",
-          array($title, $date, $file_id))) {
+      $num_updated = db_update('filepicker')
+        ->fields(array(
+          'file_title' => $title,
+          'img_date' => $date,
+        ))
+        ->condition('file_id', $file_id)
+        ->execute();
+      if ($num_updated) {
         drupal_set_message(t('File was successfully updated.'));
         drupal_goto($outpath);
       }
@@ -114,7 +124,7 @@ function filepicker_edit_form_process($form, &$form_state) {
     }
     else {
       drupal_set_message(t('This file does not belong to you.'), 'error');
-      watchdog('filepicker', 'User uid %d attempted to edit file belonging to user uid %d', array($user->uid, $file['uid']), WATCHDOG_WARNING);
+      watchdog('filepicker', 'User uid %d attempted to edit file belonging to user uid %d', array($user->uid, $file->uid), WATCHDOG_WARNING);
     }
   }
   else {
@@ -136,8 +146,8 @@ function _filepicker_edit_file($file_id, $src='iframe', $account=FALSE) {
   $file =  _filepicker_get_file($file_id, ($src=='admin'? FALSE: TRUE), $account);
   if ($file) {
     $filesrc = filepicker_get_file_path($file, 'browser', $userdir);
-    $content .= theme('filepicker_file_edit_header', $file, $filesrc);
-    $content .= drupal_get_form('filepicker_edit_form', $file, $src, $account);
+    $content .= theme('filepicker_file_edit_header', array('file' => $file, 'source' => $filesrc));
+    $content .= render(drupal_get_form('filepicker_edit_form', $file, $src, $account));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');

@@ -11,7 +11,7 @@
  * Menu callback; presents the settings form for filepicker
  */
 function filepicker_settings_page($op = NULL) {
-  $content = drupal_get_form('filepicker_settings_form');
+  $content = render(drupal_get_form('filepicker_settings_form'));
   return $content;
 }
 
@@ -20,9 +20,9 @@ function filepicker_settings_page($op = NULL) {
  * @return
  *   Returns the form.
  */
-function filepicker_settings_form($form_state) {
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
-  drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
+function filepicker_settings_form($form, &$form_state) {
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
+  drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
 
   // default settings
   $form['filepicker_settings'] = array(
@@ -33,21 +33,25 @@ function filepicker_settings_form($form_state) {
     '#collapsed' => FALSE,
     '#weight' => -40,
   );
-  $node_types = node_get_types('names');
+  $node_types =  node_type_get_names();
   $form['filepicker_settings']['filepicker_node_types_enabled'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Node Types'),
     '#description' => t('Set the node types you want to enable Filepicker for.'),
-    '#default_value' => variable_get('filepicker_node_types_enabled', array_keys($node_types)),
+    '#default_value' => filepicker_variable_get('filepicker_node_types_enabled', array_keys($node_types)),
     '#options' => $node_types,
   );
+#dd($node_types, 'node_types');
+#dd(array_keys($node_types), 'array keys');
+#dd(filepicker_variable_get('filepicker_node_types_enabled', array()));
+
   if (module_exists('comment')) {
     $form['filepicker_settings']['filepicker_comment_enabled'] = array(
       '#type' => 'checkbox',
       '#title' => t('Comments'),
       '#description' => t('Setting this option enables Filepicker in comments.'),
       '#return_value' => 1,
-      '#default_value' => variable_get('filepicker_comment_enabled', 0),
+      '#default_value' => filepicker_variable_get('filepicker_comment_enabled', 0),
     );
   }
   $form['filepicker_settings']['filepicker_blocks_enabled'] = array(
@@ -55,41 +59,41 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Blocks'),
     '#description' => t('Setting this option enables Filepicker in blocks.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_blocks_enabled', 0),
+    '#default_value' => filepicker_variable_get('filepicker_blocks_enabled', 0),
   );
   $form['filepicker_settings']['filepicker_account_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Filepicker in My Account'),
     '#description' => t('Setting this option enables Filepicker in My Account.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_account_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_account_enabled', 1),
   );
   $form['filepicker_settings']['filepicker_user_config_enable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable User configuration'),
     '#description' => t('Allow users to select their own settings.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_user_config_enable', 1),
+    '#default_value' => filepicker_variable_get('filepicker_user_config_enable', 1),
   );
   $form['filepicker_settings']['filepicker_use_full_url'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use full url'),
     '#description' => t('Setting this option will make filepicker use a full url to the file being inserted, unsetting it will use a path relative to the Drupal root.<br />This is useful if you are developing a site with a different url than the production site will be on.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_use_full_url', 0),
+    '#default_value' => filepicker_variable_get('filepicker_use_full_url', 0),
   );
   $form['filepicker_settings']['filepicker_use_new_window'] = array(
     '#type' => 'checkbox',
     '#title' => t('Open link in new window'),
     '#description' => t('Setting this option will set the inserted link to open in a new window.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_use_new_window', 0),
+    '#default_value' => filepicker_variable_get('filepicker_use_new_window', 0),
   );
   $form['filepicker_settings']['filepicker_use_icons'] = array(
     '#type' => 'checkbox',
     '#title' => t('Icons in tables'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_use_icons', 1),
+    '#default_value' => filepicker_variable_get('filepicker_use_icons', 1),
     '#description' => t('Setting this option enables icons in tables.'),
   );
 
@@ -102,20 +106,20 @@ function filepicker_settings_form($form_state) {
     '#collapsed' => FALSE,
     '#weight' => -38,
   );
-  $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem(variable_get('filepicker_rows_per_page', 25));
+  $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem(filepicker_variable_get('filepicker_rows_per_page', 25));
 
   $form['filepicker_defaults']['filepicker_dateformat_default'] = array(
     '#type' => 'select',
     '#title' => t('Set Date Format'),
     '#description' => t("Select the Date format to use in tables."),
-    '#default_value' => variable_get('filepicker_dateformat_default', 'medium'),
+    '#default_value' => filepicker_variable_get('filepicker_dateformat_default', 'medium'),
     '#options' => array('small' => t('Small'), 'medium' => t('Medium'), 'large' => t('Long')),
   );
 
   $form['filepicker_defaults']['filepicker_upload_extensions'] = array(
     '#type' => 'textfield',
     '#title' => t('Permitted file extensions'),
-    '#default_value' => variable_get('filepicker_upload_extensions', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'),
+    '#default_value' => filepicker_variable_get('filepicker_upload_extensions', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'),
     '#maxlength' => 255,
     '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
   );
@@ -133,7 +137,7 @@ function filepicker_settings_form($form_state) {
       '#title' => t('Enable Colorbox in Filepicker'),
       '#description' => t('Setting this option will enable Colorbox in Filepicker.'),
       '#return_value' => 1,
-      '#default_value' => variable_get('filepicker_colorbox_enable', 0),
+      '#default_value' => filepicker_variable_get('filepicker_colorbox_enable', 0),
     );
   }
   // quota
@@ -149,27 +153,27 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Enable Quotas in Filepicker'),
     '#description' => t('Setting this option will enable Quotas in Filepicker.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_quota_enable', 1),
+    '#default_value' => filepicker_variable_get('filepicker_quota_enable', 1),
   );
   $form['filepicker_quotas']['filepicker_quota_byrole'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Quotas by Role'),
     '#description' => t("Setting this option will enable 'Quotas by Role' instead of 'Per User'."),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_quota_byrole', 0),
+    '#default_value' => filepicker_variable_get('filepicker_quota_byrole', 0),
   );
   $form['filepicker_quotas']['filepicker_quota_role'] = array(
     '#type' => 'radios',
     '#title' => t('Available Roles'),
     '#description' => t("Select which Role for 'Quotas by Role'."),
     '#options' => user_roles(TRUE),
-    '#default_value' => variable_get('filepicker_quota_role', 2),
+    '#default_value' => filepicker_variable_get('filepicker_quota_role', 2),
   );
   $form['filepicker_quotas']['filepicker_quota_default'] = array(
     '#type' => 'select',
     '#title' => t('Set Quota'),
     '#description' => t("Select the Quota to apply for 'Quotas by Role' or the default for 'Per User'."),
-    '#default_value' => variable_get('filepicker_quota_default', 0),
+    '#default_value' => filepicker_variable_get('filepicker_quota_default', 0),
     '#options' => filepicker_get_quota_list(),
   );
   // Iframe
@@ -182,12 +186,12 @@ function filepicker_settings_form($form_state) {
     '#weight' => -22,
   );
   if (module_exists('colorbox') && variable_get('colorbox_load', 0)) {
-    $form['filepicker_iframe']['filepicker_advanced_colorbox'] = filepicker_colorbox_elem(variable_get('filepicker_advanced_colorbox', 0));
+    $form['filepicker_iframe']['filepicker_advanced_colorbox'] = filepicker_colorbox_elem(filepicker_variable_get('filepicker_advanced_colorbox', 0));
   }
-  $form['filepicker_iframe']['filepicker_advanced_iframe_width'] = filepicker_iframe_width_elem(variable_get('filepicker_advanced_iframe_width', "100%"));
-  $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem(variable_get('filepicker_advanced_iframe_height', "500"));
-  $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem(variable_get('filepicker_advanced_iframe_border', "0"));
-  $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem(variable_get('filepicker_advanced_collapsed', 0));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_width'] = filepicker_iframe_width_elem(filepicker_variable_get('filepicker_advanced_iframe_width', "100%"));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem(filepicker_variable_get('filepicker_advanced_iframe_height', "500"));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem(filepicker_variable_get('filepicker_advanced_iframe_border', "0"));
+  $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem(filepicker_variable_get('filepicker_advanced_collapsed', 0));
 
 
   // progress bar
@@ -203,7 +207,7 @@ function filepicker_settings_form($form_state) {
     '#type' => 'checkbox',
     '#title' => t('Enable Progress bar in upload'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_upload_progress_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_upload_progress_enabled', 1),
   );
   $form['filepicker_progress']['filepicker_upload_progress_delay'] = array(
     '#type' => 'textfield',
@@ -211,7 +215,7 @@ function filepicker_settings_form($form_state) {
     '#description' => t('Show the progress bar if processing is longer than this value.'),
     '#size' => 3,
     '#required' => TRUE,
-    '#default_value' => variable_get('filepicker_upload_progress_delay', 3),
+    '#default_value' => filepicker_variable_get('filepicker_upload_progress_delay', 3),
     '#field_suffix' => t('seconds'),
   );
 
@@ -220,7 +224,7 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Progress bar message'),
     '#description' => t('Message to display while uploading.'),
     '#size' => 60,
-    '#default_value' => variable_get('filepicker_upload_progress_message', t('Processing form... please wait.')),
+    '#default_value' => filepicker_variable_get('filepicker_upload_progress_message', t('Processing form... please wait.')),
   );
 
   // Groups
@@ -237,28 +241,28 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Enable Groups'),
     '#description' => t('Allow users to manage groups.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_groups_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_groups_enabled', 1),
   );
   $form['filepicker_groups']['filepicker_public_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Public option'),
     '#description' => t('Allow users to make file groups publicly available.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_public_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_public_enabled', 1),
   );
   $form['filepicker_groups']['filepicker_publicroles_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Public Role Control option'),
     '#description' => t('Allow users to make publicly available file groups restricted by role.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_publicroles_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_publicroles_enabled', 1),
   );
   $form['filepicker_groups']['filepicker_groups_in_upload_enabled'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Groups in upload form'),
     '#description' => t('Allow users to select a group in the upload form.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_groups_in_upload_enabled', 1),
+    '#default_value' => filepicker_variable_get('filepicker_groups_in_upload_enabled', 1),
   );
 
   // Import
@@ -267,7 +271,7 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Filepicker Bulk Import'),
     '#description' => t('Enable bulk import of files.'),
     '#collapsible' => TRUE,
-    '#collapsed' => (variable_get('filepicker_import_enabled', 0) ? TRUE : FALSE),
+    '#collapsed' => (filepicker_variable_get('filepicker_import_enabled', 0) ? TRUE : FALSE),
     '#weight' => -14,
   );
   $form['filepicker_import']['filepicker_import_enabled'] = array(
@@ -275,14 +279,14 @@ function filepicker_settings_form($form_state) {
     '#title' => t('Enable Bulk import processing'),
     '#description' => t('Import files into filepicker from an import folder in the filesystem.<br />Requires FTP or SSH access'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_import_enabled', 0),
+    '#default_value' => filepicker_variable_get('filepicker_import_enabled', 0),
   );
   $form['filepicker_import']['filepicker_import_delete'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Bulk import deletion'),
     '#description' => t('Delete uploaded source files after succesful import into filepicker.'),
     '#return_value' => 1,
-    '#default_value' => variable_get('filepicker_import_delete', 0),
+    '#default_value' => filepicker_variable_get('filepicker_import_delete', 0),
   );
   $form['filepicker_import']['filepicker_import_max'] = array(
     '#type' => 'textfield',
@@ -290,11 +294,14 @@ function filepicker_settings_form($form_state) {
     '#description' => t('How many files to process at a time. Must be greater than 1 and less than 100.'),
     '#size' => 3,
     '#required' => TRUE,
-    '#default_value' => variable_get('filepicker_import_max', 5),
+    '#default_value' => filepicker_variable_get('filepicker_import_max', 5),
   );
 
   $form = system_settings_form($form);
+  unset($form['#submit']);
+  $form['#submit'][] = 'filepicker_settings_form_submit';
   unset($form['#theme']);
+  $form['#theme'] = 'filepicker_settings_form';
   return $form;
 }
 
@@ -330,63 +337,121 @@ function filepicker_settings_form_validate($form, &$form_state) {
   }
 }
 
+function filepicker_settings_form_submit($form, &$form_state) {
+  filepicker_variable_set('filepicker_node_types_enabled', $form_state['values']['filepicker_node_types_enabled']);
+  if (module_exists('comment')) {
+    filepicker_variable_set('filepicker_comment_enabled', $form_state['values']['filepicker_comment_enabled']);
+  }
+  filepicker_variable_set('filepicker_blocks_enabled', $form_state['values']['filepicker_blocks_enabled']);
+  filepicker_variable_set('filepicker_account_enabled', $form_state['values']['filepicker_account_enabled']);
+  filepicker_variable_set('filepicker_user_config_enable', $form_state['values']['filepicker_user_config_enable']);
+  filepicker_variable_set('filepicker_use_full_url', $form_state['values']['filepicker_use_full_url']);
+  filepicker_variable_set('filepicker_use_new_window', $form_state['values']['filepicker_use_new_window']);
+  filepicker_variable_set('filepicker_use_icons', $form_state['values']['filepicker_use_icons']);
+  filepicker_variable_set('filepicker_rows_per_page', $form_state['values']['filepicker_rows_per_page']);
+  filepicker_variable_set('filepicker_dateformat_default', $form_state['values']['filepicker_dateformat_default']);
+  filepicker_variable_set('filepicker_upload_extensions', $form_state['values']['filepicker_upload_extensions']);
+  if (module_exists('colorbox')) {
+    filepicker_variable_set('filepicker_colorbox_enable', $form_state['values']['filepicker_colorbox_enable']);
+    if (variable_get('colorbox_load', 0)) {
+      filepicker_variable_set('filepicker_advanced_colorbox', $form_state['values']['filepicker_advanced_colorbox']);
+    }
+  }
+  filepicker_variable_set('filepicker_quota_enable', $form_state['values']['filepicker_quota_enable']);
+  filepicker_variable_set('filepicker_quota_byrole', $form_state['values']['filepicker_quota_byrole']);
+  filepicker_variable_set('filepicker_quota_role', $form_state['values']['filepicker_quota_role']);
+  filepicker_variable_set('filepicker_quota_default', $form_state['values']['filepicker_quota_default']);
+  filepicker_variable_set('filepicker_advanced_iframe_width', $form_state['values']['filepicker_advanced_iframe_width']);
+  filepicker_variable_set('filepicker_advanced_iframe_height', $form_state['values']['filepicker_advanced_iframe_height']);
+  filepicker_variable_set('filepicker_advanced_iframe_border', $form_state['values']['filepicker_advanced_iframe_border']);
+  filepicker_variable_set('filepicker_advanced_collapsed', $form_state['values']['filepicker_advanced_collapsed']);
+  filepicker_variable_set('filepicker_upload_progress_enabled', $form_state['values']['filepicker_upload_progress_enabled']);
+  filepicker_variable_set('filepicker_upload_progress_delay', $form_state['values']['filepicker_upload_progress_delay']);
+  filepicker_variable_set('filepicker_upload_progress_message', $form_state['values']['filepicker_upload_progress_message']);
+  filepicker_variable_set('filepicker_groups_enabled', $form_state['values']['filepicker_groups_enabled']);
+  filepicker_variable_set('filepicker_public_enabled', $form_state['values']['filepicker_public_enabled']);
+  filepicker_variable_set('filepicker_publicroles_enabled', $form_state['values']['filepicker_publicroles_enabled']);
+  filepicker_variable_set('filepicker_groups_in_upload_enabled', $form_state['values']['filepicker_groups_in_upload_enabled']);
+  filepicker_variable_set('filepicker_import_enabled', $form_state['values']['filepicker_import_enabled']);
+  filepicker_variable_set('filepicker_import_delete', $form_state['values']['filepicker_import_delete']);
+  filepicker_variable_set('filepicker_import_max', $form_state['values']['filepicker_import_max']);
+
+}
+
 /**
  * Administration functions
  */
 function filepicker_admin_users_list($dir, $label='') {
 
-  $how_many = variable_get('filepicker_rows_per_page', 25);
+  $max = filepicker_variable_get('filepicker_rows_per_page', 25);
   $header = array(
     array('data' => t('Name'), 'field' => 'u.name'),
     t('Files'),
-    (variable_get('filepicker_groups_enabled', 1) ? t('Groups') : ''),
-    (variable_get('filepicker_quota_enable', 1) ? t('Quotas') : ''),
+    (filepicker_variable_get('filepicker_groups_enabled', 1) ? t('Groups') : ''),
+    (filepicker_variable_get('filepicker_quota_enable', 1) ? t('Quotas') : ''),
     t('Used'),
   );
-  $cols = 5;
+
   $rowcount = 0;
-  $rows = '';
+  $rows = NULL;
+  $countquery = db_select('users', 'u');
+  $countquery->addExpression('COUNT(DISTINCT u.uid)', 'ct');
+  $countquery->join('filepicker', 'i', 'i.uid = u.uid');
+  $countquery->condition('u.status', 1);
 
-  $countsql = "SELECT COUNT(DISTINCT u.uid) FROM {filepicker} i JOIN {users} u ON i.uid=u.uid WHERE u.status=1";
-  $sql = "SELECT DISTINCT u.uid, u.name FROM {filepicker} i JOIN {users} u ON  i.uid=u.uid WHERE u.status=1";
-  $sql .= tablesort_sql($header);
-  $result = pager_query($sql, $how_many, 0, $countsql);
+  $query = db_select('users', 'u')
+    ->extend('PagerDefault')->limit($max)
+    ->extend('TableSort')->orderByHeader($header);
+  $query->setCountQuery($countquery);
+  $query->fields('u', array('uid', 'name'))
+    ->addExpression('COUNT( i.file_id)', 'ct');
+  $query->distinct();
+  $query->leftjoin('filepicker', 'i', 'i.uid = u.uid');
+  $query->condition('u.status', 1)
+    ->groupBy('u.uid');
+  $records = $query->execute();
 
-  while ($row = db_fetch_array($result)) {
-    $account = user_load( array('uid' => $row['uid']));
-    $allcount = _filepicker_user_has_file($account);
+  foreach ($records AS $row) {
+    $account = user_load($row->uid);
+    #$allcount = _filepicker_user_has_img($account);
+    $allcount = $row->ct;
     $groupcount = _filepicker_user_has_groups('all', $account);
     $usedbytesprint = _filepicker_bkmg(filepicker_get_all_bytes($account)+1);
     $quota = 0;
-    if (variable_get('filepicker_quota_enable', 1)) {
-      if (variable_get('filepicker_quota_byrole', 0)) {
-        $roleid = variable_get('filepicker_quota_role', 2);
+    if (filepicker_variable_get('filepicker_quota_enable', 1)) {
+      if (filepicker_variable_get('filepicker_quota_byrole', 0)) {
+        $roleid = filepicker_variable_get('filepicker_quota_role', 2);
         if (filepicker_user_has_role($roleid, $account) && $account->uid > 1) {
-          $quota = variable_get('filepicker_quota_default', 0);
+          $quota = filepicker_variable_get('filepicker_quota_default', 0);
         }
       }
       else {
-        $quota = (isset($account->filepicker_quota) ? $account->filepicker_quota : variable_get('filepicker_quota_default', 0));
+        $quota = (isset($account->data['filepicker_quota']) ? $account->data['filepicker_quota'] : filepicker_variable_get('filepicker_quota_default', 0));
       }
     }
 
     $row_data = array(
-      check_plain($row['name']),
-      ($allcount ? $allcount .' '. l(t('files'), FILEPICKER_ADMIN_PATH .'/files/user/'. $row['uid'] .'/list' ) : t('No files')),
-      (variable_get('filepicker_groups_enabled', 1) ? ($groupcount ? ($groupcount .' '. l(t('groups'), FILEPICKER_ADMIN_PATH .'/groups/user/'. $row['uid'] .'/list' )) : t('No groups')) : ''),
-      (variable_get('filepicker_quota_enable', 1) ? l(filepicker_get_quota_list($quota+1), FILEPICKER_ADMIN_PATH .'/files/user/'. $row['uid'] .'/quota') : ''),
+      check_plain($row->name),
+      ($allcount ? l(format_plural($allcount, '1 file', '@count files'), FILEPICKER_ADMIN_PATH . '/files/user/' . $row->uid . '/list' ) : t('No files')),
+      (filepicker_variable_get('filepicker_groups_enabled', 1) ? ($groupcount ? (l(format_plural($groupcount, '1 group', '@count groups'), FILEPICKER_ADMIN_PATH . '/groups/user/' . $row->uid . '/browse' )) : t('No groups')) :  t('n/a')),
+      (filepicker_variable_get('filepicker_quota_enable', 1) ? l(filepicker_get_quota_list($quota+1), FILEPICKER_ADMIN_PATH . '/files/user/' . $row->uid . '/quota') : t('n/a')),
       $usedbytesprint,
     );
+
     $rows[] = $row_data;
     $rowcount++;
   }
 
-  return theme('filepicker_list', $header, $rows, $how_many, t('No users found.'), '', '', $label, $cols);
+  $message = t('No users found.');
+  $content = theme('filepicker_list', array('header' => $header, 'rows' => $rows, 'max' => $max, 'message' => $message, 'pref' => '', 'suff' => '', 'label' => $label));
+  return $content;
+
 }
 
 function filepicker_admin_groups_list($label="") {
-  $how_many = variable_get('filepicker_rows_per_page', 25);
-  $use_icons = variable_get('filepicker_use_icons', 1);
+  $max = filepicker_variable_get('filepicker_rows_per_page', 25);
+  $use_icons = filepicker_variable_get('filepicker_use_icons', 1);
+  $rows = NULL;
   $header = array(
     array('data' => t('Group Name'), 'field' => 'g.group_name'),
     array('data' => t('User Name'), 'field' => 'u.name'),
@@ -394,60 +459,67 @@ function filepicker_admin_groups_list($label="") {
     array('data' => t('Files'), 'field' => 'ct'),
     array('data' => t('Actions'), 'colspan' => 2),
   );
-  $cols = 6;
-  $rowcount = 0;
-  $rows = '';
+  $countquery = db_select('filepicker_user_groups', 'g');
+  $countquery->addExpression('COUNT(g.gid)', 'ct');
 
-  $countsql = "SELECT COUNT(g.gid) FROM {filepicker_user_groups} g JOIN {users} u USING(uid)";
-  $sql = "SELECT g.gid, g.uid, g.group_name, g.group_description, g.state, g.public, u.name
-    FROM {filepicker_user_groups} g JOIN  {users} u USING(uid)";
-  $sql .= tablesort_sql($header);
-  $result = pager_query($sql, $how_many, 0, $countsql);
+  $query = db_select('filepicker_user_groups', 'g')
+    ->extend('PagerDefault')->limit($max)
+    ->extend('TableSort')->orderByHeader($header);
+  $query->setCountQuery($countquery);
+  $query->fields('g', array('gid', 'uid', 'group_name', 'public'))
+    ->addField('u', 'name');
+  $query->addExpression('COUNT(i.file_id)', 'ct');
+  $query->leftjoin('filepicker_group_files', 'i', 'g.gid = i.gid');
+  $query->leftjoin('users', 'u', 'g.uid = u.uid');
+  $query->groupBy('g.gid');
+  $records = $query->execute();
 
-  while ($row = db_fetch_array($result)) {
-    $editpath = FILEPICKER_ADMIN_PATH .'/groups/user/'. $row['uid'] .'/edit/'. $row['gid'];
-    $deletepath = FILEPICKER_ADMIN_PATH .'/groups/user/'. $row['uid'] .'/delete/'. $row['gid'];
-    $filect = filepicker_group_files_count($row['gid']);
+  foreach ($records AS $row) {
+    // get file count
+    $ict = $row->ct;
+    $editpath = FILEPICKER_ADMIN_PATH . '/groups/user/' . $row->uid . '/edit/' . $row->gid;
+    $deletepath = FILEPICKER_ADMIN_PATH . '/groups/user/' . $row->uid . '/delete/' . $row->gid;
     $row_data = array(
-      $row['group_name'],
-      l($row['name'], FILEPICKER_ADMIN_PATH .'/groups/user/'. $row['uid']),
-      ($row['public'] ? t('Public') : t('Private')),
-      ($filect ? l(format_plural($filect, '1 file', '@count files'), FILEPICKER_ADMIN_PATH .'/groups/user/'. $row['uid'] .'/list/'. $row['gid'] ) : t('No files')),
+      $row->group_name,
+      l($row->name, FILEPICKER_ADMIN_PATH . '/groups/user/' . $row->uid),
+      ($row->public ? t('Public') : t('Private')),
+      ($ict ? l(format_plural($ict, '1 file', '@count files'), FILEPICKER_ADMIN_PATH . '/groups/user/' . $row->uid . '/list/' . $row->gid) : t('No files')),
       ($use_icons ? _filepicker_get_icon('edit', $editpath, array('title' => t('Edit'))) : l(t('Edit'), $editpath)),
       ($use_icons ?  _filepicker_get_icon('delete', $deletepath, array('title' => t('Delete'))) : l(t('Delete'), $deletepath)),
     );
     $rows[] = $row_data;
-    $rowcount++;
   }
-
   $pref = '';
   $suff = '';
-  return theme('filepicker_list', $header, $rows, $how_many, t('No groups found.'), $pref, $suff, $label, $cols);
+  return theme('filepicker_list', array('header' => $header, 'rows' => $rows, 'max' => $max, 'message' => t('No groups found.'), 'pref' => $pref, 'suff' => $suff, 'label' => $label));
+
 }
 
 function filepicker_admin_view($file_id, $account = FALSE) {
   if ($account) {
     $user = $account;
-    $userdir = array('name' => $user->name , 'uid' => $user->uid);
+    $userdir = $user->uid;
   }
   else {
     global $user;
     $userdir = FALSE;
   }
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
+  $form1 = NULL;
+  $form2 = NULL;
+  $form3 = NULL;
+
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
   $file = _filepicker_get_file($file_id, FALSE, $user);
   if ($file) {
     $filepath = filepicker_get_file_path($file, 'full', $userdir);
     $info = filepicker_get_info($file);
-    $view = theme('filepicker_view', $file, $filepath, $info);
-    $form1 = drupal_get_form('filepicker_admin_file_form', $file_id, $user);
-    $form2 = '';
-    $form3 = '';
+    $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
+    $form1 = render(drupal_get_form('filepicker_admin_file_form', $file_id, $user));
     // group form
     if (_filepicker_has_groups($user)) {
-      $form3 = drupal_get_form('filepicker_group_files_form', $file['file_id'], $user);
+      $form3 = render(drupal_get_form('filepicker_group_files_form', $file['file_id'], $user));
     }
-    $content = theme('filepicker_admin_view', $view, $form1, $form2, $form3);
+    $content = theme('filepicker_admin_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');
@@ -461,7 +533,7 @@ function filepicker_admin_view($file_id, $account = FALSE) {
  * @return
  *   Returns the form.
  */
-function filepicker_admin_file_form($form_state, $file_id, $account = FALSE) {
+function filepicker_admin_file_form($form, &$form_state, $file_id, $account = FALSE) {
   if ($account) {
     $form['account'] = array(
       '#type' => 'value',
@@ -485,11 +557,11 @@ function filepicker_admin_file_form($form_state, $file_id, $account = FALSE) {
 
 function filepicker_admin_file_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete file')) {
-    $account = user_load(array('uid' => $form_state['values']['account']));
+    $account = user_load($form_state['values']['account']);
     filepicker_file_delete($form_state['values']['file_id'], $account, 'admin');
   }
   elseif ($form_state['values']['op'] == t('Edit file')) {
-    drupal_goto(FILEPICKER_ADMIN_PATH .'/files/user/'. $form_state['values']['account'] .'/edit/'. $form_state['values']['file_id'] .'');
+    drupal_goto(FILEPICKER_ADMIN_PATH . '/files/user/' . $form_state['values']['account'] . '/edit/' . $form_state['values']['file_id']);
   }
 }
 
@@ -498,11 +570,11 @@ function filepicker_admin_file_form_submit($form, &$form_state) {
  * @return
  *   Returns the form.
  */
-function filepicker_user_search_form($form_state, $dir) {
+function filepicker_user_search_form($form, &$form_state, $dir) {
   $form['filepicker_currentuser'] = array(
     '#type' => 'textfield',
     '#title' => t('Users'),
-    '#autocomplete_path' => FILEPICKER_ADMIN_PATH .'/'. $dir .'/autocomplete',
+    '#autocomplete_path' => FILEPICKER_ADMIN_PATH . '/' . $dir . '/autocomplete',
     '#default_value' => '',
     '#maxlength' => 30,
     '#size' => 25,
@@ -520,67 +592,71 @@ function filepicker_user_search_form($form_state, $dir) {
 
 function filepicker_user_search_form_submit($form, &$form_state) {
   if ($form_state['values']['filepicker_currentuser']) {
-
-    $result = db_query("SELECT u.uid FROM {users} u, {filepicker} i WHERE u.name = '%s' AND u.uid=i.uid", $form_state['values']['filepicker_currentuser']);
-    $row = db_fetch_array($result);
+    $currentuser = $form_state['values']['filepicker_currentuser'];
+    $query = db_select('users', 'u');
+    $query->fields('u', array('uid'));
+    $query->join('filepicker', 'i', 'u.uid = i.uid');
+    $query->condition('u.name', $currentuser);
+    $row = $query->execute()->fetchAssoc();
     if ($row['uid'] ) {
-      variable_set('filepicker_currentuser', $row['uid']);
-      drupal_goto(FILEPICKER_ADMIN_PATH .'/'. $form_state['values']['dir'] .'/user/'. $row['uid']. '/list');
+      filepicker_variable_set('filepicker_currentuser', $row['uid']);
+      drupal_goto(FILEPICKER_ADMIN_PATH . '/' . $form_state['values']['dir'] . '/user/' . $row['uid'] . '/list');
     }
     else {
-      variable_del('filepicker_currentuser');
+      filepicker_variable_del('filepicker_currentuser');
     }
   }
   else {
-    variable_del('filepicker_currentuser');
+    filepicker_variable_del('filepicker_currentuser');
   }
 }
 
 
 function filepicker_admin_groups() {
-  drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
+  drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
   module_load_include('inc', 'filepicker', 'filepicker.group');
-  if (! arg(4) ) {
-    variable_del('filepicker_currentuser');
-    variable_set('filepicker_currentgroup', 0);
+  $content = '';
+  $action = '';
+  $rows = NULL;
+  $gid = FALSE;
+  if (! arg(5) ) {
+    filepicker_variable_del('filepicker_currentuser');
+    filepicker_variable_set('filepicker_currentgroup', 0);
     $action = 'users';
   }
-  $uid = variable_get('filepicker_currentuser', '');
-  if ( arg(4) == 'user' && is_numeric(arg(5))) {
-    $uid = arg(5);
+  $uid = filepicker_variable_get('filepicker_currentuser', '');
+  if ( arg(5) == 'user' && is_numeric(arg(6))) {
+    $uid = arg(6);
   }
-  elseif (arg(4) == 'stats' || arg(4) == 'users') {
-    $action = arg(4);
+  elseif (arg(5) == 'stats' || arg(5) == 'users') {
+    $action = arg(5);
   }
-  $gidaction = '';
-  $gid = 0;
-  if ( (arg(6) == 'list' || arg(6) == 'edit' || arg(6) == 'delete') && is_numeric(arg(7)) ) {
-    $gidaction = arg(6);
-    $gid = arg(7);
-    if (arg(6) == 'list') {
-      variable_set('filepicker_currentgroup', $gid);
-      drupal_goto(FILEPICKER_ADMIN_PATH .'/files/user/'. $uid .'/list');
+  if ( (arg(7) == 'list' || arg(7) == 'edit' || arg(7) == 'delete') && is_numeric(arg(8)) ) {
+    $gidaction = arg(7);
+    $gid = arg(8);
+    if (arg(7) == 'list') {
+      filepicker_variable_set('filepicker_currentgroup', $gid);
+      drupal_goto(FILEPICKER_ADMIN_PATH . '/files/user/' . $uid . '/list');
     }
   }
   $name = '';
-  $content = '';
   if ($uid) {
-    $account = user_load(array('uid' => $uid));
+    $account = user_load($uid);
     $name = $account->name;
   }
-  if (variable_get('filepicker_groups_enabled', 1)) {
-    $content .= drupal_get_form('filepicker_group_search_form');
-    $content .= '<p>'. t('Managing groups for ') . ($name ? l($name, "user/$uid") : 'All') .'</p>';
+  if (filepicker_variable_get('filepicker_groups_enabled', 1)) {
+    $content .= render(drupal_get_form('filepicker_group_search_form', 'groups'));
+    $content .= '<p>' . t('Managing groups for !n', array('!n' => ($name ? l($name, "user/$uid") : t('All')))) . '</p>';
     if ($uid) {
       // show groups for $uid
       if ($gid) {
         if ($gidaction == 'edit') {
           $record = filepicker_get_user_group($gid);
-          $content .= drupal_get_form('filepicker_groups_form', $record);
+          $content .= render(drupal_get_form('filepicker_groups_form', $record));
         }
         elseif ($gidaction == 'delete') {
-          $content .= drupal_get_form('filepicker_group_delete_form', $gid);
+          $content .= render(drupal_get_form('filepicker_group_delete_form', $gid));
         }
       }
       elseif (arg(6) == 'stats') {
@@ -588,7 +664,7 @@ function filepicker_admin_groups() {
       }
       else {
         $content .= filepicker_groups_list('admin', $account, t('Groups for %name', array('%name' => $name)));
-        $content .= drupal_get_form('filepicker_groups_form', 0, $account);
+        $content .= render(drupal_get_form('filepicker_groups_form', 0, $account));
       }
     }
     else {
@@ -604,60 +680,63 @@ function filepicker_admin_groups() {
 }
 
 function filepicker_admin_files() {
-  drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
-  if (! arg(4) ) {
-    variable_del('filepicker_currentuser');
-    variable_set('filepicker_currentgroup', 0);
+  drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
+
+  $action = FALSE;
+  $imgaction = FALSE;
+  $img_id = FALSE;
+  $content = '';
+  if (! arg(5) ) {
+    filepicker_variable_del('filepicker_currentuser');
+    filepicker_variable_set('filepicker_currentgroup', 0);
     $action = 'users';
   }
-  $uid = variable_get('filepicker_currentuser', '');
-  if ( arg(4) == 'user' && is_numeric(arg(5))) {
-    $uid = arg(5);
+  $uid = filepicker_variable_get('filepicker_currentuser', '');
+  if ( arg(5) == 'user' && is_numeric(arg(6))) {
+    $uid = arg(6);
   }
-  elseif (arg(4) == 'list_all' || arg(4) == 'stats' || arg(4) == 'users' || arg(4) == 'list_all') {
-    $action = arg(4);
-    variable_del('filepicker_currentuser');
-    variable_set('filepicker_currentgroup', 0);
-    $uid = variable_get('filepicker_currentuser', '');
+  elseif (arg(5) == 'stats' || arg(5) == 'users' || arg(5) == 'list_all') {
+    $action = arg(5);
+    filepicker_variable_del('filepicker_currentuser');
+    filepicker_variable_set('filepicker_currentgroup', 0);
+    $uid = filepicker_variable_get('filepicker_currentuser', '');
   }
-  $fileaction = '';
-  if ( arg(6) == 'list_all'
-    || arg(6) == 'edit'
-    || arg(6) == 'delete'
-    || arg(6) == 'list'
-    || arg(6) == 'upload'
-    || arg(6) == 'stats'
-    || arg(6) == 'groups'
-    || arg(6) == 'quota') {
-    $fileaction = arg(6);
+  if ( arg(7) == 'list_all'
+    || arg(7) == 'edit'
+    || arg(7) == 'delete'
+    || arg(7) == 'list'
+    || arg(7) == 'upload'
+    || arg(7) == 'stats'
+    || arg(7) == 'groups'
+    || arg(7) == 'quota') {
+    $fileaction = arg(7);
   }
-  $file_id = 0;
-  if ( is_numeric(arg(7))) {
-    $file_id = arg(7);
+  $file_id = FALSE;
+  if ( is_numeric(arg(8))) {
+    $file_id = arg(8);
   }
-  $content = '';
-  if (arg(6) == 'upload' ) {
+  if (arg(7) == 'upload' ) {
     module_load_include('inc', 'filepicker', 'filepicker.upload');
-    if (variable_get('filepicker_upload_progress_enabled', 1)) {
-      $content .= filepicker_upload_progress_get_script(variable_get('filepicker_upload_progress_delay', 0));
+    if (filepicker_variable_get('filepicker_upload_progress_enabled', 1)) {
+      $content .= filepicker_upload_progress_get_script(filepicker_variable_get('filepicker_upload_progress_delay', 0));
     }
   }
   $name = "";
   if ($uid) {
-    $account = user_load(array('uid' => $uid));
+    $account = user_load($uid);
     $name = $account->name;
   }
-  $content .= drupal_get_form('filepicker_user_search_form', 'files');
-  $content .= '<p>'. t('Managing files for ') . ($name ? l($name, "user/$uid") : 'All') .'</p>';
+  $content .= render(drupal_get_form('filepicker_user_search_form', 'files'));
+  $content .= '<p>' . t('Managing files for !n', array('!n' => ($name ? l($name, "user/$uid") : t('All')))) . '</p>';
+
   if ($uid) {
     if ($file_id) {
       if ($fileaction == 'edit' ) {
         module_load_include('inc', 'filepicker', 'filepicker.edit');
         $file =  _filepicker_get_file($file_id, FALSE, $account);
         $filesrc = filepicker_get_file_path($file, array('uid' => $account->uid , 'name' => $account->name) );
-        $content .= theme('filepicker_file_edit_header', $file, $filesrc);
-        $content .= drupal_get_form('filepicker_edit_form', $file, 'admin', $account);
+        $content .= theme('filepicker_file_edit_header', array('file' => $file, 'source' => $filesrc));
+        $content .= render(drupal_get_form('filepicker_edit_form', $file, 'admin', $account));
       }
       elseif ($fileaction == 'delete') {
         filepicker_file_delete($file_id, $account, 'admin');
@@ -679,15 +758,15 @@ function filepicker_admin_files() {
       $usedbytes = filepicker_get_all_bytes($account)+1;
       $usedbytesprint = _filepicker_bkmg($usedbytes);
       $quota = 0;
-      if (variable_get('filepicker_quota_enable', 1)) {
-        if (variable_get('filepicker_quota_byrole', 0)) {
-          $roleid = variable_get('filepicker_quota_role', 2);
+      if (filepicker_variable_get('filepicker_quota_enable', 1)) {
+        if (filepicker_variable_get('filepicker_quota_byrole', 0)) {
+          $roleid = filepicker_variable_get('filepicker_quota_role', 2);
           if (filepicker_user_has_role($roleid, $account) && $account->uid > 1) {
-            $quota = variable_get('filepicker_quota_default', 0);
+            $quota = filepicker_variable_get('filepicker_quota_default', 0);
           }
         }
         else {
-          $quota = (isset($account->filepicker_quota) ? $account->filepicker_quota : variable_get('filepicker_quota_default', 0));
+          $quota = (isset($account->filepicker_quota) ? $account->filepicker_quota : filepicker_variable_get('filepicker_quota_default', 0));
         }
       }
       $label = t('Quota for %name', array('%name' => $name));
@@ -700,16 +779,16 @@ function filepicker_admin_files() {
       else {
         $message = t('User %name has used %usedbytesprint and has %pl.', array('%name' => $name, '%usedbytesprint' => $usedbytesprint, '%pl' => $pl));
       }
-      if (! variable_get('filepicker_quota_byrole', 0) ) {
-        $form = drupal_get_form('filepicker_quota_form', $account);
+      if (! filepicker_variable_get('filepicker_quota_byrole', 0) ) {
+        $form = render(drupal_get_form('filepicker_quota_form', $account));
       }
       else {
         $form = "";
       }
-      $content .= theme('filepicker_quota', $form, $message, $label);
+      $content .= theme('filepicker_quota', array('quotaform' => $form, 'message' => $message, 'label' => $label));
     }
     elseif ($fileaction == 'groups') {
-      drupal_goto(FILEPICKER_ADMIN_PATH .'/groups/user/'. $uid);
+      drupal_goto(FILEPICKER_ADMIN_PATH . '/groups/user/' . $uid);
     }
     else {
       $content .= _filepicker_list('admin', $account, t('List files for %name', array('%name' => $name)));
@@ -719,11 +798,8 @@ function filepicker_admin_files() {
     if ($action == 'stats') {
       $content .= filepicker_group_stats(FALSE, t('Statistics'));
     }
-#    elseif ($action == 'list_all') {
-#      $content .= _filepicker_list_public('admin', variable_get('filepicker_list_public', 0), t('List All Files'));
-#    }
     elseif ($action == 'list_all') {
-      $content .= _filepicker_list_admin('admin', FALSE, TRUE, variable_get('filepicker_list_public', 0), t('List All Files'));
+      $content .= _filepicker_list_admin('admin', FALSE, TRUE, filepicker_variable_get('filepicker_list_public', 0), t('List All Files'));
     }
     else {
       $content .= filepicker_admin_users_list('files', t('Users'));
@@ -737,12 +813,12 @@ function filepicker_admin_files() {
  * @return
  *   Returns the form.
  */
-function filepicker_group_search_form($form_state, $dir = 'groups') {
+function filepicker_group_search_form($form, &$form_state, $dir = 'groups') {
   $form['filepicker_currentgroup'] = array(
     '#type' => 'textfield',
     '#title' => t('Groups'),
     '#description' => '',
-    '#autocomplete_path' => FILEPICKER_ADMIN_PATH .'/groups/autocomplete',
+    '#autocomplete_path' => FILEPICKER_ADMIN_PATH . '/groups/autocomplete',
     '#default_value' => '',
     '#maxlength' => 30,
     '#size' => 25,
@@ -760,18 +836,21 @@ function filepicker_group_search_form($form_state, $dir = 'groups') {
 
 function filepicker_group_search_form_submit($form, &$form_state) {
   if ($form_state['values']['filepicker_currentgroup']) {
-    $result = db_query("SELECT gid, uid FROM {filepicker_user_groups} WHERE group_name = '%s' ", $form_state['values']['filepicker_currentgroup']);
-    $row = db_fetch_array($result);
+    $currentgroup = $form_state['values']['filepicker_currentgroup'];
+    $query = db_select('filepicker_user_groups', 'iug');
+    $query->fields('iug', array('gid', 'uid'));
+    $query->condition('iug.group_name', $currentgroup);
+    $row = $query->execute()->fetchAssoc();
     if ($row['gid'] ) {
-      variable_set('filepicker_currentgroup', $row['gid']);
-      drupal_goto(FILEPICKER_ADMIN_PATH .'/'. $form_state['values']['dir'] .'/user/'. $row['uid'] .'/edit/'. $row['gid']);
+      filepicker_variable_set('filepicker_currentgroup', $row['gid']);
+      drupal_goto(FILEPICKER_ADMIN_PATH . '/' . $form_state['values']['dir'] . '/user/' . $row['uid'] . '/edit/' . $row['gid']);
     }
     else {
-      variable_set('filepicker_currentgroup', 0);
+      filepicker_variable_set('filepicker_currentgroup', 0);
     }
   }
   else {
-    variable_set('filepicker_currentgroup', 0);
+    filepicker_variable_set('filepicker_currentgroup', 0);
   }
 }
 
@@ -780,14 +859,18 @@ function filepicker_group_search_form_submit($form, &$form_state) {
  * @return
  *   Returns the form.
  */
-function filepicker_quota_form(&$form_state, $account=FALSE) {
+function filepicker_quota_form($form, &$form_state, $account=FALSE) {
   $list = filepicker_get_quota_list();
-  $default = variable_get('filepicker_quota_default', 0);
+  $default = filepicker_variable_get('filepicker_quota_default', 0);
   $quota = $default;
   $title = t('Set default quota');
   if ($account) {
     $title = t('Set user quota');
-    $quota = (isset($account->filepicker_quota) && $account->filepicker_quota ? $account->filepicker_quota : $default);
+    #$quota = (isset($account->filepicker_quota) && $account->filepicker_quota ? $account->filepicker_quota : $default);
+    $quota = (filepicker_variable_get('filepicker_quota_default', 0, $account->uid) ? filepicker_variable_get('filepicker_quota_default', 0, $account->uid) : 0);
+    if (! $quota) {
+      $quota = $default;
+    }
   }
   $form['filepicker_quota'] = array(
     '#type' => 'select',
@@ -808,35 +891,34 @@ function filepicker_quota_form(&$form_state, $account=FALSE) {
 
 function filepicker_quota_form_submit($form, &$form_state) {
     if ( $form_state['values']['account'] > 0 ) {
-      $account = user_load(array('uid' => $form_state['values']['account']));
-      user_save($account, array('filepicker_quota' => $form_state['values']['filepicker_quota']));
+      filepicker_variable_set('filepicker_quota_default', $form_state['values']['filepicker_quota'], $form_state['values']['account']);
     }
     else {
-      variable_set('filepicker_quota_default', $form_state['values']['filepicker_quota']);
+      filepicker_variable_set('filepicker_quota_default', $form_state['values']['filepicker_quota']);
     }
 }
 
 function filepicker_admin_import() {
-  drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
+  drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
   module_load_include('inc', 'filepicker', 'filepicker.import');
   if (! arg(4) ) {
-    variable_del('filepicker_currentuser');
+    filepicker_variable_del('filepicker_currentuser');
   }
-  $uid = variable_get('filepicker_currentuser', '');
+  $uid = filepicker_variable_get('filepicker_currentuser', '');
   if ( arg(4) == 'user' && is_numeric(arg(5))) {
     $uid = arg(5);
   }
   $content = "";
-  if (! $importdir = variable_get('filepicker_import_dir', '')) {
+  if (! $importdir = filepicker_variable_get('filepicker_import_dir', '')) {
     drupal_set_message(t('You need to set the import folder'));
   }
-  $content = drupal_get_form('filepicker_import_dir_form');
+  $content = render(drupal_get_form('filepicker_import_dir_form'));
   if ($importdir) {
     if ($import_files = filepicker_import_dir_check()) {
-      $content .= drupal_get_form('filepicker_user_search_form', 'import');
+      $content .= render(drupal_get_form('filepicker_user_search_form', 'import'));
       if ($uid) {
-        $account = user_load(array('uid' => $uid));
-        $content .= drupal_get_form('filepicker_import_form', count($import_files), $account, TRUE);
+        $account = user_load($uid);
+        $content .= render(drupal_get_form('filepicker_import_form', count($import_files), $account, TRUE));
       }
       else {
         drupal_set_message(t('Please select a user. You have %total files to be imported', array('%total' => count($import_files)) ));
@@ -854,28 +936,39 @@ function filepicker_admin_import() {
  * Retrieve a pipe delimited string of autocomplete suggestions for existing users
  */
 function filepicker_user_autocomplete($string = '') {
+
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT DISTINCT u.name FROM {users} u, {filepicker} i WHERE LOWER(u.name) LIKE LOWER('%s%%') AND u.uid=i.uid", $string, 0, 10);
-    while ($user = db_fetch_object($result)) {
+    $query = db_select('users', 'u');
+    $query->fields('u', array('name'));
+    $query->distinct();
+    $query->join('filepicker', 'i', 'u.uid = i.uid');
+    $query->where("LOWER(u.name) LIKE LOWER(:st)", array(':st' => $string . '%') );
+    $query->condition('u.status', 1);
+    $query->range(0, 10);
+    $result = $query->execute();
+    foreach ($result as $user) {
       $matches[$user->name] = check_plain($user->name);
     }
   }
-  print drupal_to_js($matches);
-  exit();
+  drupal_json_output($matches);
 }
-
 /**
  * Retrieve a pipe delimited string of autocomplete suggestions for existing groups
  */
 function filepicker_group_search_autocomplete($string = '') {
+
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT group_name FROM {filepicker_user_groups} WHERE LOWER(group_name) LIKE LOWER('%s%%')", $string, 0, 10);
-    while ($group = db_fetch_object($result)) {
+    $query = db_select('filepicker_user_groups', 'iug');
+    $query->fields('iug', array('group_name'));
+    $query->where("LOWER(group_name) LIKE LOWER(:st)", array(':st' => $string . '%') );
+    $query->range(0, 10);
+    $result = $query->execute();
+    foreach ($result AS $group) {
       $matches[$group->group_name] = check_plain($group->group_name);
     }
   }
-  print drupal_to_js($matches);
-  exit();
+  drupal_json_output($matches);
 }
+

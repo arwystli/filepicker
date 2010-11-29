@@ -7,8 +7,8 @@
  * my filepicker in my account
  */
 function filepicker_user_page($uid, $path="", $func="", $id=0) {
-  drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
+  drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
   $content = '';
   // path/func/id
   if ($path == 'files') {
@@ -41,13 +41,13 @@ function filepicker_user_page($uid, $path="", $func="", $id=0) {
     }
     elseif ($func == 'list' && is_numeric($id) && $id > 0) {
       filepicker_set_user_group_state(1, $id);
-      $content .= filepicker_user_groups();
+      $content .= filepicker_user_list_admin();
     }
     elseif ($func == 'list') {
       $content .= filepicker_user_groups();
     }
     elseif ($func == 'delete') {
-      $content .= drupal_get_form('filepicker_group_delete_form', $id);
+      $content .= render(drupal_get_form('filepicker_group_delete_form', $id));
     }
   }
   elseif ($path == 'stats') {
@@ -74,21 +74,21 @@ function filepicker_user_list_admin() {
 }
 
 function filepicker_user_view($file_id) {
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
 
   $file = _filepicker_get_file($file_id);
   if ($file) {
     $filepath = filepicker_get_file_path($file);
     $info = filepicker_get_info($file);
-    $view = theme('filepicker_view', $file, $filepath, $info);
-    $form1 = drupal_get_form('filepicker_user_file_form', $file_id);
+    $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
+    $form1 = render(drupal_get_form('filepicker_user_file_form', $file_id));
     $form2 = '';
     $form3 = '';
     // group form
     if (_filepicker_has_groups()) {
-      $form3 = drupal_get_form('filepicker_group_files_form', $file['file_id']);
+      $form3 = render(drupal_get_form('filepicker_group_files_form', $file['file_id']));
     }
-    $content = theme('filepicker_user_view', $view, $form1, $form2, $form3);
+    $content = theme('filepicker_user_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');
@@ -102,13 +102,10 @@ function filepicker_user_view_public($file_id) {
   $file = _filepicker_get_file($file_id, FALSE);
   if ($file) {
 
-    $result = db_query("SELECT name FROM {users} WHERE uid=%d AND status=1", array($file['uid']));
-    $row = db_fetch_array($result);
-    $file['name'] = ($row['name'] ? $row['name'] : FALSE);
-
-    $filepath = filepicker_get_file_path($file, 'full', array('name' => $file['name'] , 'uid' => $file['uid'] ));
-    $info = filepicker_get_info(filepicker_get_path(FALSE, array('name' => $file['name'] , 'uid' => $file['uid'] )) . $file['file_name']);
-    $content = theme('filepicker_view', $file, $filepath, $info);
+    $user = user_load($file->uid);
+    $filepath = filepicker_get_file_path($file);
+    $info = filepicker_get_info($file->file_name);
+    $content = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');
@@ -117,7 +114,7 @@ function filepicker_user_view_public($file_id) {
   return $content;
 }
 
-function filepicker_user_file_form(&$form_state, $file_id) {
+function filepicker_user_file_form($form, &$form_state, $file_id) {
   $form['edit'] = array(
     '#type' => 'submit',
     '#value' => t('Edit file'),
@@ -141,21 +138,21 @@ function filepicker_user_file_form_delete($form, &$form_state) {
 
 function filepicker_user_file_form_edit($form, &$form_state) {
   global $user;
-  drupal_goto('user/'. $user->uid .'/filepicker/files/edit/'. $form_state['values']['file_id']);
+  drupal_goto('user/' . $user->uid . '/filepicker/files/edit/' . $form_state['values']['file_id']);
 }
 
 /**
  * Menu callback; presents the configuration settings form for filepicker user.
  */
 function filepicker_user_config_admin() {
-  $content = drupal_get_form('filepicker_user_config_admin_form');
-  return theme('filepicker_user_config', $content, '', t('Filepicker configuration page.'), '', '');
+  $form = render(drupal_get_form('filepicker_user_config_admin_form'));
+  return theme('filepicker_user_config', array('form' => $form, 'label' => '', 'help' => t('Filepicker configuration page.'), 'message1' => '', 'message2' => ''));
 }
 
 /**
  * Submit form
  */
-function filepicker_user_config_admin_form(&$form_state, $account = FALSE) {
+function filepicker_user_config_admin_form($form, &$form_state, $account = FALSE) {
   if ($account) {
     $user = $account;
   }
@@ -173,7 +170,7 @@ function filepicker_user_config_admin_form(&$form_state, $account = FALSE) {
     '#collapsed' => FALSE,
     '#weight' => -38,
   );
-  $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem((isset($user->filepicker_rows_per_page) ? $user->filepicker_rows_per_page : NULL));
+  $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem(filepicker_variable_get('filepicker_rows_per_page', NULL, $user->uid));
 
 
   // Iframe
@@ -186,12 +183,12 @@ function filepicker_user_config_admin_form(&$form_state, $account = FALSE) {
     '#weight' => -22,
   );
   if (module_exists('colorbox') && variable_get('colorbox_load', 0)) {
-    $form['filepicker_iframe']['filepicker_advanced_colorbox'] = filepicker_colorbox_elem((isset($user->filepicker_advanced_colorbox) ? $user->filepicker_advanced_colorbox : NULL));
+    $form['filepicker_iframe']['filepicker_advanced_colorbox'] = filepicker_colorbox_elem(filepicker_variable_get('filepicker_advanced_colorbox', NULL, $user->uid));
   }
-  $form['filepicker_iframe']['filepicker_advanced_iframe_width'] = filepicker_iframe_width_elem((isset($user->filepicker_advanced_iframe_width) ? $user->filepicker_advanced_iframe_width : NULL));
-  $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem((isset($user->filepicker_advanced_iframe_height) ? $user->filepicker_advanced_iframe_height : NULL));
-  $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem((isset($user->filepicker_advanced_iframe_border) ? $user->filepicker_advanced_iframe_border : NULL));
-  $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem((isset($user->filepicker_advanced_collapsed) ? $user->filepicker_advanced_collapsed : NULL));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_width'] = filepicker_iframe_width_elem(filepicker_variable_get('filepicker_advanced_iframe_width', NULL, $user->uid));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem(filepicker_variable_get('filepicker_advanced_iframe_height', NULL, $user->uid));
+  $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem(filepicker_variable_get('filepicker_advanced_iframe_border', NULL, $user->uid));
+  $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem(filepicker_variable_get('filepicker_advanced_collapsed', NULL, $user->uid));
 
   if ($account) {
     $form['uid'] = array(
@@ -213,12 +210,12 @@ function filepicker_user_config_admin_form(&$form_state, $account = FALSE) {
 
 function filepicker_user_config_admin_form_validate($form, &$form_state) {
   if (isset($form_state['values']['uid']) && is_numeric($form_state['values']['uid']) ) {
-    $user = user_load(array('uid' => $form_state['values']['uid']));
+    $user = user_load($form_state['values']['uid']);
   }
   else {
     global $user;
   }
-  if (drupal_strlen($form_state['values']['filepicker_rows_per_page']) && ! is_numeric($form_state['values']['filepicker_rows_per_page'])) {
+  if (drupal_strlen($form_state['values']['filepicker_rows_per_page']) && (! is_numeric($form_state['values']['filepicker_rows_per_page']) || $form_state['values']['filepicker_rows_per_page'] < 1)) {
     form_set_error('filepicker_rows_per_page', t('Rows per page must be a number'));
   }
 
@@ -246,35 +243,36 @@ function filepicker_user_config_admin_form_validate($form, &$form_state) {
 
 function filepicker_user_config_admin_form_submit($form, &$form_state) {
   if (isset($form_state['values']['uid'])) {
-    $user = user_load(array('uid' => $form_state['values']['uid']));
+    $user = user_load($form_state['values']['uid']);
   }
   else {
     global $user;
   }
 
-  user_save($user, array('filepicker_rows_per_page' => $form_state['values']['filepicker_rows_per_page']));
+  filepicker_variable_set('filepicker_rows_per_page', $form_state['values']['filepicker_rows_per_page'], $user->uid);
 
   if (isset($form_state['values']['filepicker_advanced_colorbox']) && module_exists('colorbox')) {
-    user_save($user, array('filepicker_advanced_colorbox' => $form_state['values']['filepicker_advanced_colorbox']));
+    filepicker_variable_set('filepicker_advanced_colorbox', $form_state['values']['filepicker_advanced_colorbox'], $user->uid);
   }
-  user_save($user, array('filepicker_advanced_iframe_width' => $form_state['values']['filepicker_advanced_iframe_width']));
-  user_save($user, array('filepicker_advanced_iframe_height' => $form_state['values']['filepicker_advanced_iframe_height']));
-  user_save($user, array('filepicker_advanced_iframe_border' => $form_state['values']['filepicker_advanced_iframe_border']));
-  user_save($user, array('filepicker_advanced_collapsed' => $form_state['values']['filepicker_advanced_collapsed']));
+  filepicker_variable_set('filepicker_advanced_iframe_width', $form_state['values']['filepicker_advanced_iframe_width'], $user->uid);
+  filepicker_variable_set('filepicker_advanced_iframe_height', $form_state['values']['filepicker_advanced_iframe_height'], $user->uid);
+  filepicker_variable_set('filepicker_advanced_iframe_border', $form_state['values']['filepicker_advanced_iframe_border'], $user->uid);
+  filepicker_variable_set('filepicker_advanced_collapsed', $form_state['values']['filepicker_advanced_collapsed'], $user->uid);
   drupal_set_message(t('Configuration settings saved'));
 }
 
 function filepicker_user_config_form_reset($form, &$form_state) {
   global $user;
-  user_save($user, array('filepicker_rows_per_page' => NULL));
-  user_save($user, array('filepicker_advanced_colorbox' => NULL));
-  user_save($user, array('filepicker_advanced_iframe_width' => NULL));
-  user_save($user, array('filepicker_advanced_iframe_height' => NULL));
-  user_save($user, array('filepicker_advanced_iframe_border' => NULL));
-  user_save($user, array('filepicker_advanced_collapsed' => NULL));
+  filepicker_variable_del('filepicker_rows_per_page', $user->uid);
+  filepicker_variable_del('filepicker_advanced_colorbox', $user->uid);
+  filepicker_variable_del('filepicker_advanced_iframe_width', $user->uid);
+  filepicker_variable_del('filepicker_advanced_iframe_height', $user->uid);
+  filepicker_variable_del('filepicker_advanced_iframe_border', $user->uid);
+  filepicker_variable_del('filepicker_advanced_collapsed', $user->uid);
   drupal_set_message(t('Configuration settings reset'));
 }
 
+/*
 function filepicker_user_config_admin_form_delete($form, &$form_state) {
   if ( $form_state['values']['uid'] ) {
     $user = user_load(array('uid' => $form_state['values']['uid']));
@@ -283,4 +281,4 @@ function filepicker_user_config_admin_form_delete($form, &$form_state) {
     global $user;
   }
 }
-
+*/

@@ -8,26 +8,23 @@
  */
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function filepicker_install() {
   // Create a directory structure.
   $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR;
-  $dir = $drupaldir . file_directory_path() . DIRECTORY_SEPARATOR .'filepicker';
+  $dir = $drupaldir . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . DIRECTORY_SEPARATOR . 'filepicker';
 
-  if (file_check_directory($dir, TRUE)) {
+  if (file_prepare_directory($dir, FILE_CREATE_DIRECTORY)) {
     drupal_get_messages('status', TRUE);
   }
   else {
-    drupal_set_message(t('Directory creation for the Filepicker module was unsuccessful.'), 'error');
+    drupal_set_message(st('Directory creation for the Filepicker module was unsuccessful.'), 'error');
   }
-
-  // Create tables.
-  drupal_install_schema('filepicker');
 }
 
 /**
- * Implementation of hook_schema().
+ * Implements hook_schema().
  */
 function filepicker_schema() {
   $schema['filepicker'] = array(
@@ -143,16 +140,44 @@ function filepicker_schema() {
     ),
   );
 
+  $schema['filepicker_variables'] = array(
+    'fields' => array(
+      'name' => array(
+        'description' => t('filepicker variables.'),
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'value' => array(
+        'description' => t('filepicker variable values.'),
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'uid' => array(
+        'description' => t('The user identifier.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'name' => array('name')
+    ),
+  );
+
   return $schema;
 
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function filepicker_uninstall() {
-  // Remove tables.
-  drupal_uninstall_schema('filepicker');
 
-  db_query("DELETE FROM {variable} WHERE name LIKE 'filepicker_%';");
+#  $query = db_delete('variable')
+#    ->condition('name', 'filepicker_%', 'LIKE')
+#    ->execute();
 }
+

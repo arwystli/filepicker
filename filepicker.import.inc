@@ -15,7 +15,7 @@
  *   Returns the number of files.
  */
 function filepicker_import_dir_check($account = FALSE) {
-  if (! $importdir = variable_get('filepicker_import_dir', '')) {
+  if (! $importdir = filepicker_variable_get('filepicker_import_dir', '')) {
     return FALSE;
   }
   if ($account) {
@@ -24,11 +24,12 @@ function filepicker_import_dir_check($account = FALSE) {
   else {
     global $user;
   }
-  if (file_check_directory($importdir, TRUE)) {
+
+  if (file_prepare_directory($importdir, FILE_MODIFY_PERMISSIONS)) {
 
     // clear out the noisy 'created' messages
     drupal_get_messages('status', TRUE);
-    $importlist = file_scan_directory($importdir, ".*", array('.', '..', 'CVS'), 0, FALSE);
+    $importlist = file_scan_directory($importdir, "/.*/", array('recurse' => FALSE));
     $checked_importlist = array();
     $bad_importlist = array();
     if (count($importlist)) {
@@ -65,7 +66,7 @@ function filepicker_import_dir_check($account = FALSE) {
  * @return
  *   Returns the file form.
  */
-function filepicker_import_form($form_state, $total, $account=FALSE, $admin = FALSE) {
+function filepicker_import_form($form, &$form_state, $total, $account=FALSE, $admin = FALSE) {
   if ($account) {
     $user = $account;
   }
@@ -77,11 +78,11 @@ function filepicker_import_form($form_state, $total, $account=FALSE, $admin = FA
   // default watermark
   $form['total'] = array(
     '#type' => 'markup',
-    '#value' => t('!total files found in the filepicker import folder.<br />Selected user is %user', array('!total' => $total, '%user' => $user->name )),
+    '#value' => t('!total files found in the filepicker import folder.<br />Selected user is %user', array('!total' => check_plain($total), '%user' => $user->name )),
   );
 
   // groups
-  if (variable_get('filepicker_groups_enabled', 1) && variable_get('filepicker_groups_in_upload_enabled', 1)) {
+  if (filepicker_variable_get('filepicker_groups_enabled', 1) && filepicker_variable_get('filepicker_groups_in_upload_enabled', 1)) {
     $grouplist = filepicker_get_groups( ($admin ? $user : FALSE));
     if ($grouplist) {
       $form['grouplist'] = array(
@@ -128,21 +129,24 @@ function filepicker_import_form_submit($form, &$form_state) {
   $op = isset($form_state['values']['op']) ? $form_state['values']['op']: '';
   if ($op == t('Import')) {
     if ( isset($form_state['values']['account']) && isset($form_state['values']['admin'])) {
-      $user = user_load(array('uid' => $form_state['values']['account']));
+      $user = user_load($form_state['values']['account']);
     }
     else {
       global $user;
     }
 
-    $destdir = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? array('name' => $user->name, 'uid' => $user->uid ) : TRUE));
-    $sourcedir = variable_get('filepicker_import_dir', '');
+    $destdir = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? $user->uid : TRUE));
+    $sourcedir = filepicker_variable_get('filepicker_import_dir', '');
+    $destdirscheme = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? $user->uid : TRUE), TRUE);
 
-    if (file_check_directory($destdir, TRUE)
-      && file_check_directory($sourcedir, TRUE)
+    if (file_prepare_directory($destdir, FILE_CREATE_DIRECTORY)
+      && file_prepare_directory($sourcedir, FILE_CREATE_DIRECTORY)
       ) {
       // clear out the noisy 'created' messages
       drupal_get_messages('status', TRUE);
       // Add DIRECTORY_SEPARATORS here because drupals' functions remove trailing slashes
+
+      $options['destdirscheme'] = $destdirscheme . DIRECTORY_SEPARATOR;
       $options['destdir'] = $destdir . DIRECTORY_SEPARATOR;
       $options['sourcedir'] = $sourcedir;
       $selected = filepicker_import_dir_check();
@@ -153,7 +157,7 @@ function filepicker_import_form_submit($form, &$form_state) {
           array('filepicker_import_batch', array($form_state, $selected, $options, $user)),
         ),
         'finished' => 'filepicker_import_finished',
-        'file' =>  drupal_get_path('module', 'filepicker') ."/filepicker.import.inc",
+        'file' =>  drupal_get_path('module', 'filepicker') . "/filepicker.import.inc",
         'progress_message' => t('Processed @current out of @total.'),
       );
       batch_set($batch);
@@ -173,46 +177,50 @@ function filepicker_import_batch($form_state, $selected, $options, $account, &$c
     global $user;
   }
 
+  $max = filepicker_variable_get('filepicker_import_max', 5);
   if (empty($context['sandbox'])) {
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['max'] = count($selected);
     $context['sandbox']['files'] = $selected;
   }
-  // Process files by groups of 5.
-  $count = min(5, count($context['sandbox']['files']));
+  // Process files by groups of $max.
+  $count = min($max, count($context['sandbox']['files']));
   for ($i = 0; $i < $count; $i++) {
     $index = array_shift($context['sandbox']['files']);
 
     // Check the file is OK
     $filename = $index;
-    $source_filepath = file_check_location($options['sourcedir'] . DIRECTORY_SEPARATOR . $filename, $options['sourcedir']);
+    $source_filepath = filepicker_file_check_location($options['sourcedir'] . DIRECTORY_SEPARATOR . $filename, $options['sourcedir']);
     if ($source_filepath &&  filepicker_validate_is_file($source_filepath)) {
       $source = $source_filepath;
       $file = $filename;
 
       // copy original
-      if (file_copy($source, $options['destdir'], FILE_EXISTS_RENAME)) {
+      if (file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $options['destdirscheme'], FILE_EXISTS_RENAME)) {
+
         $file = basename($source);
         $orig = $options['destdir'] . $file;
 
         $nextfileid = filepicker_insert_file($user->uid, $file, $title);
         if ($nextfileid) {
-          if ( is_array($form_state['values']['grouplist']) && variable_get('filepicker_groups_enabled', 1) && variable_get('filepicker_groups_in_upload_enabled', 1) ) {
-            $result = db_query("SELECT file_id FROM {filepicker} WHERE uid = '%d' AND file_name = '%s'", array($user->uid, $file));
-            $row = db_fetch_array($result);
-            $record['file_id']  = $row['file_id'];
+          if ( is_array($form_state['values']['grouplist']) && filepicker_variable_get('filepicker_groups_enabled', 1) && filepicker_variable_get('filepicker_groups_in_upload_enabled', 1) ) {
+            $query = db_select('filepicker', 'i');
+            $query->fields('i', array('file_id') );
+            $query->condition('uid', $user->uid)->condition('file_name', $file);
+            $record = $query->execute()->fetchObject();
+
             foreach ($form_state['values']['grouplist'] AS $gid) {
-              $record['gid'] = $gid;
+              $record->gid = $gid;
               filepicker_insert_group_file($record);
             }
           }
           // delete
-          if (variable_get('filepicker_import_delete', 0)) {
-            file_delete($source_filepath);
+          if (filepicker_variable_get('filepicker_import_delete', 0)) {
+            file_unmanaged_delete($source_filepath);
           }
         }
         else {
-          file_delete($options['destdir'] . $file);
+          file_unmanaged_delete($options['destdir'] . $file);
           $_SESSION['filepicker_import_status'] = t('Error while saving information to database for imported file %im.', array('%im' => $file));
         }
       }
@@ -251,14 +259,14 @@ function filepicker_import_finished($success, $results, $operations) {
  * @return
  *   Returns the import folder form.
  */
-function filepicker_import_dir_form($form_state) {
+function filepicker_import_dir_form($form, &$form_state) {
 
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filepicker Import Folder'),
     '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload files to, via FTP or rsync.'),
     '#collapsible' => TRUE,
-    '#collapsed' => (variable_get('filepicker_import_dir', '') ? TRUE : FALSE),
+    '#collapsed' => (filepicker_variable_get('filepicker_import_dir', '') ? TRUE : FALSE),
   );
   $form['filepicker_import']['filepicker_import_dir'] = array(
     '#type' => 'textfield',
@@ -266,7 +274,7 @@ function filepicker_import_dir_form($form_state) {
     '#size' => 55,
     '#maxlength' => 100,
     '#required' => FALSE,
-    '#default_value' => variable_get('filepicker_import_dir', ''),
+    '#default_value' => filepicker_variable_get('filepicker_import_dir', ''),
   );
   $form['filepicker_import']['submit'] = array(
     '#type' => 'submit',
@@ -281,7 +289,7 @@ function filepicker_import_dir_form($form_state) {
  */
 function filepicker_import_dir_form_validate($form, &$form_state) {
   $importdir = $form_state['values']['filepicker_import_dir'];
-  if ($importdir && ! file_check_directory($importdir, TRUE)) {
+  if ($importdir && ! file_prepare_directory($importdir, FILE_MODIFY_PERMISSIONS)) {
     form_set_error('filepicker_import_dir', t('The folder does not exist.'));
   }
 }
@@ -290,5 +298,22 @@ function filepicker_import_dir_form_validate($form, &$form_state) {
  * Submit form
  */
 function filepicker_import_dir_form_submit($form, &$form_state) {
-  variable_set('filepicker_import_dir', $form_state['values']['filepicker_import_dir']);
+  filepicker_variable_set('filepicker_import_dir', $form_state['values']['filepicker_import_dir']);
+}
+
+// D7 has lost file_check_location()
+function filepicker_file_check_location($source, $directory = '') {
+  $check = realpath($source);
+  if ($check) {
+    $source = $check;
+  }
+  else {
+    // This file does not yet exist
+    $source = realpath(dirname($source)) . '/' . basename($source);
+  }
+  $directory = realpath($directory);
+  if ($directory && strpos($source, $directory) !== 0) {
+    return 0;
+  }
+  return $source;
 }

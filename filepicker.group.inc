@@ -8,25 +8,25 @@
  */
 
 function filepicker_groups() {
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
 
   // from iframe
   if (! arg(2)) {
     $content = filepicker_groups_list();
-    $content .= drupal_get_form('filepicker_groups_form');
+    $content .= render(drupal_get_form('filepicker_groups_form'));
   }
   elseif ( arg(2) == 'edit') {
     $record = filepicker_get_user_group(arg(3));
-    $content .= drupal_get_form('filepicker_groups_form', $record);
+    $content .= render(drupal_get_form('filepicker_groups_form', $record));
   }
   elseif (arg(2) == 'delete') {
-    $content .= drupal_get_form('filepicker_group_delete_form', arg(3));
+    $content .= render(drupal_get_form('filepicker_group_delete_form', arg(3)));
   }
   elseif ( is_numeric(arg(2)) && arg(2) > 0 ) {
     filepicker_set_user_group_state(1, arg(2));
-    drupal_goto('filepicker/browse');
+    drupal_goto('filepicker/list');
   }
-  return theme('filepicker_iframe', $content);
+  return theme('filepicker_iframe', array('content' => $content));
 }
 
 /**
@@ -38,22 +38,22 @@ function filepicker_user_groups($mode="", $gid=0) {
   // $mode is edit, delete or empty
   if (empty($mode)) {
     $content .= filepicker_groups_list('account');
-    $content .= drupal_get_form('filepicker_groups_form');
+    $content .= render(drupal_get_form('filepicker_groups_form'));
   }
   elseif ($mode == 'edit') {
     $record = filepicker_get_user_group($gid);
-    $content .= drupal_get_form('filepicker_groups_form', $record);
+    $content .= render(drupal_get_form('filepicker_groups_form', $record));
   }
   elseif ($mode == 'delete') {
-    $content .= drupal_get_form('filepicker_group_delete_form', $gid);
+    $content .= render(drupal_get_form('filepicker_group_delete_form', $gid));
   }
   return $content;
 }
 
-function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
+function filepicker_groups_form($form, &$form_state, $record=0, $account=FALSE) {
   $form['groupsave'] = array(
     '#type' => 'fieldset',
-    '#title' => ( $record ?  t('Edit group') : t('Add group')),
+    '#title' => ($record ? t('Edit group') : t('Add group')),
     '#description' => t('Give your group a brief name and optionally put any additional information in the group description box'),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
@@ -62,7 +62,7 @@ function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
     '#type' => 'textfield',
     '#title' => t('Group name'),
     '#size' => 20,
-    '#default_value' => (isset($record->group_name) ? $record->group_name : ''),
+    '#default_value' => (isset($record->group_name) ? check_plain($record->group_name) : ''),
     '#description' => t(''),
     '#required' => TRUE
   );
@@ -71,11 +71,11 @@ function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
     '#title' => t('group description'),
     '#size' => 50,
     '#maxlength' => 50,
-    '#default_value' => (isset($record->group_description) ? $record->group_description : ''),
+    '#default_value' => (isset($record->group_description) ? check_plain($record->group_description) : ''),
     '#description' => t('Maximum 50 characters'),
     '#required' => FALSE
   );
-  if (user_access('use public filepicker') && user_access('create public groups') && variable_get('filepicker_public_enabled', 1)) {
+  if (user_access('use public filepicker') && user_access('create public groups') && filepicker_variable_get('filepicker_public_enabled', 1)) {
     $form['groupsave']['group_public'] = array(
       '#type' => 'checkbox',
       '#title' => t('Public'),
@@ -84,7 +84,7 @@ function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
       '#description' => t('Make this group publicly available'),
     );
     // Create role restrictions
-    if (variable_get('filepicker_publicroles_enabled', 1)) {
+    if (filepicker_variable_get('filepicker_publicroles_enabled', 1)) {
       $form['groupsave']['group_public_roles'] = array(
         '#type' => 'fieldset',
         '#title' => ( isset($record->gid) ?  t('Edit group roles') : t('Add public group roles')),
@@ -175,9 +175,17 @@ function filepicker_groups_form_submit($form, &$form_state) {
  * filepicker_user_groups functions
  */
 function filepicker_insert_user_group($record) {
-  if (db_query(
-    "INSERT INTO {filepicker_user_groups} (uid, group_name, group_description, public, avail_roles) VALUES (%d, '%s', '%s', %d, '%s')",
-    array($record['uid'], $record['group_name'], $record['group_description'], $record['public'], $record['avail_roles']))) {
+
+  if (db_insert('filepicker_user_groups')
+    ->fields(array(
+      'uid' => $record['uid'],
+      'group_name' => $record['group_name'],
+      'group_description' => $record['group_description'],
+      'public' => $record['public'],
+       'avail_roles' => (isset($record['avail_roles']) ? $record['avail_roles'] : 'all'),
+    ))
+    ->execute()
+  ) {
     drupal_set_message(t('Group was successfully inserted'));
   }
   else {
@@ -186,9 +194,17 @@ function filepicker_insert_user_group($record) {
 }
 
 function filepicker_update_user_group($record) {
-  if (db_query(
-    "UPDATE {filepicker_user_groups} SET group_name='%s', group_description='%s', public=%d, avail_roles='%s' WHERE gid = %d",
-    array($record['group_name'], $record['group_description'], $record['public'], $record['avail_roles'], $record['gid']))) {
+
+  if (db_update('filepicker_user_groups')
+    ->fields(array(
+      'group_name' => $record['group_name'],
+      'group_description' => $record['group_description'],
+      'public' => $record['public'],
+       'avail_roles' => (isset($record['avail_roles']) ? $record['avail_roles'] : 'all'),
+    ))
+    ->condition('gid', $record['gid'])
+    ->execute()
+  ) {
     drupal_set_message(t('Group was successfully updated'));
   }
   else {
@@ -197,8 +213,9 @@ function filepicker_update_user_group($record) {
 }
 
 function filepicker_delete_user_group($gid) {
-  if (db_query("DELETE FROM {filepicker_user_groups} WHERE gid = %d", array($gid))
-    && db_query("DELETE FROM {filepicker_group_files} WHERE gid=%d", array($gid)) ) {
+
+  if ( db_delete('filepicker_user_groups')->condition('gid', $gid)->execute()
+    && db_delete('filepicker_group_files')->condition('gid', $gid)->execute() ) {
     drupal_set_message(t('Group was successfully deleted'));
   }
   else {
@@ -206,28 +223,20 @@ function filepicker_delete_user_group($gid) {
   }
 }
 
-function filepicker_get_user_groups_by_user($uid, $obj=TRUE) {
-  $result = db_query("SELECT * FROM {filepicker_user_groups} WHERE uid = %d", array($uid));
-  if ($obj) {
-    return db_fetch_object($result);
-  }
-  return db_fetch_array($result);
-}
-
 function filepicker_group_edit($gid) {
   $record = filepicker_get_user_group($gid);
-  $content .= drupal_get_form('filepicker_groups_form', $record);
+  $content .= render(drupal_get_form('filepicker_groups_form', $record));
   return $content;
 }
 
 /**
  * group delete form
  */
-function filepicker_group_delete_form(&$form_state, $gid) {
+function filepicker_group_delete_form($form, &$form_state, $gid) {
   $record = filepicker_get_user_group($gid);
   if ($record) {
     $form['groupname'] = array(
-      '#value' => '<p>'. $record->group_name .'</p>',
+      '#value' => '<p>' . $record->group_name . '</p>',
     );
     $form['mode'] = array(
       '#type' => 'value',
@@ -243,9 +252,6 @@ function filepicker_group_delete_form(&$form_state, $gid) {
     );
     return $form;
   }
-  else {
-
-  }
 }
 
 /**
@@ -255,106 +261,113 @@ function filepicker_group_delete_form_submit($form, &$form_state) {
   filepicker_delete_user_group($form_state['values']['gid']);
 }
 
-
 function filepicker_role_has_permission($rid) {
-  $result = db_query("SELECT count(pid) AS ct FROM {permission} WHERE rid = %d AND perm LIKE '%%use public filepicker%%'", array($rid));
-  $row = db_fetch_array($result);
-  return $row['ct'];
+
+  $query = db_select('role_permission', 'p');
+  $query->addExpression('COUNT(rid)', 'ct');
+  $query->condition('rid', $rid)->condition('permission', '%use public imagepicker%', 'LIKE');
+  $row = $query->execute()->fetchObject();
+  return $row->ct;
 }
 
 // build a table
 function filepicker_groups_list($src=FALSE, $account=FALSE, $label="") {
+
   if ($account) {
     $user = $account;
   }
   else {
     global $user;
   }
+
   if ($src) {
     if ($src == 'admin') {
-      $editpath = FILEPICKER_ADMIN_PATH .'/groups/user/'. $user->uid .'/edit/';
-      $deletepath = FILEPICKER_ADMIN_PATH .'/groups/user/'. $user->uid .'/delete/';
+      $editpath = FILEPICKER_ADMIN_PATH . '/groups/user/' . $user->uid . '/edit/';
+      $deletepath = FILEPICKER_ADMIN_PATH . '/groups/user/' . $user->uid . '/delete/';
+      $browsepath = FILEPICKER_ADMIN_PATH . '/groups/user/' . $user->uid . '/list/';
     }
     else {
-      $editpath = 'user/'. $user->uid .'/filepicker/groups/edit/';
-      $deletepath = 'user/'. $user->uid .'/filepicker/groups/delete/';
+      $editpath = 'user/' . $user->uid . '/filepicker/groups/edit/';
+      $deletepath = 'user/' . $user->uid . '/filepicker/groups/delete/';
+      $browsepath = 'user/' . $user->uid . '/filepicker/groups/list/';
     }
   }
   else {
     $editpath = "filepicker/groups/edit/";
     $deletepath = "filepicker/groups/delete/";
+    $browsepath = 'filepicker/groups/';
   }
 
   $content = "";
-  $how_many = variable_get('filepicker_rows_per_page', 25);
-  $use_icons = variable_get('filepicker_use_icons', 1);
+  $max = filepicker_variable_get('filepicker_advanced_browser_page', 25);
+  $use_icons = filepicker_variable_get('filepicker_use_icons', 1);
 
-  if (user_access('use public filepicker') && variable_get('filepicker_public_enabled', 1)) {
+  if (user_access('use public filepicker') && filepicker_variable_get('filepicker_public_enabled', 1)) {
     $header = array(
       array('data' => t('Group name'), 'field' => 'g.group_name'),
       array('data' => t('Description'), 'field' => 'g.group_description'),
-      array('data' => t('No. files'), 'field' => 'ct'),
+      array('data' => t('Files'), 'field' => 'ct'),
       t('State'),
       array('data' => t('Public'), 'field' => 'g.public'),
       array('data' => t('Actions'), 'colspan' => 2),
     );
-    $cols = 7;
   }
   else {
     $header = array(
       array('data' => t('Group name'), 'field' => 'g.group_name'),
       array('data' => t('Description'), 'field' => 'g.group_description'),
-      array('data' => t('No. files'), 'field' => 'ct'),
+      array('data' => t('Files'), 'field' => 'ct'),
       t('State'),
       array('data' => t('Actions'), 'colspan' => 2),
     );
-    $cols = 6;
   }
 
-  $countsql = "SELECT COUNT(DISTINCT(g.gid)) FROM {filepicker_user_groups} g JOIN {filepicker_group_files} u USING(gid) WHERE  g.uid=%d";
-  $sql = "SELECT g.gid, g.group_name, g.group_description, g.public, COUNT(i.file_id) AS ct
-    FROM {filepicker_user_groups} g LEFT JOIN {filepicker_group_files} i USING(gid)
-    WHERE  g.uid=%d
-    GROUP BY g.gid". tablesort_sql($header);
+  $countquery = db_select('filepicker_user_groups', 'g');
+  $countquery->addExpression('COUNT(g.gid)', 'ct');
+  $countquery->join('users', 'u', 'u.uid = g.uid');
+  $countquery->condition('g.uid', $user->uid)
+    ->condition('u.status', 1);
 
-  $result = pager_query($sql, $how_many, 0, $countsql, array($user->uid));
+  $query = db_select('filepicker_user_groups', 'g')
+    ->extend('PagerDefault')->limit($max)
+    ->extend('TableSort')->orderByHeader($header);
+  $query->setCountQuery($countquery);
+  $query->fields('g', array('gid', 'group_name', 'group_description', 'public'))
+    ->addExpression('COUNT(i.file_id)', 'ct');
+  $query->leftjoin('filepicker_group_files', 'i', 'g.gid = i.gid');
+  $query->leftjoin('users', 'u', 'g.uid = u.uid');
+  $query->condition('g.uid', $user->uid)
+    ->condition('u.status', 1)
+    ->groupBy('g.gid');
+  $result = $query->execute();
+
   $rows = array();
-  $totcount = 0;
-  $rowcount = 0;
   $enabledlist = filepicker_get_enabled_group($account);
-  while ($row = db_fetch_array($result)) {
-    if (user_access('use public filepicker') && variable_get('filepicker_public_enabled', 1)) {
+  foreach ($result AS $row) {
+    $rowct = $row->ct;
+    if (user_access('use public filepicker') && filepicker_variable_get('filepicker_public_enabled', 1)) {
       $row_data = array(
-        check_plain($row['group_name']),
-        check_plain($row['group_description']),
-        $row['ct'],
-        (($enabledlist && in_array($row['gid'], $enabledlist)) ? t('selected') : ''),
-        ($row['public'] ? t('Yes') : t('No')),
-        ($use_icons ? _filepicker_get_icon('edit', $editpath . $row['gid'], array('title' => t('Edit'))) : l(t('Edit'), $editpath . $row['gid'])),
-        ($use_icons ? _filepicker_get_icon('delete', $deletepath . $row['gid'], array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $row['gid'])),
+        check_plain($row->group_name),
+        check_plain($row->group_description),
+        ($rowct && $browsepath ?  l(format_plural($rowct, '1 file', '@count files'), $browsepath . $row->gid) : t('No files')),
+        (($enabledlist && in_array($row->gid, $enabledlist)) ? t('selected') : ''),
+        ($row->public ? t('Yes') : t('No')),
+        ($use_icons ? _filepicker_get_icon('edit', $editpath . $row->gid, array('title' => t('Edit'))) : l(t('Edit'), $editpath . $row->gid)),
+        ($use_icons ? _filepicker_get_icon('delete', $deletepath . $row->gid, array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $row->gid)),
       );
     }
     else {
       $row_data = array(
-        check_plain($row['group_name']),
-        check_plain($row['group_description']),
-        $row['ct'],
-        (($enabledlist && in_array($row['gid'], $enabledlist)) ? t('selected') : ''),
-        ($use_icons ? _filepicker_get_icon('edit', $editpath . $row['gid'], array('title' => t('Edit'))) : l(t('Edit'), $editpath . $row['gid'])),
-        ($use_icons ? _filepicker_get_icon('delete', $deletepath . $row['gid'], array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $row['gid'])),
+        check_plain($row->group_name),
+        check_plain($row->group_description),
+        ($rowct && $browsepath ?  l(format_plural($rowct, '1 file', '@count files'), $browsepath . $row->gid) : t('No files')),
+        (($enabledlist && in_array($row->gid, $enabledlist)) ? t('selected') : ''),
+        ($use_icons ? _filepicker_get_icon('edit', $editpath . $row->gid, array('title' => t('Edit'))) : l(t('Edit'), $editpath . $row->gid)),
+        ($use_icons ? _filepicker_get_icon('delete', $deletepath . $row->gid, array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $row->gid)),
       );
     }
     $rows[] = $row_data;
-    $rowcount++;
   }
-  return theme('filepicker_list', $header, $rows, $how_many, t('No groups found.'), '<div class="filep_groups_list">', '</div>', $label, $cols);
-
-}
-
-// not in use I think
-function filepicker_get_group_files_count($gid) {
-  $result = db_query("SELECT count(gid) as gidct FROM {filepicker_group_files} WHERE gid = %d", array($gid));
-  $row = db_fetch_array($result);
-  return $row['gidct'];
+  return theme('filepicker_list', array('header' => $header, 'rows' => $rows, 'max' => $max, 'message' => t('No groups found.'), 'pref' => '<div class="filep_groups_list">', 'suff' => '</div>', 'label' => $label));
 }
 

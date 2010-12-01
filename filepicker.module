@@ -26,7 +26,7 @@ function filepicker_help($path, $arg) {
  * Implementation of hook_perm().
  */
 function filepicker_perm() {
-  return array('administer filepicker', 'use filepicker', 'access own filepicker', 'use public filepicker', 'create public groups');
+  return array('administer filepicker', 'use filepicker', 'access own filepicker', 'use public filepicker', 'create public filepicker groups');
 }
 
 /**

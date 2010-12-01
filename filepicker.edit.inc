@@ -24,7 +24,7 @@ function filepicker_user_file_edit($file_id) {
 
 function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $account=FALSE) {
 
-  $form['file_name'] = array('#value' => $file->file_name);
+#  $form['file_name'] = array('#type' => 'markup', '#value' => $file->file_name);
 
   $form['title'] = array(
     '#type' => 'textfield',
@@ -88,13 +88,16 @@ function filepicker_edit_form_process($form, &$form_state) {
   }
 
   if ($src == 'admin') {
-    $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
+    #$outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
+    $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list';
   }
   elseif ($src == 'account') {
-    $outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;
+    #$outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;
+    $outpath = 'user/' . $user->uid . '/filepicker/files/list';
   }
   else {
-    $outpath = 'filepicker/list/' . $file_id;
+    #$outpath = 'filepicker/list/' . $file_id;
+    $outpath = 'filepicker/list';
   }
 
   $query = db_select('filepicker', 'i');
@@ -110,7 +113,7 @@ function filepicker_edit_form_process($form, &$form_state) {
       $num_updated = db_update('filepicker')
         ->fields(array(
           'file_title' => $title,
-          'img_date' => $date,
+          'file_date' => $date,
         ))
         ->condition('file_id', $file_id)
         ->execute();

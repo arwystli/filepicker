@@ -41,9 +41,6 @@ function filepicker_settings_form($form, &$form_state) {
     '#default_value' => filepicker_variable_get('filepicker_node_types_enabled', array_keys($node_types)),
     '#options' => $node_types,
   );
-#dd($node_types, 'node_types');
-#dd(array_keys($node_types), 'array keys');
-#dd(filepicker_variable_get('filepicker_node_types_enabled', array()));
 
   if (module_exists('comment')) {
     $form['filepicker_settings']['filepicker_comment_enabled'] = array(
@@ -123,29 +120,12 @@ function filepicker_settings_form($form, &$form_state) {
     '#maxlength' => 255,
     '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
   );
-
-  if (module_exists('colorbox')) {
-    $form['filepicker_module'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Module integration'),
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
-      '#weight' => -30,
-    );
-    $form['filepicker_module']['filepicker_colorbox_enable'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Enable Colorbox in Filepicker'),
-      '#description' => t('Setting this option will enable Colorbox in Filepicker.'),
-      '#return_value' => 1,
-      '#default_value' => filepicker_variable_get('filepicker_colorbox_enable', 0),
-    );
-  }
   // quota
   $form['filepicker_quotas'] = array(
     '#type' => 'fieldset',
     '#title' => t('User quotas'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => (filepicker_variable_get('filepicker_quota_enable', 1) ? TRUE : FALSE),
     '#weight' => -28,
   );
   $form['filepicker_quotas']['filepicker_quota_enable'] = array(
@@ -200,7 +180,7 @@ function filepicker_settings_form($form, &$form_state) {
     '#title' => t('Progress bar'),
     '#description' => t('Enable and configure progress bar.'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => (filepicker_variable_get('filepicker_upload_progress_enabled', 1) ? TRUE : FALSE),
     '#weight' => -18,
   );
   $form['filepicker_progress']['filepicker_upload_progress_enabled'] = array(
@@ -233,7 +213,7 @@ function filepicker_settings_form($form, &$form_state) {
     '#title' => t('Filepicker group settings'),
     '#description' => t('Enable and configure groups.'),
     '#collapsible' => TRUE,
-    '#collapsed' => FALSE,
+    '#collapsed' => (filepicker_variable_get('filepicker_groups_enabled', 1) ? TRUE : FALSE),
     '#weight' => -16,
   );
   $form['filepicker_groups']['filepicker_groups_enabled'] = array(
@@ -351,11 +331,8 @@ function filepicker_settings_form_submit($form, &$form_state) {
   filepicker_variable_set('filepicker_rows_per_page', $form_state['values']['filepicker_rows_per_page']);
   filepicker_variable_set('filepicker_dateformat_default', $form_state['values']['filepicker_dateformat_default']);
   filepicker_variable_set('filepicker_upload_extensions', $form_state['values']['filepicker_upload_extensions']);
-  if (module_exists('colorbox')) {
-    filepicker_variable_set('filepicker_colorbox_enable', $form_state['values']['filepicker_colorbox_enable']);
-    if (variable_get('colorbox_load', 0)) {
-      filepicker_variable_set('filepicker_advanced_colorbox', $form_state['values']['filepicker_advanced_colorbox']);
-    }
+  if (module_exists('colorbox') && variable_get('colorbox_load', 0)) {
+    filepicker_variable_set('filepicker_advanced_colorbox', $form_state['values']['filepicker_advanced_colorbox']);
   }
   filepicker_variable_set('filepicker_quota_enable', $form_state['values']['filepicker_quota_enable']);
   filepicker_variable_set('filepicker_quota_byrole', $form_state['values']['filepicker_quota_byrole']);
@@ -413,7 +390,6 @@ function filepicker_admin_users_list($dir, $label='') {
 
   foreach ($records AS $row) {
     $account = user_load($row->uid);
-    #$allcount = _filepicker_user_has_img($account);
     $allcount = $row->ct;
     $groupcount = _filepicker_user_has_groups('all', $account);
     $usedbytesprint = _filepicker_bkmg(filepicker_get_all_bytes($account)+1);
@@ -426,7 +402,7 @@ function filepicker_admin_users_list($dir, $label='') {
         }
       }
       else {
-        $quota = (isset($account->data['filepicker_quota']) ? $account->data['filepicker_quota'] : filepicker_variable_get('filepicker_quota_default', 0));
+        $quota = filepicker_variable_get('filepicker_quota_default', filepicker_variable_get('filepicker_quota_default', 0), $account->uid);
       }
     }
 
@@ -683,8 +659,8 @@ function filepicker_admin_files() {
   drupal_add_css(FILEPICKER_PATH . '/filepicker.css');
 
   $action = FALSE;
-  $imgaction = FALSE;
-  $img_id = FALSE;
+  $fileaction = FALSE;
+
   $content = '';
   if (! arg(5) ) {
     filepicker_variable_del('filepicker_currentuser');

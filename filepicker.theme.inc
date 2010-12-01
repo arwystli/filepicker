@@ -316,7 +316,7 @@ function theme_filepicker_view($variables) {
 function theme_filepicker_file_edit_header($variables) {
   $file = $variables['file'];
   $source = $variables['source'];
-  $output = '<div class="filep_help">' . t('Edit file details') . '</div>';
+  $output = '<div class="filep_help">' . t('Edit details for %f', array('%f' => $file->file_name )) . '</div>';
   return $output;
 }
 
@@ -473,8 +473,8 @@ function theme_filepicker_edit_form($variables) {
 function theme_filepicker_groups_form($variables) {
   $form = $variables['form'];
   $output = '';
-  $form['groupsave']['group_public_roles']['#prefix'] = '<div id="wrap-group-public-roles">';
-  $form['groupsave']['group_public_roles']['#suffix'] = '</div>';
+#  $form['groupsave']['group_public_roles']['#prefix'] = '<div id="wrap-group-public-roles">';
+#  $form['groupsave']['group_public_roles']['#suffix'] = '</div>';
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -545,13 +545,14 @@ function theme_filepicker_settings_form($variables) {
   $output = '';
   $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import">';
   $form['filepicker_import']['filepicker_import_delete']['#suffix'] = '</div>';
-  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups">';
-  $form['filepicker_groups']['filepicker_groups_in_upload_enabled']['#suffix'] = '</div>';
+#  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups">';
+#  $form['filepicker_groups']['filepicker_groups_in_upload_enabled']['#suffix'] = '</div>';
   $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress">';
   $form['filepicker_progress']['filepicker_upload_progress_message']['#suffix'] = '</div>';
-  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap_filepicker_quota_role">';
+  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap-filepicker-quota-role">';
   $form['filepicker_quotas']['filepicker_quota_role']['#suffix'] = '</div>';
-
+  $form['filepicker_groups']['filepicker_publicroles_enabled']['#prefix'] = '<div id="wrap-group-public-roles">';
+  $form['filepicker_groups']['filepicker_publicroles_enabled']['#suffix'] = '</div>';
   $output .= drupal_render_children($form);
   return $output;
 }

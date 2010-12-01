@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20010-12-01
+------------------------------------
+by hutch, numerous bugs fixed
+
 File Picker for D7 in DRUPAL-7--1, 20010-11-30
 ------------------------------------
 by hutch, fixed block paste

@@ -66,17 +66,17 @@ function filepicker_upload_progress_hide_timeout() {
 
       // form enhancement
       if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-        $("#wrap_filepicker_quota_role").show();
+        $("#wrap-filepicker-quota-role").show();
       }
       else {
-        $("#wrap_filepicker_quota_role").hide();
+        $("#wrap-filepicker-quota-role").hide();
       }
       $("#edit-filepicker-quota-byrole").change(function() {
         if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-          $("#wrap_filepicker_quota_role").show();
+          $("#wrap-filepicker-quota-role").show();
         }
         else {
-          $("#wrap_filepicker_quota_role").hide();
+          $("#wrap-filepicker-quota-role").hide();
         }
       });
 
@@ -111,20 +111,21 @@ function filepicker_upload_progress_hide_timeout() {
         }
       });
 
-      if ($("#edit-group-public").attr('checked')) {
+      if ($("#edit-filepicker-public-enabled").attr('checked')) {
         $("#wrap-group-public-roles").show();
       }
       else {
         $("#wrap-group-public-roles").hide();
       }
-      $("#edit-group-public").change(function() {
-        if ($("#edit-group-public").attr('checked')) {
+      $("#edit-filepicker-public-enabled").change(function() {
+        if ($("#edit-filepicker-public-enabled").attr('checked')) {
           $("#wrap-group-public-roles").show();
         }
         else {
           $("#wrap-group-public-roles").hide();
         }
       });
+
     }
   };
 })(jQuery);

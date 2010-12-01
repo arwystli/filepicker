@@ -127,11 +127,11 @@ function filepicker_upload_form_submit($form, &$form_state) {
       // Add DIRECTORY_SEPARATORS here because drupals' functions remove trailing slashes
       $destdir .= DIRECTORY_SEPARATOR;
       $destination = $destdirscheme;
-#dd($destination, 'destination');
+
       $filemoved = filepicker_copy_uploaded_file($destination, 'file_upload');
       if ($filemoved) {
         $file = filepicker_get_uploaded_file_name($destination, 'file_upload');
-#dd($file, 'file');
+
         $title = htmlspecialchars($form_state['values']['title']);
         $nextfileid = filepicker_insert_file($user->uid, $file, $title);
         if ($nextfileid) {
@@ -189,8 +189,6 @@ function filepicker_copy_uploaded_file($destination, $name) {
 
   if ($name && isset($_FILES['files']['tmp_name'][$name]) ) {
     $source = $_FILES['files']['tmp_name'][$name];
-#dd($source, 'source');
-#dd(FILEPICKER_FILE_SCHEME . $destination, 'filepicker_copy_uploaded_file');
 
     $newsrc = file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $destination, FILE_EXISTS_RENAME);
     if ($newsrc) {
@@ -198,11 +196,9 @@ function filepicker_copy_uploaded_file($destination, $name) {
       // DIRECTORY_SEPARATOR for making directories. This causes problems on
       // Windows machines. Not sure if this is still true in D7
       $newsrc = str_replace('/', DIRECTORY_SEPARATOR, $newsrc);
-#dd($newsrc, 'filepicker_copy_uploaded_file newsrc');
 
       $file = filepicker_get_uploaded_file_name($destination, $name);
       $destination .= $file;
-#dd($destination, 'filepicker_copy_uploaded_file 2');
 
       file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
       return $file;

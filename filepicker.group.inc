@@ -75,7 +75,7 @@ function filepicker_groups_form($form, &$form_state, $record=0, $account=FALSE) 
     '#description' => t('Maximum 50 characters'),
     '#required' => FALSE
   );
-  if (user_access('use public filepicker') && user_access('create public groups') && filepicker_variable_get('filepicker_public_enabled', 1)) {
+  if (user_access('use public filepicker') && user_access('create public filepicker groups') && filepicker_variable_get('filepicker_public_enabled', 1)) {
     $form['groupsave']['group_public'] = array(
       '#type' => 'checkbox',
       '#title' => t('Public'),

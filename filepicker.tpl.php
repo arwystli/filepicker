@@ -42,7 +42,7 @@
         }
       ?>
     </div>
-    <div id="imgp">
+    <div id="filep">
       <?php echo $messages ?>
       <?php echo $content; ?>
     </div>

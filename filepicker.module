@@ -1079,10 +1079,6 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     $rowct++;
   } // end of while loop
 
-#  $form['options']['cols'] = array(
-#    '#type' => 'hidden',
-#    '#value' => $cols,
-#  );
   $form['options']['returnpath'] = array(
     '#type' => 'value',
     '#value' => $returnpath,
@@ -1357,12 +1353,12 @@ function _filepicker_list_admin($src="iframe", $account=FALSE, $public=FALSE, $r
     }
   }
 
-#  if ($src != 'admin' && filepicker_variable_get('filepicker_show_list_search_form', filepicker_variable_get('filepicker_show_list_search_form', 1), $user->uid) ) {
+  if ($src != 'admin' && filepicker_variable_get('filepicker_show_list_search_form', filepicker_variable_get('filepicker_show_list_search_form', 1), $user->uid) ) {
     $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
-#  }
-#  elseif (filepicker_variable_get('filepicker_show_list_search_form', 1)) {
-#    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
-#  }
+  }
+  elseif (filepicker_variable_get('filepicker_show_list_search_form', 1)) {
+    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
+  }
 
   $forms['list_admin'] = render(drupal_get_form('filepicker_list_admin_form', $src, $account, $public, $range));
   $pref = '<div class="filep_files_list">';
@@ -1563,12 +1559,14 @@ function filepicker_get_grouplist($account = FALSE) {
   }
 
   $grouplist = array('0' => 'All');
+
   $query = db_select('filepicker_user_groups', 'g');
   $query->fields('g', array('gid', 'group_name', 'public'));
   $query->distinct();
   $query->join('filepicker_group_files', 'i', 'g.gid = i.gid');
   $query->condition('g.uid', $user->uid);
   $rows = $query->execute();
+
   foreach ($rows AS $row) {
     $grouplist[$row->gid] = $row->group_name . (user_access('use public filepicker') && filepicker_variable_get('filepicker_public_enabled', 1) ? ($row->public ? ' - ' . t('Public') : ' - ' . t('Private')) : '');
   }
@@ -1586,11 +1584,13 @@ function filepicker_has_grouplist($account = FALSE) {
   else {
     global $user;
   }
+
   $query = db_select('filepicker_user_groups', 'g');
   $query->addExpression('COUNT(DISTINCT g.gid)', 'ct');
   $query->join('filepicker_group_files', 'i', 'g.gid = i.gid');
   $query->condition('g.uid', $user->uid);
   $row = $query->execute()->fetchObject();
+
   return $row->ct;
 }
 
@@ -1607,10 +1607,12 @@ function filepicker_get_public_grouplist($account = FALSE, $admin = FALSE) {
   }
   $grouplist = array('0' => 'All');
   $tmp = '';
-  $query = db_select('filepicker_user_groups', 'g');
-  $query->fields('g', array('gid', 'group_name', 'avail_roles'));
-  $query->condition('g.public', 1);
-  $rows = $query->execute();
+
+  $rows = db_select('filepicker_user_groups', 'g')
+    ->fields('g', array('gid', 'group_name', 'avail_roles'))
+    ->condition('g.public', 1)
+    ->execute();
+
   $rowct = 0;
   foreach ($rows AS $row) {
     $tmp[$rowct]['gid'] = $row->gid;
@@ -1929,10 +1931,17 @@ function filepicker_group_files_form_submit($form, &$form_state) {
 function filepicker_get_file_groups($file_id) {
 
   $data = array();
+/*
   $query = db_select('filepicker_group_files', 'i');
   $query->fields('i', array('gid'));
   $query->condition('i.file_id', $file_id);
   $rows = $query->execute();
+*/
+  $rows = db_select('filepicker_group_files', 'i')
+    ->fields('i', array('gid'))
+    ->condition('i.file_id', $file_id)
+    ->execute();
+
   foreach ($rows AS $row) {
     $data[] = $row->gid;
   }
@@ -1940,12 +1949,18 @@ function filepicker_get_file_groups($file_id) {
 }
 
 function filepicker_get_files_by_group($gid) {
-
+/*
   $query = db_select('filepicker_group_files', 'i');
   $query->fields('i', 'file_id');
   $query->condition('i.gid', $gid);
-  $ct = 0;
   $rows = $query->execute();
+*/
+  $rows = db_select('filepicker_group_files', 'i')
+    ->fields('i', 'file_id')
+    ->condition('i.gid', $gid)
+    ->execute();
+
+  $ct = 0;
   foreach ($rows AS $row) {
     $data[] = $row->file_id;
     $ct++;
@@ -1988,11 +2003,12 @@ function _filepicker_get_file($file_id, $checkuser=TRUE, $account = FALSE) {
     global $user;
   }
 
-  $query = db_select('filepicker', 'i');
-  $query->fields('i', array('file_id', 'uid', 'file_name', 'file_title', 'file_date'));
-  $query->range(0, 1);
-  $query->condition('file_id', $file_id);
-  $file = $query->execute()->fetchObject();
+  $file = db_select('filepicker', 'i')
+    ->fields('i', array('file_id', 'uid', 'file_name', 'file_title', 'file_date'))
+    ->range(0, 1)
+    ->condition('file_id', $file_id)
+    ->execute()
+    ->fetchObject();
 
   if ( count($file) ) {
     if (($file->uid != $user->uid) && $checkuser) {
@@ -2001,10 +2017,12 @@ function _filepicker_get_file($file_id, $checkuser=TRUE, $account = FALSE) {
       return FALSE;
     }
     // get user name
-    $query = db_select('users', 'u');
-    $query->fields('u', array('name'));
-    $query->condition('uid', $file->uid);
-    $name = $query->execute()->fetchObject();
+    $name = db_select('users', 'u')
+      ->fields('u', array('name'))
+      ->condition('uid', $file->uid)
+      ->execute()
+      ->fetchObject();
+
     $file->name = $name;
     return $file;
   }
@@ -2181,7 +2199,7 @@ function _filepicker_get_bytes($file_id, $account = FALSE) {
 }
 
 function filepicker_get_all_bytes($account = FALSE) {
-// TODO update to db_select
+
   $tot = 0;
   $olduid = 0;
   if (is_object($account) ) {
@@ -2496,63 +2514,6 @@ function filepicker_list_search_form_reset_func($admin = FALSE) {
     }
 }
 
-/*
-function _filepicker_search_opts($searchs) {
-  $search_opts = variable_get('filepicker_list_search_opts', array());
-  if (! isset($search_opts['name'])) {
-    $search_opts['name'] = FALSE;
-  }
-  if (! isset($search_opts['desc'])) {
-    $search_opts['desc'] = FALSE;
-  }
-  if (! isset($search_opts['title'])) {
-    $search_opts['title'] = FALSE;
-  }
-
-  if (   $search_opts['name']
-    && ! $search_opts['desc']
-    && ! $search_opts['title']) {
-    $s = " AND i.file_name LIKE '%%%s%%' ";
-    $sarr = array($searchs);
-  }
-  elseif ( $search_opts['name']
-    &&     $search_opts['desc']
-    &&   ! $search_opts['title']) {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_description LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs);
-  }
-  elseif ( $search_opts['name']
-    &&   ! $search_opts['desc']
-    &&     $search_opts['title']) {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs);
-  }
-  elseif (! $search_opts['name']
-    &&      $search_opts['desc']
-    &&      $search_opts['title']) {
-    $s = " AND (i.file_description LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs);
-  }
-  elseif (! $search_opts['name']
-    &&    ! $search_opts['desc']
-    &&      $search_opts['title']) {
-    $s = " AND i.file_title LIKE '%%%s%%' ";
-    $sarr = array($searchs);
-  }
-  elseif (! $search_opts['name']
-    &&      $search_opts['desc']
-    &&    ! $search_opts['title']) {
-    $s = " AND i.file_description LIKE '%%%s%%' ";
-    $sarr = array($searchs);
-  }
-  else {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_description LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs, $searchs);
-  }
-  return (array(0 => $s, 1 => $sarr));
-}
-*/
-###
 function _filepicker_search_opts2($searchs, $account) {
 
   if ($account) {
@@ -2592,8 +2553,6 @@ function _filepicker_search_opts2($searchs, $account) {
   }
   return ($conditions);
 }
-
-###
 
 /**
  * Function to insert the file data into db
@@ -2743,37 +2702,13 @@ function filepicker_variable_set($varname, $value, $uid = FALSE) {
   if (!$uid) {
     $uid = 0;
   }
-  // from bootstrap
-
-  db_merge('filepicker_variables')
-    ->key(array('name' => $varname, 'uid' => $uid))
-    ->fields(array('value' => serialize($value), 'uid' => $uid))
-    ->execute();
-
-
-/*
-  // check if it exists, if not insert else update
-  $oldvalue = filepicker_variable_get($varname, FALSE, $uid);
-  if ($oldvalue) {
-    // update
-    db_update('filepicker_variables')
-      ->fields(array('value' => serialize($value)))
-      ->condition('name', $varname)
-      ->condition('uid', $uid)
+  if ($varname) {
+    // from bootstrap
+    db_merge('filepicker_variables')
+      ->key(array('name' => $varname, 'uid' => $uid))
+      ->fields(array('value' => serialize($value), 'uid' => $uid))
       ->execute();
   }
-  else {
-    // insert
-    db_insert('filepicker_variables')
-      ->fields(
-        array(
-          'name' => $varname,
-          'value' => serialize($value),
-          'uid' => $uid
-        )
-      )->execute();
-  }
-*/
 }
 
 function filepicker_variable_del($varname, $uid = FALSE) {

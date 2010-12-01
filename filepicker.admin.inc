@@ -901,8 +901,8 @@ function filepicker_admin_import() {
       }
     }
   }
-  if ($msg = $_SESSION['filepicker_import_status']) {
-    drupal_set_message($msg);
+  if (isset($_SESSION['filepicker_import_status'])) {
+    drupal_set_message($_SESSION['filepicker_import_status']);
     unset($_SESSION['filepicker_import_status']);
   }
   return $content;

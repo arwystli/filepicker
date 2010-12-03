@@ -120,22 +120,6 @@ function filepicker_settings_form($form_state) {
     '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
   );
 
-  if (module_exists('colorbox')) {
-    $form['filepicker_module'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Module integration'),
-      '#collapsible' => TRUE,
-      '#collapsed' => FALSE,
-      '#weight' => -30,
-    );
-    $form['filepicker_module']['filepicker_colorbox_enable'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Enable Colorbox in Filepicker'),
-      '#description' => t('Setting this option will enable Colorbox in Filepicker.'),
-      '#return_value' => 1,
-      '#default_value' => variable_get('filepicker_colorbox_enable', 0),
-    );
-  }
   // quota
   $form['filepicker_quotas'] = array(
     '#type' => 'fieldset',

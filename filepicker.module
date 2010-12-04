@@ -2654,10 +2654,10 @@ function filepicker_get_info($file) {
 }
 
 function filepicker_validate_is_file($filename) {
-#  $mimetype = file_get_mimetype($filename);
-#  if ($mimetype == 'application/octet-stream') {
-#    return '';
-#  }
+  $mimetype = file_get_mimetype($filename);
+  if ($mimetype == 'application/octet-stream') {
+    return '';
+  }
   if (preg_match("!.*\.(.*)$!i", $filename, $matches)) {
     if ($matches[1]) {
       $extensions = explode(' ', filepicker_variable_get('filepicker_upload_extensions', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));

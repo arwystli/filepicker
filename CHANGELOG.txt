@@ -1,6 +1,11 @@
 // $Id$
 // $Name$
 
+File Picker  for D6 in DRUPAL-6--1, 20010-12-04
+------------------------------------
+by hutch, fixed $form_state reference bug, 
+  preg_match bug in extension detection
+
 File Picker  for D6 in DRUPAL-6--1, 20010-12-03
 ------------------------------------
 by hutch, removed colorbox_enable option

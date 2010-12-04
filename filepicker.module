@@ -466,7 +466,7 @@ function filepicker_access_use_group() {
 /**
  * Implementation of hook_form_alter().
  */
-function filepicker_form_alter(&$form, $form_state, $form_id) {
+function filepicker_form_alter(&$form, &$form_state, $form_id) {
   global $user;
 
   $node_type = FALSE;
@@ -2666,7 +2666,7 @@ function filepicker_validate_is_file($filename) {
   if ($mimetype == 'application/octet-stream') {
     return '';
   }
-  if (preg_match('!\.(.*)$!i', $filename, $matches)) {
+  if (preg_match('!.*\.(.*)$!i', $filename, $matches)) {
     if ($matches[1]) {
       // TODO add a restricted list here
       $extensions = explode(' ', variable_get('filepicker_upload_extensions', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));

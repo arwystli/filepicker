@@ -65,7 +65,7 @@ function filepicker_import_dir_check($account = FALSE) {
  * @return
  *   Returns the file form.
  */
-function filepicker_import_form($form_state, $total, $account=FALSE, $admin = FALSE) {
+function filepicker_import_form(&$form_state, $total, $account=FALSE, $admin = FALSE) {
   if ($account) {
     $user = $account;
   }
@@ -165,7 +165,7 @@ function filepicker_import_form_submit($form, &$form_state) {
   }
 }
 
-function filepicker_import_batch($form_state, $selected, $options, $account, &$context) {
+function filepicker_import_batch(&$form_state, $selected, $options, $account, &$context) {
   if ($account) {
     $user = $account;
   }
@@ -251,7 +251,7 @@ function filepicker_import_finished($success, $results, $operations) {
  * @return
  *   Returns the import folder form.
  */
-function filepicker_import_dir_form($form_state) {
+function filepicker_import_dir_form(&$form_state) {
 
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',

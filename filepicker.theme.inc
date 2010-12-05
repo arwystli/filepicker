@@ -70,7 +70,6 @@ function filepicker_theme() {
     'filepicker_file_edit_header' => array(
       'arguments' => array(
         'file' => array(),
-        'source' => "",
       ),
     ),
     'filepicker_quota' => array(
@@ -326,16 +325,15 @@ function theme_filepicker_quota_message($message1, $message2, $form, $label, $he
 
 function theme_filepicker_view($file, $filepath, $info) {
   $output = '<div id="filep_file_view">';
-  $output .= '<div id="filep_file_view_name">' . $file['file_name'] . '</div>';
-  $output .= ($file['file_title'] ? '<div id="filep_file_view_title">'. $file['file_title'] .'</div>' : '');
-  $output .= '<div>';
-  $output .= t('Size')   .": ". $info['file_size'] . '</div>';
+  $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file['file_name'] . '</div>';
+  $output .= ($file['file_title'] ? '<div id="filep_file_view_title">'. t('Title') .": ". $file['file_title'] .'</div>' : '');
+  $output .= '<div id="filep_file_view_info">' . t('Size') .": ". _filepicker_bkmg($info['file_size']) .'</div>';
   $output .= '</div>';
   return $output;
 }
 
-function theme_filepicker_file_edit_header($file, $source) {
-  $output = '<div class="filep_help">'. t('Edit file details') . '</div>';
+function theme_filepicker_file_edit_header($file) {
+  $output = '<div class="filep_help">' . t('Edit details for %f', array('%f' => $file['file_name'])) . '</div>';
   return $output;
 }
 
@@ -391,10 +389,8 @@ function theme_filepicker_insert($file='', $public=FALSE, $form1='', $form2='') 
   if ($file) {
     $filepath = filepicker_get_file_path($file, ($public ? array('name' => $file['name'] , 'uid' => $file['uid']) : FALSE ));
     $output .= '<div class="filep_help">'. t('Choose the settings you want, place the cursor in the Body box above and Insert file.') .'</div>';
-    $output .= '<div id="filep_file_view_name">' . $file['file_name'] . '</div>';
-    if ($file['file_title']) {
-      $output .= '<div id="filep_file_holder_title">'. check_plain($file['file_title']) .'</div>';
-    }
+    $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file['file_name'] . '</div>';
+    $output .= ($file['file_title'] ? '<div id="filep_file_view_title">'. t('Title') .": ". $file['file_title'] .'</div>' : '');
     $output .= $form1;
     $output .= $form2;
   }

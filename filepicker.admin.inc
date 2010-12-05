@@ -20,7 +20,7 @@ function filepicker_settings_page($op = NULL) {
  * @return
  *   Returns the form.
  */
-function filepicker_settings_form($form_state) {
+function filepicker_settings_form(&$form_state) {
   drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
   drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
 
@@ -445,7 +445,7 @@ function filepicker_admin_view($file_id, $account = FALSE) {
  * @return
  *   Returns the form.
  */
-function filepicker_admin_file_form($form_state, $file_id, $account = FALSE) {
+function filepicker_admin_file_form(&$form_state, $file_id, $account = FALSE) {
   if ($account) {
     $form['account'] = array(
       '#type' => 'value',
@@ -482,7 +482,7 @@ function filepicker_admin_file_form_submit($form, &$form_state) {
  * @return
  *   Returns the form.
  */
-function filepicker_user_search_form($form_state, $dir) {
+function filepicker_user_search_form(&$form_state, $dir) {
   $form['filepicker_currentuser'] = array(
     '#type' => 'textfield',
     '#title' => t('Users'),
@@ -639,8 +639,7 @@ function filepicker_admin_files() {
       if ($fileaction == 'edit' ) {
         module_load_include('inc', 'filepicker', 'filepicker.edit');
         $file =  _filepicker_get_file($file_id, FALSE, $account);
-        $filesrc = filepicker_get_file_path($file, array('uid' => $account->uid , 'name' => $account->name) );
-        $content .= theme('filepicker_file_edit_header', $file, $filesrc);
+        $content .= theme('filepicker_file_edit_header', $file);
         $content .= drupal_get_form('filepicker_edit_form', $file, 'admin', $account);
       }
       elseif ($fileaction == 'delete') {
@@ -721,7 +720,7 @@ function filepicker_admin_files() {
  * @return
  *   Returns the form.
  */
-function filepicker_group_search_form($form_state, $dir = 'groups') {
+function filepicker_group_search_form(&$form_state, $dir = 'groups') {
   $form['filepicker_currentgroup'] = array(
     '#type' => 'textfield',
     '#title' => t('Groups'),

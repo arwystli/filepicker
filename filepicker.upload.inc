@@ -30,7 +30,7 @@ function filepicker_user_upload() {
   return $content;
 }
 
-function filepicker_upload_form($form_state, $account=FALSE, $admin = FALSE) {
+function filepicker_upload_form(&$form_state, $account=FALSE, $admin = FALSE) {
   if ($account) {
     $user = $account;
   }

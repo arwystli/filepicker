@@ -24,8 +24,6 @@ function filepicker_user_file_edit($file_id) {
 
 function filepicker_edit_form(&$form_state, $file, $src='iframe', $account=FALSE) {
 
-  $form['file_name'] = array('#value' => $file['file_name']);
-
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Link text'),
@@ -135,8 +133,7 @@ function _filepicker_edit_file($file_id, $src='iframe', $account=FALSE) {
   $content = '';
   $file =  _filepicker_get_file($file_id, ($src=='admin'? FALSE: TRUE), $account);
   if ($file) {
-    $filesrc = filepicker_get_file_path($file, 'browser', $userdir);
-    $content .= theme('filepicker_file_edit_header', $file, $filesrc);
+    $content .= theme('filepicker_file_edit_header', $file);
     $content .= drupal_get_form('filepicker_edit_form', $file, $src, $account);
   }
   else {

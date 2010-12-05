@@ -618,7 +618,7 @@ function filepicker_file_select($file_id, $showgroup=TRUE, $public = FALSE, $acc
  * @return
  *   Returns the file form.
  */
-function filepicker_file_form($form_state, $file, $filepath, $public = FALSE) {
+function filepicker_file_form(&$form_state, $file, $filepath, $public = FALSE) {
   global $user;
   $form['insert'] = array(
     '#type' => 'button',
@@ -720,33 +720,6 @@ function _filepicker_file_delete($file_id, $account=FALSE, $src='iframe') {
 }
 
 /**
- * Menu callback; presents the file page for filepicker
- */
-/*
-function filepicker_file_page($file_id) {
-  global $base_url;
-
-  $content = '';
-  $result = db_query_range("SELECT i.*, u.name FROM {filepicker} AS i JOIN {users} AS u USING (uid) WHERE file_id = '%d'", $file_id, 0, 1);
-  $file = db_fetch_array($result);
-  if ($file && is_array($file) && count($file)) {
-
-    drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-    drupal_set_title($file['file_title']);
-    // js link
-    $account = user_load(array('uid' => $file['uid']));
-    $link = (isset($account->filepicker_default_pagelink) ? $account->filepicker_default_pagelink : variable_get('filepicker_default_pagelink', 1));
-    $content = theme('filepicker_fullpage', $file, filepicker_get_path(TRUE, $file) . $file['file_name'], $link);
-  }
-  else {
-    drupal_set_message(t('File not found in page.'), 'error');
-  }
-
-  return $content;
-}
-*/
-
-/**
  * some common utilities
  */
 function filepicker_get_path($url = FALSE, $userdir = FALSE) {
@@ -799,7 +772,7 @@ function filepicker_strip_messages($msg) {
  * list of files with bulk operations
  */
 function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE, $public=FALSE, $range=1) {
-#dd("src=" . $src . " account=" . $account . " public=" . $public . " range=" . $range, 'filepicker_list_admin_form');
+
   global $base_url;
   if ($account) {
     $user = $account;
@@ -990,7 +963,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
     }
     $result = pager_query($sql, $how_many, 0, NULL, $rarr);
   }
-#dd($sql, 'sql');
+
   if ($admin || ! $public) {
     // bulk ops form
     $form['options'] = array(
@@ -1030,10 +1003,8 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
   while ($row = db_fetch_array($result)) {
     // file_id file_name  file_title
     $file_name = check_plain($row['file_name']);
-    #$filepath = $base_url . DIRECTORY_SEPARATOR . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR . DIRECTORY_SEPARATOR . $row['uid'] . DIRECTORY_SEPARATOR . $file_name;
-    $filelink = l($file_name, $filepath . $row['file_id']);
     $file_id = $row['file_id'];
-    #$file_date = date('Y-m-d H:i:s', $row['file_date']);
+    $filelink = l($file_name, $filepath . $file_id);
     $file_date = format_date($row['file_date'], variable_get('filepicker_dateformat_default', 'medium'));
 
     if ($public && $src == 'admin') {
@@ -1946,74 +1917,6 @@ function filepicker_insert_group_file($record) {
   }
 }
 
-/**
- * Function to display the list order form
- *
- * @param $account
- *   Optional user account object.
- * @param $admin
- *   Optional admin flag.
- * @return
- *   Returns the listr order form.
- */
-/*
-function filepicker_list_order_form(&$form_state, $account = FALSE, $admin = FALSE) {
-  if ($account) {
-    $user = $account;
-  }
-  else {
-    global $user;
-  }
-
-  $default_order = variable_get('filepicker_default_list_order', 'file_id DESC');
-  if ($admin) {
-    $order = variable_get('filepicker_list_order', $default_order);
-    $form['admin'] = array(
-      '#type' => 'value',
-      '#value' => TRUE,
-    );
-  }
-  else {
-    $order = (isset($user->filepicker_list_order) ? $user->filepicker_list_order : $default_order );
-  }
-  $orderlist = array(
-    'file_id DESC' => t('Newest first'),
-    'file_id ASC' => t('Newest last'),
-    'file_date DESC' => t('Edited first'),
-    'file_date ASC' => t('Edited last'),
-    'file_name' => t('By name'),
-  );
-  $default_order = variable_get('filepicker_default_list_order', 'file_id DESC');
-  $form['filepicker_list_order'] = array(
-    '#type' => 'select',
-    '#default_value' => $order,
-    '#options' => $orderlist,
-    '#title' => t('Order'),
-  );
-  $form['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Go'),
-  );
-
-  return $form;
-}
-*/
-
-/**
- * Submit form
- */
-/*
-function filepicker_list_order_form_submit($form, &$form_state) {
-  if (isset($form_state['values']['admin'])) {
-    variable_set('filepicker_list_order', $form_state['values']['filepicker_list_order']);
-  }
-  else {
-    global $user;
-    user_save($user, array('filepicker_list_order' => $form_state['values']['filepicker_list_order']));
-  }
-}
-*/
-
 function filepicker_get_files_directory() {
   $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR;
   $dir = $drupaldir . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
@@ -2656,8 +2559,8 @@ function filepicker_group_files_count($gid) {
 
 function filepicker_get_info($file) {
 
-  $filepath = filepicker_get_path(FALSE, $file) . $file['file_name'];
-  $info['file_size'] = filesize($filepath);
+  $filepath = filepicker_get_path(FALSE, array('uid' => $file['uid']));
+  $info['file_size'] = filesize($filepath . $file['file_name']);
   return $info;
 }
 

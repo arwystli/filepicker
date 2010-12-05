@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D6 in DRUPAL-6--1, 20010-12-05
+------------------------------------
+by hutch, fixed filesize, pathing in various places
+
 File Picker  for D6 in DRUPAL-6--1, 20010-12-04
 ------------------------------------
 by hutch, fixed $form_state reference bug, 
@@ -10,9 +14,6 @@ File Picker  for D6 in DRUPAL-6--1, 20010-12-03
 ------------------------------------
 by hutch, removed colorbox_enable option
 
-
 File Picker  for D6 in DRUPAL-6--1, 20010-12-01
 ------------------------------------
 by hutch, fixed imagepicker incompatibility
-
-

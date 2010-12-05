@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20010-12-05
+------------------------------------
+by hutch, fixed filesize, pathing in various places
+
 File Picker for D7 in DRUPAL-7--1, 20010-12-04
 ------------------------------------
 by hutch, fixed $form_state reference bug,

@@ -60,25 +60,20 @@
 #filep_edit_form .form-item {
   margin-top: 0;
 }
-#filep_file_holder_title {
-  padding: 10px;
-  font-weight: bold;
-}
-#filep_file_holder_description {
-  font-style: italic
-}
+
 #filep_file_view {
   margin: 15px 15px 15px 15px;
 }
 #filep_file_view_title {
-  font-weight: bold;
+  padding: 2px 0px 2px 0px;
 }
-#filep_file_view_file {
+#filep_file_view_name {
+  padding: 2px 0px 2px 0px;
+}
+#filep_file_view_info {
+  padding: 2px 0px 2px 0px;
+}
 
-}
-#filep_file_view_desc {
-  font-style: italic;
-}
 .filep_help {
   padding: 2px 0px 4px 4px;
   margin-left: 20px;

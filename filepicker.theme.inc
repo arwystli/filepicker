@@ -241,7 +241,6 @@ function theme_filepicker_iframe($variables) {
   return $content;
 }
 
-#function theme_filepicker_list($header, $rows, $max, $message="", $pref="", $suff="", $label="", $cols = 1) {
 function theme_filepicker_list($variables) {
   $header = $variables['header'];
   $rows =  $variables['rows'];
@@ -305,10 +304,9 @@ function theme_filepicker_view($variables) {
   $filepath = $variables['filepath'];
   $info = $variables['info'];
   $output = '<div id="filep_file_view">';
-  $output .= '<div id="filep_file_view_name">' . $file->file_name . '</div>';
-  $output .= ($file['file_title'] ? '<div id="filep_file_view_title">' . $file->file_title . '</div>' : '');
-  $output .= '<div>';
-  $output .= t('Size') . ": " . $info['file_size'] . '</div>';
+  $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file->file_name . '</div>';
+  $output .= ($file->file_title ? '<div id="filep_file_view_title">'. t('Title') .": ". $file->file_title .'</div>' : '');
+  $output .= '<div id="filep_file_view_info">' . t('Size') .": ". _filepicker_bkmg($info['file_size']) .'</div>';
   $output .= '</div>';
   return $output;
 }
@@ -394,10 +392,8 @@ function theme_filepicker_insert($variables) {
   if ($file) {
     $filepath = filepicker_get_file_path($file, ($public ? $file->uid : FALSE ));
     $output .= '<div class="filep_help">' . t('Choose the settings you want, place the cursor in the Body box above and Insert file.') . '</div>';
-    $output .= '<div id="filep_file_view_name">' . $file->file_name . '</div>';
-    if ($file->file_title) {
-      $output .= '<div id="filep_file_holder_title">' . check_plain($file->file_title) . '</div>';
-    }
+    $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file->file_name . '</div>';
+    $output .= ($file->file_title ? '<div id="filep_file_view_title">'. t('Title') .": ". $file->file_title .'</div>' : '');
     $output .= $form1;
     $output .= $form2;
   }
@@ -473,8 +469,6 @@ function theme_filepicker_edit_form($variables) {
 function theme_filepicker_groups_form($variables) {
   $form = $variables['form'];
   $output = '';
-#  $form['groupsave']['group_public_roles']['#prefix'] = '<div id="wrap-group-public-roles">';
-#  $form['groupsave']['group_public_roles']['#suffix'] = '</div>';
   $output .= drupal_render_children($form);
   return $output;
 }
@@ -545,8 +539,6 @@ function theme_filepicker_settings_form($variables) {
   $output = '';
   $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import">';
   $form['filepicker_import']['filepicker_import_delete']['#suffix'] = '</div>';
-#  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups">';
-#  $form['filepicker_groups']['filepicker_groups_in_upload_enabled']['#suffix'] = '</div>';
   $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress">';
   $form['filepicker_progress']['filepicker_upload_progress_message']['#suffix'] = '</div>';
   $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap-filepicker-quota-role">';
@@ -560,8 +552,6 @@ function theme_filepicker_settings_form($variables) {
 function theme_filepicker_list_admin_form($variables) {
   $form = $variables['form'];
   $output = '';
-  #$src = $form['options']['src']['#value'];
-  #$cols = $form['options']['cols']['#value'];
   $public = $form['options']['public']['#value'];
   if ($public) {
     $rows = $form['files']['#options'];

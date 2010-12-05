@@ -86,7 +86,7 @@ function filepicker_user_view($file_id) {
     $form3 = '';
     // group form
     if (_filepicker_has_groups()) {
-      $form3 = render(drupal_get_form('filepicker_group_files_form', $file['file_id']));
+      $form3 = render(drupal_get_form('filepicker_group_files_form', $file_id));
     }
     $content = theme('filepicker_user_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }

@@ -24,8 +24,6 @@ function filepicker_user_file_edit($file_id) {
 
 function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $account=FALSE) {
 
-#  $form['file_name'] = array('#type' => 'markup', '#value' => $file->file_name);
-
   $form['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Link text'),

@@ -115,12 +115,6 @@ function filepicker_menu() {
     'type'             => MENU_CALLBACK,
     'file'             => 'filepicker.edit.inc'
   );
-#  $items['filepicker/file/%filepicker_id'] = array(
-#    'title'            => 'Filepicker',
-#    'page callback'    => 'filepicker_box',
-#    'access arguments' => array('access content'),
-#    'type'             => MENU_CALLBACK
-#  );
   // admin settings
   $items[FILEPICKER_ADMIN_PATH] = array(
     'title'            => 'Filepicker',
@@ -497,7 +491,6 @@ function filepicker_form_alter(&$form, &$form_state, $form_id) {
     if (!empty($form['#node_edit_form']) && preg_match('/node_form$/i', $form_id)) {
       // get the object
       $node = $form['#node'];
-      #  $node_types = node_get_types('names');
       $node_types = node_type_get_names();
 
       // zxx issue. zxx stands for 'no language' but it might change....
@@ -1041,9 +1034,8 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
       $deletelink = ($use_icons ? _filepicker_get_icon('delete', $deletepath . $file_id, array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $file_id));
       $u = user_load($row->uid);
       $listlink = l($u->name, $listpath);
-
       $options[$file_id] = array(
-        'file_name' => $file_name,
+        'file_name' => $filelink,
         'file_title' => check_plain($row->file_title),
         'file_list' => $listlink,
         'file_date' => $file_date,
@@ -1068,7 +1060,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
         $editlink = ($use_icons ? _filepicker_get_icon('edit', $editpath . $file_id, array('title' => t('Edit'))) : l(t('Edit'), $editpath . $file_id));
         $deletelink = ($use_icons ? _filepicker_get_icon('delete', $deletepath . $file_id, array('title' => t('Delete'))) : l(t('Delete'), $deletepath . $file_id));
         $options[$file_id] = array(
-          'file_name' => ($src=='iframe' ? $filelink : $file_name),
+          'file_name' => $filelink,
           'file_title' => check_plain($row->file_title),
           'file_date' => $file_date,
           'file_actions' => "$editlink $deletelink",
@@ -1931,12 +1923,6 @@ function filepicker_group_files_form_submit($form, &$form_state) {
 function filepicker_get_file_groups($file_id) {
 
   $data = array();
-/*
-  $query = db_select('filepicker_group_files', 'i');
-  $query->fields('i', array('gid'));
-  $query->condition('i.file_id', $file_id);
-  $rows = $query->execute();
-*/
   $rows = db_select('filepicker_group_files', 'i')
     ->fields('i', array('gid'))
     ->condition('i.file_id', $file_id)
@@ -1949,12 +1935,6 @@ function filepicker_get_file_groups($file_id) {
 }
 
 function filepicker_get_files_by_group($gid) {
-/*
-  $query = db_select('filepicker_group_files', 'i');
-  $query->fields('i', 'file_id');
-  $query->condition('i.gid', $gid);
-  $rows = $query->execute();
-*/
   $rows = db_select('filepicker_group_files', 'i')
     ->fields('i', 'file_id')
     ->condition('i.gid', $gid)
@@ -2647,9 +2627,8 @@ function filepicker_group_files_count($gid) {
 
 function filepicker_get_info($file) {
 
-  $filepath = filepicker_get_file_path($file);
-
-  $info['file_size'] = filesize($filepath);
+  $filepath = filepicker_get_path(FALSE, array('uid' => $file->uid));
+  $info['file_size'] = filesize($filepath . $file->file_name);
   return $info;
 }
 
@@ -2683,7 +2662,6 @@ function filepicker_validate_is_file($filename) {
  */
 function filepicker_variable_get($varname, $default = NULL, $uid = FALSE) {
   // db table filepicker_variables
-
   if (!$uid) {
     $uid = 0;
   }

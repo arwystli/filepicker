@@ -493,7 +493,7 @@ function filepicker_admin_view($file_id, $account = FALSE) {
     $form1 = render(drupal_get_form('filepicker_admin_file_form', $file_id, $user));
     // group form
     if (_filepicker_has_groups($user)) {
-      $form3 = render(drupal_get_form('filepicker_group_files_form', $file['file_id'], $user));
+      $form3 = render(drupal_get_form('filepicker_group_files_form', $file_id, $user));
     }
     $content = theme('filepicker_admin_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }

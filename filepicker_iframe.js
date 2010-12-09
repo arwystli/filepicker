@@ -111,7 +111,6 @@ function filepickerInsert(button) {
     }
 
     if (! jobdone) {
-      //var nodeBody = win.document.getElementById('edit-body');
       var nodeBody = win.document.getElementById(node_editbody);
       var commentBody = win.document.getElementById('edit-comment-value');
       var blockBody = win.document.getElementById('edit-body-value');

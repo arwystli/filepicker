@@ -37,7 +37,7 @@ function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $accoun
   $form['src'] = array('#type' => 'value', '#value' => $src);
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Submit'),
+    '#value' => t('Save'),
     '#submit' => array('filepicker_edit_form_process'),
   );
   $form['cancel'] = array(

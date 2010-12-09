@@ -304,9 +304,9 @@ function theme_filepicker_view($variables) {
   $filepath = $variables['filepath'];
   $info = $variables['info'];
   $output = '<div id="filep_file_view">';
-  $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file->file_name . '</div>';
-  $output .= ($file->file_title ? '<div id="filep_file_view_title">'. t('Title') .": ". $file->file_title .'</div>' : '');
-  $output .= '<div id="filep_file_view_info">' . t('Size') .": ". _filepicker_bkmg($info['file_size']) .'</div>';
+  $output .= '<div id="filep_file_view_name">' . t('Name') . ": " . $file->file_name . '</div>';
+  $output .= ($file->file_title ? '<div id="filep_file_view_title">' . t('Title') . ": " . $file->file_title . '</div>' : '');
+  $output .= '<div id="filep_file_view_info">' . t('Size') . ": " . _filepicker_bkmg($info['file_size']) . '</div>';
   $output .= '</div>';
   return $output;
 }
@@ -392,8 +392,8 @@ function theme_filepicker_insert($variables) {
   if ($file) {
     $filepath = filepicker_get_file_path($file, ($public ? $file->uid : FALSE ));
     $output .= '<div class="filep_help">' . t('Choose the settings you want, place the cursor in the Body box above and Insert file.') . '</div>';
-    $output .= '<div id="filep_file_view_name">' . t('Name') .": ". $file->file_name . '</div>';
-    $output .= ($file->file_title ? '<div id="filep_file_view_title">'. t('Title') .": ". $file->file_title .'</div>' : '');
+    $output .= '<div id="filep_file_view_name">' . t('Name') . ": " . $file->file_name . '</div>';
+    $output .= ($file->file_title ? '<div id="filep_file_view_title">' . t('Title') . ": " . $file->file_title . '</div>' : '');
     $output .= $form1;
     $output .= $form2;
   }

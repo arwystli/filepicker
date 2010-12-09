@@ -13,7 +13,7 @@ define('FILEPICKER_PATH', drupal_get_path('module', 'filepicker'));
 define('FILEPICKER_FILE_SCHEME', 'public://');
 
 /**
- * Implementation of hook_help().
+ * Implements hook_help().
  */
 function filepicker_help($path, $arg) {
   switch ($path) {
@@ -24,7 +24,7 @@ function filepicker_help($path, $arg) {
 }
 
 /**
- * Implement hook_perm().
+ * Implements hook_permission().
  */
 function filepicker_permission() {
 
@@ -53,7 +53,7 @@ function filepicker_permission() {
 }
 
 /**
- * Implementation of hook_init().
+ * Implements hook_init().
  */
 function filepicker_init() {
   module_load_include('inc', 'filepicker', 'filepicker.theme');
@@ -61,7 +61,7 @@ function filepicker_init() {
 }
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function filepicker_menu() {
 
@@ -479,7 +479,7 @@ function filepicker_access_use_group() {
 }
 
 /**
- * Implement hook_form_alter().
+ * Implements hook_form_alter().
  */
 function filepicker_form_alter(&$form, &$form_state, $form_id) {
 
@@ -2512,18 +2512,15 @@ function _filepicker_search_opts2($searchs, $account) {
 
   $os = $searchs;
   $searchs = '%' . db_like($searchs) . '%';
-  if (     $search_opts['name']
-      && ! $search_opts['title']) {
+  if ($search_opts['name'] && ! $search_opts['title']) {
     $conditions = array('file_name', $searchs, 'LIKE');
   }
-  elseif ( $search_opts['name']
-        && $search_opts['title']) {
+  elseif ($search_opts['name'] && $search_opts['title']) {
     $conditions = db_or()
       ->condition('file_name', $searchs, 'LIKE')
       ->condition('file_title', $searchs, 'LIKE');
   }
-  elseif (! $search_opts['name']
-       && $search_opts['title']) {
+  elseif (! $search_opts['name'] && $search_opts['title']) {
     $conditions = array('file_title', $searchs, 'LIKE');
   }
   else {

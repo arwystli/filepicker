@@ -271,14 +271,3 @@ function filepicker_user_config_form_reset($form, &$form_state) {
   filepicker_variable_del('filepicker_advanced_collapsed', $user->uid);
   drupal_set_message(t('Configuration settings reset'));
 }
-
-/*
-function filepicker_user_config_admin_form_delete($form, &$form_state) {
-  if ( $form_state['values']['uid'] ) {
-    $user = user_load(array('uid' => $form_state['values']['uid']));
-  }
-  else {
-    global $user;
-  }
-}
-*/

@@ -882,19 +882,17 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
   $use_icons = filepicker_variable_get('filepicker_use_icons', 1);
   if ($src == 'admin') {
     $max = filepicker_variable_get('filepicker_rows_per_page', 25);
+    $searchs = filepicker_variable_get('filepicker_list_search', '');
   }
   else {
     $max = (filepicker_variable_get('filepicker_rows_per_page', '', $user->uid) ? filepicker_variable_get('filepicker_rows_per_page', '', $user->uid) : filepicker_variable_get('filepicker_rows_per_page', 25));
+    $searchs = filepicker_variable_get('filepicker_list_search', '', $user->uid);
   }
-  $searchs = (filepicker_variable_get('filepicker_list_search', '', $user->uid) ? filepicker_variable_get('filepicker_list_search', '', $user->uid) : '');
-  $searchs = trim($searchs);
-  $sarr = '';
-  $searchsql = '';
   if ($searchs) {
-    $xarr = _filepicker_search_opts($searchs);
-    $searchsql = $xarr[0];
-    $sarr = $xarr[1];
+    $searchs = trim($searchs);
+    $searchs = check_plain($searchs);
   }
+
   if ($public && $src == 'admin') {
     if ($range == 1 ||  $range == 2) {
       $publicstate = ($range == 1 ? 1 : 0);
@@ -969,7 +967,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
   // do search
   $searchsql = '';
   if ($searchs) {
-    $searchsql = _filepicker_search_opts2($searchs, $account);
+    $searchsql = _filepicker_search_opts($searchs, $account);
   }
   if (is_array($searchsql) ) {
     $query->condition($searchsql[0], $searchsql[1], $searchsql[2]);
@@ -1349,7 +1347,7 @@ function _filepicker_list_admin($src="iframe", $account=FALSE, $public=FALSE, $r
     $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
   }
   elseif (filepicker_variable_get('filepicker_show_list_search_form', 1)) {
-    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
+    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form', FALSE, TRUE));
   }
 
   $forms['list_admin'] = render(drupal_get_form('filepicker_list_admin_form', $src, $account, $public, $range));
@@ -2494,7 +2492,7 @@ function filepicker_list_search_form_reset_func($admin = FALSE) {
     }
 }
 
-function _filepicker_search_opts2($searchs, $account) {
+function _filepicker_search_opts($searchs, $account) {
 
   if ($account) {
     $search_opts = filepicker_variable_get('filepicker_list_search_opts', array());

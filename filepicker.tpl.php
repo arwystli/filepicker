@@ -33,17 +33,10 @@
 <body id="filepicker" class="html not-front logged-in no-sidebars overlay" >
   <div>
     <div class="tabs">
-      <?php
-        if (is_array($tabs) ) {
-          echo render($tabs);
-        }
-        else {
-          echo $tabs;
-        }
-      ?>
+      <?php echo $tabs; ?>
     </div>
     <div id="filep">
-      <?php echo $messages ?>
+      <?php echo $messages; ?>
       <?php echo $content; ?>
     </div>
   </div>

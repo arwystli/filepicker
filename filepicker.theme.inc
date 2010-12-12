@@ -348,7 +348,9 @@ function theme_filepicker_quota($form, $message, $label) {
 function theme_filepicker_upload_progress_message($message) {
   $output = '<div id="sending" class="progress" style="display: none;">';
   $output .= '<div class="status">'. $message .'</div>';
-  $output .= '<div class="bar"></div></div>';
+  $output .= '<div class="bar"></div>';
+  $output .= '<a id="filepicker_upload_progress_cancel_link" href="#">' . t('Cancel') . '</a>';
+  $output .= '</div>';
   return $output;
 }
 
@@ -520,13 +522,21 @@ function theme_filepicker_list_search_form($form) {
 
 function theme_filepicker_settings_form($form) {
   $output = '';
-  $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import">';
-  $form['filepicker_import']['filepicker_import_delete']['#suffix'] = '</div>';
-  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups">';
+
+  $jshide = (variable_get('filepicker_import_enabled', 0) ? '' : ' class="js-hide"');
+  $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import"'. $jshide .'>';
+  $form['filepicker_import']['filepicker_import_max']['#suffix'] = '</div>';
+
+  $jshide = (variable_get('filepicker_groups_enabled', 0) ? '' : ' class="js-hide"');
+  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups"'. $jshide .'>';
   $form['filepicker_groups']['filepicker_groups_in_upload_enabled']['#suffix'] = '</div>';
-  $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress">';
+
+  $jshide = (variable_get('filepicker_upload_progress_enabled', 0) ? '' : ' class="js-hide"');
+  $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress"'. $jshide .'>';
   $form['filepicker_progress']['filepicker_upload_progress_message']['#suffix'] = '</div>';
-  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap_filepicker_quota_role">';
+
+  $jshide = (variable_get('filepicker_quota_byrole', 0) ? '' : ' class="js-hide"');
+  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap_filepicker_quota_role"'. $jshide .'>';
   $form['filepicker_quotas']['filepicker_quota_role']['#suffix'] = '</div>';
 
   $output .= drupal_render($form);

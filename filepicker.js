@@ -14,15 +14,16 @@
 /**
  * Hide the node form and show the busy div
 */
-  Drupal.filepicker_upload_progress_hide_timeout = function() {
-    var delay = Drupal.settings.filepicker_upload_progress.delay;
-    setTimeout('filepicker_upload_progress_hide', delay*1000);
-  }
 
-  function filepicker_upload_progress_hide() {
+  Drupal.filepicker_upload_progress_hide = function() {
     $('#filepicker-upload-form').hide();
     $("#sending").show();
     $("#filepicker_upload_progress_cancel_link").click(Drupal.filepicker_upload_progress_show);
+  }
+
+  Drupal.filepicker_upload_progress_hide_timeout = function() {
+    var delay = Drupal.settings.filepicker_upload_progress.delay;
+    setTimeout(Drupal.filepicker_upload_progress_hide, delay*1000);
   }
 
   Drupal.filepicker_upload_progress_show = function() {
@@ -33,69 +34,43 @@
     window.location = window.location;
   }
 
-  Drupal.behaviors.filepicker = function() {
+  Drupal.behaviors.filepicker = function(context) {
     // Attaches the upload behaviour to the filepicker upload form.
-    $('#filepicker-upload-form').submit(Drupal.filepicker_upload_progress_hide_timeout);
+    $('#filepicker-upload-form', context).submit(Drupal.filepicker_upload_progress_hide_timeout);
 
-    // form enhancement
-    if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-      $("#wrap_filepicker_quota_role").show();
-    }
-    else {
-      $("#wrap_filepicker_quota_role").hide();
-    }
-    $("#edit-filepicker-quota-byrole").change(function() {
-      if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-        $("#wrap_filepicker_quota_role").show();
+    $("#edit-filepicker-quota-byrole", context).change(function() {
+      if ($(this).attr('checked')) {
+        $("#wrap_filepicker_quota_role", context).show();
       }
       else {
-        $("#wrap_filepicker_quota_role").hide();
+        $("#wrap_filepicker_quota_role", context).hide();
       }
     });
 
-    if ($("#edit-filepicker-import-enabled").attr('checked')) {
-      $("#wrap-filepicker-import").show();
-    }
-    else {
-      $("#wrap-filepicker-import").hide();
-    }
-    $("#edit-filepicker-import-enabled").change(function() {
-      if ($("#edit-filepicker-import-enabled").attr('checked')) {
-        $("#wrap-filepicker-import").show();
+    $("#edit-filepicker-import-enabled", context).change(function() {
+      if ($(this).attr('checked')) {
+        $("#wrap-filepicker-import", context).show();
       }
       else {
-        $("#wrap-filepicker-import").hide();
+        $("#wrap-filepicker-import", context).hide();
       }
     });
 
-
-    if ($("#edit-filepicker-upload-progress-enabled").attr('checked')) {
-      $("#wrap-filepicker-upload-progress").show();
-    }
-    else {
-      $("#wrap-filepicker-upload-progress").hide();
-    }
-    $("#edit-filepicker-upload-progress-enabled").change(function() {
-      if ($("#edit-filepicker-upload-progress-enabled").attr('checked')) {
-        $("#wrap-filepicker-upload-progress").show();
+    $("#edit-filepicker-upload-progress-enabled", context).change(function() {
+      if ($(this).attr('checked')) {
+        $("#wrap-filepicker-upload-progress", context).show();
       }
       else {
-        $("#wrap-filepicker-upload-progress").hide();
+        $("#wrap-filepicker-upload-progress", context).hide();
       }
     });
 
-    if ($("#edit-group-public").attr('checked')) {
-      $("#wrap-group-public-roles").show();
-    }
-    else {
-      $("#wrap-group-public-roles").hide();
-    }
-    $("#edit-group-public").change(function() {
-      if ($("#edit-group-public").attr('checked')) {
-        $("#wrap-group-public-roles").show();
+    $("#edit-filepicker-groups-enabled", context).change(function() {
+      if ($(this).attr('checked')) {
+        $("#wrap-filepicker-groups", context).show();
       }
       else {
-        $("#wrap-group-public-roles").hide();
+        $("#wrap-filepicker-groups", context).hide();
       }
     });
   };

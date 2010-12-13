@@ -1,51 +1,26 @@
 // $Id$
-// Original Id: upload_progress.js,v 1.1 2007/11/17 06:47:47 pfournier Exp
 /**
  * @file
- * Javascript functions for progress bar status on node creation forms
+ * Javascript functions for progress bar and form enhancement
  *
- * @author Patrick Fournier <patrick at patrickfournier dot com>
- * @author Fabio Varesano <fvaresano at yahoo dot it>
- * Adapted by Bob Hutchinson for filepicker upload form
+ * By Bob Hutchinson for filepicker upload form
 */
+
+(function ($) {
 
 /**
  * Hide the node form and show the busy div
 */
-function filepicker_upload_progress_hide() {
-  $('#filepicker-upload-form').hide();
-  $("#sending").show();
-  $("#filepicker_upload_progress_cancel_link").click(filepicker_upload_progress_show);
-}
 
-function filepicker_upload_progress_show() {
-  $('#filepicker-upload-form').show();
-  $("#sending").hide();
-
-  // "reload" the form
-  window.location = window.location;
-}
-
-function filepicker_upload_progress_hide_timeout() {
-  var delay = Drupal.settings["filepicker_upload_progress"]["delay"];
-  setTimeout('filepicker_upload_progress_hide()', delay*1000);
-
-}
-
-
-/**
- * Hide the node form and show the busy div
-*/
-/*
-  Drupal.filepicker_upload_progress_hide_timeout = function() {
-    var delay = Drupal.settings.filepicker_upload_progress.delay;
-    setTimeout('filepicker_upload_progress_hide', delay*1000);
-  }
-
-  function filepicker_upload_progress_hide() {
+  Drupal.filepicker_upload_progress_hide = function() {
     $('#filepicker-upload-form').hide();
     $("#sending").show();
     $("#filepicker_upload_progress_cancel_link").click(Drupal.filepicker_upload_progress_show);
+  }
+
+  Drupal.filepicker_upload_progress_hide_timeout = function() {
+    var delay = Drupal.settings.filepicker_upload_progress.delay;
+    setTimeout(Drupal.filepicker_upload_progress_hide, delay*1000);
   }
 
   Drupal.filepicker_upload_progress_show = function() {
@@ -55,74 +30,47 @@ function filepicker_upload_progress_hide_timeout() {
     // "reload" the form
     window.location = window.location;
   }
-*/
 
-(function ($) {
   Drupal.behaviors.filepicker = {
     attach: function(context) {
 
       // Attaches the upload behaviour to the filepicker upload form.
-      $('#filepicker-upload-form').submit(filepicker_upload_progress_hide_timeout);
+      $('#filepicker-upload-form', context).submit(Drupal.filepicker_upload_progress_hide_timeout);
 
       // form enhancement
-      if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-        $("#wrap-filepicker-quota-role").show();
-      }
-      else {
-        $("#wrap-filepicker-quota-role").hide();
-      }
-      $("#edit-filepicker-quota-byrole").change(function() {
-        if ($("#edit-filepicker-quota-byrole").attr('checked')) {
-          $("#wrap-filepicker-quota-role").show();
+      $("#edit-filepicker-quota-byrole", context).change(function() {
+        if ($(this).attr('checked')) {
+          $("#wrap-filepicker-quota-role", context).show();
         }
         else {
-          $("#wrap-filepicker-quota-role").hide();
+          $("#wrap-filepicker-quota-role", context).hide();
         }
       });
 
-      if ($("#edit-filepicker-import-enabled").attr('checked')) {
-        $("#wrap-filepicker-import").show();
-      }
-      else {
-        $("#wrap-filepicker-import").hide();
-      }
-      $("#edit-filepicker-import-enabled").change(function() {
-        if ($("#edit-filepicker-import-enabled").attr('checked')) {
-          $("#wrap-filepicker-import").show();
+      $("#edit-filepicker-import-enabled", context).change(function() {
+        if ($(this).attr('checked')) {
+          $("#wrap-filepicker-import", context).show();
         }
         else {
-          $("#wrap-filepicker-import").hide();
+          $("#wrap-filepicker-import", context).hide();
         }
       });
 
-
-      if ($("#edit-filepicker-upload-progress-enabled").attr('checked')) {
-        $("#wrap-filepicker-upload-progress").show();
-      }
-      else {
-        $("#wrap-filepicker-upload-progress").hide();
-      }
-      $("#edit-filepicker-upload-progress-enabled").change(function() {
-        if ($("#edit-filepicker-upload-progress-enabled").attr('checked')) {
-          $("#wrap-filepicker-upload-progress").show();
+      $("#edit-filepicker-upload-progress-enabled", context).change(function() {
+        if ($(this).attr('checked')) {
+          $("#wrap-filepicker-upload-progress", context).show();
         }
         else {
-          $("#wrap-filepicker-upload-progress").hide();
+          $("#wrap-filepicker-upload-progress", context).hide();
         }
       });
 
-      if ($("#edit-filepicker-public-enabled").attr('checked')) {
-        $("#wrap-group-public-roles").show();
-      }
-      else {
-        $("#wrap-group-public-roles").hide();
-      }
-      $("#edit-filepicker-public-enabled").change(function() {
-        if ($("#edit-filepicker-public-enabled").attr('checked')) {
-          $("#wrap-group-public-roles").show();
+      $("#edit-filepicker-groups-enabled", context).change(function() {
+        if ($(this).attr('checked')) {
+          $("#wrap-filepicker-groups", context).show();
         }
         else {
-          $("#wrap-group-public-roles").hide();
+          $("#wrap-filepicker-groups", context).hide();
         }
       });
 

@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20010-12-13
+------------------------------------
+by hutch, fixed upload progress
+
 File Picker for D7 in DRUPAL-7--1, 20010-12-09
 ------------------------------------
 by hutch, fixed iframe js, did coder review

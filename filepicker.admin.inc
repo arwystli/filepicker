@@ -120,6 +120,13 @@ function filepicker_settings_form($form, &$form_state) {
     '#maxlength' => 255,
     '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
   );
+  $form['filepicker_defaults']['filepicker_upload_mimetypes'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Mimetype check'),
+    '#description' => t('Setting this option will enable the built in Drupal mimetype checking.<br />This will prevent the type "application/octet-stream" from being downloaded.'),
+    '#return_value' => 1,
+    '#default_value' => filepicker_variable_get('filepicker_upload_mimetypes', 0),
+  );
   // quota
   $form['filepicker_quotas'] = array(
     '#type' => 'fieldset',
@@ -244,7 +251,6 @@ function filepicker_settings_form($form, &$form_state) {
     '#return_value' => 1,
     '#default_value' => filepicker_variable_get('filepicker_groups_in_upload_enabled', 1),
   );
-
   // Import
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
@@ -331,6 +337,7 @@ function filepicker_settings_form_submit($form, &$form_state) {
   filepicker_variable_set('filepicker_rows_per_page', $form_state['values']['filepicker_rows_per_page']);
   filepicker_variable_set('filepicker_dateformat_default', $form_state['values']['filepicker_dateformat_default']);
   filepicker_variable_set('filepicker_upload_extensions', $form_state['values']['filepicker_upload_extensions']);
+  filepicker_variable_set('filepicker_upload_mimetypes', $form_state['values']['filepicker_upload_mimetypes']);
   if (module_exists('colorbox') && variable_get('colorbox_load', 0)) {
     filepicker_variable_set('filepicker_advanced_colorbox', $form_state['values']['filepicker_advanced_colorbox']);
   }

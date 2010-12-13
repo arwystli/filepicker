@@ -119,7 +119,13 @@ function filepicker_settings_form(&$form_state) {
     '#maxlength' => 255,
     '#description' => t('Default extensions that users can upload. Separate extensions with a space and do not include the leading dot.'),
   );
-
+  $form['filepicker_defaults']['filepicker_upload_mimetypes'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Enable Mimetype check'),
+    '#description' => t('Setting this option will enable the built in Drupal mimetype checking.<br />This will prevent the type "application/octet-stream" from being downloaded.'),
+    '#return_value' => 1,
+    '#default_value' => variable_get('filepicker_upload_mimetypes', 0),
+  );
   // quota
   $form['filepicker_quotas'] = array(
     '#type' => 'fieldset',
@@ -244,7 +250,6 @@ function filepicker_settings_form(&$form_state) {
     '#return_value' => 1,
     '#default_value' => variable_get('filepicker_groups_in_upload_enabled', 1),
   );
-
   // Import
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',

@@ -2565,9 +2565,11 @@ function filepicker_get_info($file) {
 }
 
 function filepicker_validate_is_file($filename) {
-  $mimetype = file_get_mimetype($filename);
-  if ($mimetype == 'application/octet-stream') {
-    return '';
+  if (variable_get('filepicker_upload_mimetypes', 0)) {
+    $mimetype = file_get_mimetype($filename);
+    if ($mimetype == 'application/octet-stream') {
+      return '';
+    }
   }
   if (preg_match('!.*\.(.*)$!i', $filename, $matches)) {
     if ($matches[1]) {

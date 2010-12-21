@@ -12,6 +12,7 @@ define('FILEPICKER_ADMIN_PATH', 'admin/settings/filepicker');
 define('FILEPICKER_PATH', drupal_get_path('module', 'filepicker'));
 // Minimum PHP version for extension
 define('FILEPICKER_UPLOAD_STATUS_MIN_PHP', '5.2.1');
+define('FILEPICKER_UPLOAD_ID', 'UPLOAD_IDENTIFIER');
 
 /**
  * Implementation of hook_help().
@@ -2651,7 +2652,8 @@ function filepicker_uploadprogress_callback($progress_key='') {
       $status['percentage'] = round($status['bytes_uploaded']/$status['bytes_total'] * 100, 0);
       $eta = sprintf("%02d:%02d", $status['est_sec'] / 60, $status['est_sec'] % 60 );
       $speed = _filepicker_bkmg($status['speed_average']);
-      $status['message'] = t('!eta left at !speed/sec', array('!eta' => $eta, '!speed' => $speed));
+      $bytes_total = _filepicker_bkmg($status['bytes_total']);
+      $status['message'] = t('Filesize: !bytes_total. !eta left at !speed/sec.', array('!eta' => $eta, '!speed' => $speed, '!bytes_total' => $bytes_total));
     }
     else {
       $status['status'] = 1;

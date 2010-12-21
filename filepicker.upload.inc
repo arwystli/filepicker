@@ -39,7 +39,7 @@ function filepicker_upload_form(&$form_state, $account=FALSE, $admin = FALSE) {
   }
   $form['#attributes']['enctype'] = 'multipart/form-data';
   if (variable_get('filepicker_upload_progress_enabled', 1) && variable_get('filepicker_uploadprogress_server', '')) {
-    $form['UPLOAD_IDENTIFIER'] = array(
+    $form[FILEPICKER_UPLOAD_ID] = array(
       '#type' => 'hidden',
       '#value' => uniqid(),
       '#weight' => -50,
@@ -242,7 +242,7 @@ function filepicker_upload_progress_get_script($delay) {
       'filepicker_upload_progress' => array(
         'callback' => 'http://' . $_SERVER['HTTP_HOST'] . url('filepicker/progress'),
         'interval' => variable_get('filepicker_uploadprogress_interval', 1),
-        'name' => 'edit-UPLOAD-IDENTIFIER',
+        'name' => FILEPICKER_UPLOAD_ID,
         'delay' => $delay,
         'initmessage' => $message,
         'cancelmessage' => t('Cancel'),

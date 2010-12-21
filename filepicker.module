@@ -2656,7 +2656,7 @@ function filepicker_uploadprogress_callback($progress_key='') {
     else {
       $status['status'] = 1;
       $status['percentage'] = -1;
-      $status['message'] = variable_get('filepicker_upload_progress_message', t('Processing form... please wait.');
+      $status['message'] = variable_get('filepicker_upload_progress_message', t('Processing form... please wait.'));
     }
     echo json_encode($status);
   }

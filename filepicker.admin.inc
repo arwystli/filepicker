@@ -213,6 +213,36 @@ function filepicker_settings_form($form, &$form_state) {
     '#size' => 60,
     '#default_value' => filepicker_variable_get('filepicker_upload_progress_message', t('Processing form... please wait.')),
   );
+  $vok = FALSE;
+  $extok = FALSE;
+  if (version_compare(phpversion(), FILEPICKER_UPLOAD_STATUS_MIN_PHP) >= 0 ) {
+    $vok = TRUE;
+    if (extension_loaded('uploadprogress')) {
+      $extok = TRUE;
+    }
+  }
+  if ($vok && $extok) {
+    $form['filepicker_progress']['filepicker_uploadprogress'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Upload Progress Extension'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+    );
+
+    $form['filepicker_progress']['filepicker_uploadprogress']['filepicker_uploadprogress_server'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable PECL uploadprogress'),
+      '#default_value' => filepicker_variable_get('filepicker_uploadprogress_server', ''),
+    );
+    $form['filepicker_progress']['filepicker_uploadprogress']['filepicker_uploadprogress_interval'] = array(
+      '#title' => t('Interval Time'),
+      '#description' => t('The interval between each check.'),
+      '#type' => 'textfield',
+      '#size' => 5,
+      '#default_value' => filepicker_variable_get('filepicker_uploadprogress_interval', 1),
+      '#field_suffix' => t('seconds'),
+    );
+  }
 
   // Groups
   $form['filepicker_groups'] = array(
@@ -308,7 +338,11 @@ function filepicker_settings_form_validate($form, &$form_state) {
   if (! is_numeric($form_state['values']['filepicker_upload_progress_delay']) && $form_state['values']['filepicker_upload_progress_delay'] < 0) {
     form_set_error('filepicker_upload_progress_delay', t('The progress delay must be a positive number or zero'));
   }
-
+  if (isset($form_state['values']['filepicker_uploadprogress_interval'])) {
+    if ( ! is_numeric($form_state['values']['filepicker_uploadprogress_interval']) && $form_state['values']['filepicker_uploadprogress_interval'] < 1) {
+      form_set_error('filepicker_uploadprogress_interval', t('The progress interval must be a positive number'));
+    }
+  }
   if (! is_numeric($form_state['values']['filepicker_import_max']) || ($form_state['values']['filepicker_import_max'] < 1 || $form_state['values']['filepicker_import_max'] > 100 )) {
     form_set_error('filepicker_import_max', t('The Import batch size must be must be a positive number.'));
   }
@@ -352,6 +386,10 @@ function filepicker_settings_form_submit($form, &$form_state) {
   filepicker_variable_set('filepicker_upload_progress_enabled', $form_state['values']['filepicker_upload_progress_enabled']);
   filepicker_variable_set('filepicker_upload_progress_delay', $form_state['values']['filepicker_upload_progress_delay']);
   filepicker_variable_set('filepicker_upload_progress_message', $form_state['values']['filepicker_upload_progress_message']);
+  if (isset($form_state['values']['filepicker_uploadprogress_server'])) {
+    filepicker_variable_set('filepicker_uploadprogress_server', $form_state['values']['filepicker_uploadprogress_server']);
+    filepicker_variable_set('filepicker_uploadprogress_interval', $form_state['values']['filepicker_uploadprogress_interval']);
+  }
   filepicker_variable_set('filepicker_groups_enabled', $form_state['values']['filepicker_groups_enabled']);
   filepicker_variable_set('filepicker_public_enabled', $form_state['values']['filepicker_public_enabled']);
   filepicker_variable_set('filepicker_publicroles_enabled', $form_state['values']['filepicker_publicroles_enabled']);

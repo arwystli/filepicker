@@ -132,16 +132,3 @@
 .filep_file {
 
 }
-
-.filep_progress {
-  background: #fff url('images/progress.gif');
-  border: 1px solid #000080;
-  height: 1.5em;
-  margin: 0 0.2em;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-}
-.filep_status {
-  font-weight: bold;
-}

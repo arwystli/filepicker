@@ -11,6 +11,10 @@ define('FILEPICKER_FILES_DIR', 'filepicker');
 define('FILEPICKER_ADMIN_PATH', 'admin/config/media/filepicker');
 define('FILEPICKER_PATH', drupal_get_path('module', 'filepicker'));
 define('FILEPICKER_FILE_SCHEME', 'public://');
+// Minimum PHP version for extension
+define('FILEPICKER_UPLOAD_STATUS_MIN_PHP', '5.2.1');
+define('FILEPICKER_UPLOAD_ID', 'UPLOAD_IDENTIFIER');
+
 
 /**
  * Implements hook_help().
@@ -114,6 +118,12 @@ function filepicker_menu() {
     'access callback'  => 'filepicker_access_use',
     'type'             => MENU_CALLBACK,
     'file'             => 'filepicker.edit.inc'
+  );
+  // uploadprogress callback
+  $items['filepicker/progress'] = array(
+    'page callback' => 'filepicker_uploadprogress_callback',
+    'access arguments' => array(TRUE),
+    'type' => MENU_CALLBACK,
   );
   // admin settings
   $items[FILEPICKER_ADMIN_PATH] = array(
@@ -2636,8 +2646,9 @@ function filepicker_validate_is_file($filename) {
   }
   if (preg_match("!.*\.(.*)$!i", $filename, $matches)) {
     if ($matches[1]) {
+      $filext = drupal_strtolower($matches[1]);
       $extensions = explode(' ', filepicker_variable_get('filepicker_upload_extensions', 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp'));
-      if (in_array($matches[1], $extensions)) {
+      if (in_array($filext, $extensions)) {
         return $matches[1];
       }
     }
@@ -2736,3 +2747,35 @@ function filepicker_box() {
   exit;
 
 }
+
+/**
+ * callback for uploadprogress information function.
+ */
+function filepicker_uploadprogress_callback($progress_key='') {
+
+  if (! $progress_key) {
+    $progress_key = $_GET['key'];
+  }
+
+  if (filepicker_variable_get('filepicker_uploadprogress_server', '') && function_exists('uploadprogress_get_info') && $progress_key) {
+    $status = uploadprogress_get_info($progress_key);
+    if ($status['bytes_total']) {
+      $status['status'] = 1;
+      $status['percentage'] = round($status['bytes_uploaded']/$status['bytes_total'] * 100, 0);
+      $eta = sprintf("%02d:%02d", $status['est_sec'] / 60, $status['est_sec'] % 60 );
+      $speed = _filepicker_bkmg($status['speed_average']);
+      $bytes_total = _filepicker_bkmg($status['bytes_total']);
+      $status['message'] = t('Filesize: !bytes_total. !eta left at !speed/sec.', array('!eta' => $eta, '!speed' => $speed, '!bytes_total' => $bytes_total));
+    }
+    else {
+      $status['status'] = 1;
+      $status['percentage'] = -1;
+      $status['message'] = filepicker_variable_get('filepicker_upload_progress_message', t('Processing form... please wait.'));
+    }
+    echo json_encode($status);
+
+  }
+
+  exit;
+}
+

@@ -38,10 +38,18 @@ function filepicker_upload_form(&$form_state, $account=FALSE, $admin = FALSE) {
     global $user;
   }
   $form['#attributes']['enctype'] = 'multipart/form-data';
+  if (variable_get('filepicker_upload_progress_enabled', 1) && variable_get('filepicker_uploadprogress_server', '')) {
+    $form['UPLOAD_IDENTIFIER'] = array(
+      '#type' => 'hidden',
+      '#value' => uniqid(),
+      '#weight' => -50,
+    );
+  }
+  $max_filesize = ini_get('upload_max_filesize');
   $form['file_upload'] = array(
     '#type' => 'file',
     '#title' => t('File'),
-    '#description' => t('Browse your computer for a file'),
+    '#description' => t('Browse your computer for a file, Max. %max', array('%max' => $max_filesize)),
     '#required' => TRUE,
     '#value' => 1,
     '#size' => 40,
@@ -224,12 +232,41 @@ function filepicker_get_uploaded_file_name($destination, $name) {
 }
 
 function filepicker_upload_progress_get_script($delay) {
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
-  drupal_add_js(array('filepicker_upload_progress' => array('delay' => $delay[0])), 'setting');
+
+  $message = variable_get('filepicker_upload_progress_message', t('Processing form... please wait.'));
+  if (variable_get('filepicker_uploadprogress_server', '')) {
+    // Immediately disable devel shutdown functions so that it doesn't botch our
+    // JSON output.
+    $GLOBALS['devel_shutdown'] = FALSE;
+    $settings = array(
+      'filepicker_upload_progress' => array(
+        'callback' => 'http://' . $_SERVER['HTTP_HOST'] . url('filepicker/progress'),
+        'interval' => variable_get('filepicker_uploadprogress_interval', 1),
+        'name' => 'edit-UPLOAD-IDENTIFIER',
+        'delay' => $delay,
+        'initmessage' => $message,
+        'cancelmessage' => t('Cancel'),
+      ),
+    );
+  }
+  else {
+    $settings = array(
+      'filepicker_upload_progress' => array(
+        'callback' => '',
+        'interval' => '',
+        'name' => '',
+        'delay' => $delay,
+        'initmessage' => $message,
+        'cancelmessage' => t('Cancel'),
+      ),
+    );
+  }
+
+  drupal_add_js(FILEPICKER_PATH .'/filepicker_upload.js');
+  drupal_add_js($settings, 'setting');
 }
 
 function filepicker_upload_progress_busy() {
-  $message = variable_get('filepicker_upload_progress_message', t('Processing form... please wait.'));
-  return theme('filepicker_upload_progress_message', $message);
+  return '<div id="filepicker-sending" style="display: none;"></div>';
 }
 

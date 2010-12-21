@@ -3,23 +3,23 @@
 # LANGUAGE translation of Drupal (general)
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 # Generated from files:
-#  filepicker.admin.inc: n/a
-#  filepicker.user.inc: n/a
-#  filepicker.upload.inc: n/a
-#  filepicker.theme.inc: n/a
-#  filepicker.module: n/a
-#  filepicker.group.inc: n/a
-#  filepicker.edit.inc: n/a
-#  filepicker.form-elements.inc,v 1.1.2.6 2010/09/08 10:56:16 hutch
-#  filepicker.import.inc: n/a
-#  filepicker.info: n/a
-#  filepicker.install,v 1.6.2.4 2009/08/29 09:32:07 hutch
+#  filepicker.admin.inc,v 1.1.2.3 2010/12/05 19:03:28 hutch
+#  filepicker.user.inc,v 1.1 2010/11/07 12:06:09 hutch
+#  filepicker.upload.inc,v 1.1.2.2 2010/12/05 19:03:28 hutch
+#  filepicker.theme.inc,v 1.1.2.1 2010/12/05 19:03:28 hutch
+#  filepicker.module,v 1.1.2.6 2010/12/05 19:03:28 hutch
+#  filepicker.group.inc,v 1.1.2.1 2010/12/01 20:48:17 hutch
+#  filepicker.edit.inc,v 1.1.2.2 2010/12/05 19:03:28 hutch
+#  filepicker.form-elements.inc,v 1.1 2010/11/07 12:06:09 hutch
+#  filepicker.import.inc,v 1.1.2.1 2010/12/05 19:03:28 hutch
+#  filepicker.info,v 1.1 2010/11/07 12:06:09 hutch
+#  filepicker.install,v 1.1.2.1 2010/11/07 13:30:32 hutch
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2010-11-07 12:02+0000\n"
+"POT-Creation-Date: 2010-12-21 13:32+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -109,396 +109,432 @@ msgid "These settings are also available to users if User Configuration is enabl
 msgstr ""
 
 #: filepicker.admin.inc:109
-msgid "Permitted file extensions"
+msgid "Set Date Format"
+msgstr ""
+
+#: filepicker.admin.inc:110
+msgid "Select the Date format to use in tables."
 msgstr ""
 
 #: filepicker.admin.inc:112
+msgid "Small"
+msgstr ""
+
+#: filepicker.admin.inc:112
+msgid "Medium"
+msgstr ""
+
+#: filepicker.admin.inc:112
+msgid "Long"
+msgstr ""
+
+#: filepicker.admin.inc:117
+msgid "Permitted file extensions"
+msgstr ""
+
+#: filepicker.admin.inc:120
 msgid "Default extensions that users can upload. Separate extensions with a space and do not include the leading dot."
 msgstr ""
 
-#: filepicker.admin.inc:118
-msgid "Module integration"
+#: filepicker.admin.inc:124
+msgid "Enable Mimetype check"
 msgstr ""
 
 #: filepicker.admin.inc:125
-msgid "Enable Colorbox in Filepicker"
+msgid "Setting this option will enable the built in Drupal mimetype checking.<br />This will prevent the type \"application/octet-stream\" from being downloaded."
 msgstr ""
 
-#: filepicker.admin.inc:126
-msgid "Setting this option will enable Colorbox in Filepicker."
-msgstr ""
-
-#: filepicker.admin.inc:134
+#: filepicker.admin.inc:132
 msgid "User quotas"
 msgstr ""
 
-#: filepicker.admin.inc:141
+#: filepicker.admin.inc:139
 msgid "Enable Quotas in Filepicker"
 msgstr ""
 
-#: filepicker.admin.inc:142
+#: filepicker.admin.inc:140
 msgid "Setting this option will enable Quotas in Filepicker."
 msgstr ""
 
-#: filepicker.admin.inc:148
+#: filepicker.admin.inc:146
 msgid "Enable Quotas by Role"
 msgstr ""
 
-#: filepicker.admin.inc:149
+#: filepicker.admin.inc:147
 msgid "Setting this option will enable 'Quotas by Role' instead of 'Per User'."
 msgstr ""
 
-#: filepicker.admin.inc:155
+#: filepicker.admin.inc:153
 msgid "Available Roles"
 msgstr ""
 
-#: filepicker.admin.inc:156
+#: filepicker.admin.inc:154
 msgid "Select which Role for 'Quotas by Role'."
 msgstr ""
 
-#: filepicker.admin.inc:162
+#: filepicker.admin.inc:160
 msgid "Set Quota"
 msgstr ""
 
-#: filepicker.admin.inc:163
+#: filepicker.admin.inc:161
 msgid "Select the Quota to apply for 'Quotas by Role' or the default for 'Per User'."
 msgstr ""
 
-#: filepicker.admin.inc:170 filepicker.user.inc:182
+#: filepicker.admin.inc:168 filepicker.user.inc:182
 msgid "Filepicker Iframe settings"
 msgstr ""
 
-#: filepicker.admin.inc:171 filepicker.user.inc:183
+#: filepicker.admin.inc:169 filepicker.user.inc:183
 msgid "You can alter the default styling of the iframe here,<br />useful if the iframe is not fitting in with your theme."
 msgstr ""
 
-#: filepicker.admin.inc:188
+#: filepicker.admin.inc:186
 msgid "Progress bar"
 msgstr ""
 
-#: filepicker.admin.inc:189
+#: filepicker.admin.inc:187
 msgid "Enable and configure progress bar."
 msgstr ""
 
-#: filepicker.admin.inc:196
+#: filepicker.admin.inc:194
 msgid "Enable Progress bar in upload"
 msgstr ""
 
-#: filepicker.admin.inc:202
+#: filepicker.admin.inc:200
 msgid "Progress bar Delay"
 msgstr ""
 
-#: filepicker.admin.inc:203
+#: filepicker.admin.inc:201
 msgid "Show the progress bar if processing is longer than this value."
 msgstr ""
 
-#: filepicker.admin.inc:207
+#: filepicker.admin.inc:205;243
 msgid "seconds"
 msgstr ""
 
-#: filepicker.admin.inc:212
+#: filepicker.admin.inc:210
 msgid "Progress bar message"
 msgstr ""
 
-#: filepicker.admin.inc:213
+#: filepicker.admin.inc:211
 msgid "Message to display while uploading."
 msgstr ""
 
-#: filepicker.admin.inc:215 filepicker.upload.inc:232
+#: filepicker.admin.inc:213 filepicker.upload.inc:236
 msgid "Processing form... please wait."
 msgstr ""
 
-#: filepicker.admin.inc:221
-msgid "Filepicker group settings"
+#: filepicker.admin.inc:227
+msgid "Upload Progress Extension"
 msgstr ""
 
-#: filepicker.admin.inc:222
-msgid "Enable and configure groups."
+#: filepicker.admin.inc:234
+msgid "Enable PECL uploadprogress"
 msgstr ""
 
-#: filepicker.admin.inc:229
-msgid "Enable Groups"
+#: filepicker.admin.inc:238
+msgid "Interval Time"
 msgstr ""
 
-#: filepicker.admin.inc:230
-msgid "Allow users to manage groups."
-msgstr ""
-
-#: filepicker.admin.inc:236
-msgid "Enable Public option"
-msgstr ""
-
-#: filepicker.admin.inc:237
-msgid "Allow users to make file groups publicly available."
-msgstr ""
-
-#: filepicker.admin.inc:243
-msgid "Enable Public Role Control option"
-msgstr ""
-
-#: filepicker.admin.inc:244
-msgid "Allow users to make publicly available file groups restricted by role."
+#: filepicker.admin.inc:239
+msgid "The interval between each check."
 msgstr ""
 
 #: filepicker.admin.inc:250
-msgid "Enable Groups in upload form"
+msgid "Filepicker group settings"
 msgstr ""
 
 #: filepicker.admin.inc:251
-msgid "Allow users to select a group in the upload form."
+msgid "Enable and configure groups."
+msgstr ""
+
+#: filepicker.admin.inc:258
+msgid "Enable Groups"
 msgstr ""
 
 #: filepicker.admin.inc:259
+msgid "Allow users to manage groups."
+msgstr ""
+
+#: filepicker.admin.inc:265
+msgid "Enable Public option"
+msgstr ""
+
+#: filepicker.admin.inc:266
+msgid "Allow users to make file groups publicly available."
+msgstr ""
+
+#: filepicker.admin.inc:272
+msgid "Enable Public Role Control option"
+msgstr ""
+
+#: filepicker.admin.inc:273
+msgid "Allow users to make publicly available file groups restricted by role."
+msgstr ""
+
+#: filepicker.admin.inc:279
+msgid "Enable Groups in upload form"
+msgstr ""
+
+#: filepicker.admin.inc:280
+msgid "Allow users to select a group in the upload form."
+msgstr ""
+
+#: filepicker.admin.inc:287
 msgid "Filepicker Bulk Import"
 msgstr ""
 
-#: filepicker.admin.inc:260
+#: filepicker.admin.inc:288
 msgid "Enable bulk import of files."
 msgstr ""
 
-#: filepicker.admin.inc:267
+#: filepicker.admin.inc:295
 msgid "Enable Bulk import processing"
 msgstr ""
 
-#: filepicker.admin.inc:268
+#: filepicker.admin.inc:296
 msgid "Import files into filepicker from an import folder in the filesystem.<br />Requires FTP or SSH access"
 msgstr ""
 
-#: filepicker.admin.inc:274
+#: filepicker.admin.inc:302
 msgid "Enable Bulk import deletion"
 msgstr ""
 
-#: filepicker.admin.inc:275
+#: filepicker.admin.inc:303
 msgid "Delete uploaded source files after succesful import into filepicker."
 msgstr ""
 
-#: filepicker.admin.inc:281
+#: filepicker.admin.inc:309
 msgid "Default Import Batch size"
 msgstr ""
 
-#: filepicker.admin.inc:282
+#: filepicker.admin.inc:310
 msgid "How many files to process at a time. Must be greater than 1 and less than 100."
 msgstr ""
 
-#: filepicker.admin.inc:299 filepicker.user.inc:226
+#: filepicker.admin.inc:327 filepicker.user.inc:226
 msgid "The Iframe height must be a number"
 msgstr ""
 
-#: filepicker.admin.inc:302 filepicker.user.inc:229
+#: filepicker.admin.inc:330 filepicker.user.inc:229
 msgid "You must fill in the Iframe width"
 msgstr ""
 
-#: filepicker.admin.inc:305 filepicker.user.inc:232
+#: filepicker.admin.inc:333 filepicker.user.inc:232
 msgid "You must fill in the Iframe border"
 msgstr ""
 
-#: filepicker.admin.inc:308
+#: filepicker.admin.inc:336
 msgid "The progress delay must be a positive number or zero"
 msgstr ""
 
-#: filepicker.admin.inc:312
+#: filepicker.admin.inc:340
+msgid "The progress interval must be a positive number"
+msgstr ""
+
+#: filepicker.admin.inc:344
 msgid "The Import batch size must be must be a positive number."
 msgstr ""
 
-#: filepicker.admin.inc:332 filepicker.theme.inc:550;560 filepicker.module:856;867;876
+#: filepicker.admin.inc:364 filepicker.theme.inc:323;381;548;558 filepicker.module:841;852;861
 msgid "Name"
 msgstr ""
 
-#: filepicker.admin.inc:333;386 filepicker.module:2117;2128;184
+#: filepicker.admin.inc:365;418 filepicker.module:2033;2044;193
 msgid "Files"
 msgstr ""
 
-#: filepicker.admin.inc:334;591;735 filepicker.module:1004;1861;2117;2128;74;123;150;238;328
+#: filepicker.admin.inc:366;621;763 filepicker.module:989;1845;2033;2044;76;132;159;247;337
 msgid "Groups"
 msgstr ""
 
-#: filepicker.admin.inc:335
+#: filepicker.admin.inc:367
 msgid "Quotas"
 msgstr ""
 
-#: filepicker.admin.inc:336
+#: filepicker.admin.inc:368
 msgid "Used"
 msgstr ""
 
-#: filepicker.admin.inc:367
+#: filepicker.admin.inc:399
 msgid "files"
 msgstr ""
 
-#: filepicker.admin.inc:367;407
+#: filepicker.admin.inc:399;439
 msgid "No files"
 msgstr ""
 
-#: filepicker.admin.inc:368
+#: filepicker.admin.inc:400
 msgid "groups"
 msgstr ""
 
-#: filepicker.admin.inc:368
+#: filepicker.admin.inc:400
 msgid "No groups"
 msgstr ""
 
-#: filepicker.admin.inc:376
+#: filepicker.admin.inc:408
 msgid "No users found."
 msgstr ""
 
-#: filepicker.admin.inc:383
+#: filepicker.admin.inc:415
 msgid "Group Name"
 msgstr ""
 
-#: filepicker.admin.inc:384
+#: filepicker.admin.inc:416
 msgid "User Name"
 msgstr ""
 
-#: filepicker.admin.inc:385
+#: filepicker.admin.inc:417
 msgid "Status"
 msgstr ""
 
-#: filepicker.admin.inc:387 filepicker.group.inc:299;309 filepicker.theme.inc:554;563 filepicker.module:860;870;879
+#: filepicker.admin.inc:419 filepicker.group.inc:299;309 filepicker.theme.inc:552;561 filepicker.module:845;855;864
 msgid "Actions"
 msgstr ""
 
-#: filepicker.admin.inc:406 filepicker.group.inc:81;298 filepicker.module:1495;1569;2146
+#: filepicker.admin.inc:438 filepicker.group.inc:81;298 filepicker.module:1479;1553;2062
 msgid "Public"
 msgstr ""
 
-#: filepicker.admin.inc:406 filepicker.module:1495;1569;2147
+#: filepicker.admin.inc:438 filepicker.module:1479;1553;2063
 msgid "Private"
 msgstr ""
 
-#: filepicker.admin.inc:408;408 filepicker.group.inc:333;333;343;343 filepicker.module:1042;1042;1064;1064
+#: filepicker.admin.inc:440;440 filepicker.group.inc:333;333;343;343 filepicker.module:1027;1027;1048;1048
 msgid "Edit"
 msgstr ""
 
-#: filepicker.admin.inc:409;409 filepicker.group.inc:334;334;344;344 filepicker.module:1001;1004;1043;1043;1065;1065
+#: filepicker.admin.inc:441;441 filepicker.group.inc:334;334;344;344 filepicker.module:986;989;1028;1028;1049;1049
 msgid "Delete"
 msgstr ""
 
-#: filepicker.admin.inc:417 filepicker.group.inc:350
+#: filepicker.admin.inc:449 filepicker.group.inc:350
 msgid "No groups found."
 msgstr ""
 
-#: filepicker.admin.inc:445 filepicker.edit.inc:121;143 filepicker.user.inc:94;114 filepicker.module:604;717;2188
+#: filepicker.admin.inc:476 filepicker.edit.inc:119;140 filepicker.user.inc:94;114 filepicker.module:614;729;2104
 msgid "File not found."
 msgstr ""
 
-#: filepicker.admin.inc:469;483 filepicker.user.inc:123 filepicker.module:631;89
+#: filepicker.admin.inc:500;514 filepicker.user.inc:123 filepicker.module:641;91
 msgid "Edit file"
 msgstr ""
 
-#: filepicker.admin.inc:473;479 filepicker.user.inc:128 filepicker.module:636
+#: filepicker.admin.inc:504;510 filepicker.user.inc:128 filepicker.module:646
 msgid "Delete file"
 msgstr ""
 
-#: filepicker.admin.inc:496;721 filepicker.module:2122;2131;132;202
+#: filepicker.admin.inc:527;749 filepicker.module:2038;2047;141;211
 msgid "Users"
 msgstr ""
 
-#: filepicker.admin.inc:508;748;796 filepicker.module:1739;1814;2157;2451
+#: filepicker.admin.inc:539;776;824 filepicker.module:1723;1798;2073;2367
 msgid "Go"
 msgstr ""
 
-#: filepicker.admin.inc:566
+#: filepicker.admin.inc:596
 msgid "Managing groups for "
 msgstr ""
 
-#: filepicker.admin.inc:579;665
+#: filepicker.admin.inc:609;693
 msgid "Statistics for %name"
 msgstr ""
 
-#: filepicker.admin.inc:582
+#: filepicker.admin.inc:612
 msgid "Groups for %name"
 msgstr ""
 
-#: filepicker.admin.inc:588;712
+#: filepicker.admin.inc:618;740
 msgid "Statistics"
 msgstr ""
 
-#: filepicker.admin.inc:644
+#: filepicker.admin.inc:673
 msgid "Managing files for "
 msgstr ""
 
-#: filepicker.admin.inc:662
+#: filepicker.admin.inc:690
 msgid "Upload file for %name"
 msgstr ""
 
-#: filepicker.admin.inc:668;707
+#: filepicker.admin.inc:696;735
 msgid "List files for %name"
 msgstr ""
 
-#: filepicker.admin.inc:685
+#: filepicker.admin.inc:713
 msgid "Quota for %name"
 msgstr ""
 
-#: filepicker.admin.inc:690
+#: filepicker.admin.inc:718
 msgid "User %name has used %pused percent or %usedbytesprint of quota %quotaprint and has %pl."
 msgstr ""
 
-#: filepicker.admin.inc:693
+#: filepicker.admin.inc:721
 msgid "User %name has used %usedbytesprint and has %pl."
 msgstr ""
 
-#: filepicker.admin.inc:718
+#: filepicker.admin.inc:746
 msgid "List All Files"
 msgstr ""
 
-#: filepicker.admin.inc:779
+#: filepicker.admin.inc:807
 msgid "Set default quota"
 msgstr ""
 
-#: filepicker.admin.inc:781
+#: filepicker.admin.inc:809
 msgid "Set user quota"
 msgstr ""
 
-#: filepicker.admin.inc:823
+#: filepicker.admin.inc:851
 msgid "You need to set the import folder"
 msgstr ""
 
-#: filepicker.admin.inc:834
+#: filepicker.admin.inc:862
 msgid "Please select a user. You have %total files to be imported"
 msgstr ""
 
-#: filepicker.admin.inc:407;687 filepicker.theme.inc:639;647 filepicker.module:1193;1291;2336
+#: filepicker.admin.inc:439;715 filepicker.theme.inc:637;645 filepicker.module:1177;1275;2252
 msgid "1 file"
 msgid_plural "@count files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: filepicker.edit.inc:31 filepicker.upload.inc:51
+#: filepicker.edit.inc:29 filepicker.upload.inc:59
 msgid "Link text"
 msgstr ""
 
-#: filepicker.edit.inc:32
+#: filepicker.edit.inc:30
 msgid "Edit link text of your file"
 msgstr ""
 
-#: filepicker.edit.inc:42
+#: filepicker.edit.inc:40
 msgid "Submit"
 msgstr ""
 
-#: filepicker.edit.inc:47 filepicker.module:1149;1154
+#: filepicker.edit.inc:45 filepicker.upload.inc:248;260 filepicker.module:1133;1138
 msgid "Cancel"
 msgstr ""
 
-#: filepicker.edit.inc:75
+#: filepicker.edit.inc:73
 msgid "Cancelled."
 msgstr ""
 
-#: filepicker.edit.inc:108
+#: filepicker.edit.inc:106
 msgid "File was successfully updated."
 msgstr ""
 
-#: filepicker.edit.inc:112
+#: filepicker.edit.inc:110
 msgid "Error while updating file."
 msgstr ""
 
-#: filepicker.edit.inc:116 filepicker.module:2034
+#: filepicker.edit.inc:114 filepicker.module:1950
 msgid "This file does not belong to you."
 msgstr ""
 
-#: filepicker.edit.inc:117 filepicker.module:2035
+#: filepicker.edit.inc:115 filepicker.module:1951
 msgid "filepicker"
 msgstr ""
 
-#: filepicker.edit.inc:117 filepicker.module:2035
+#: filepicker.edit.inc:115 filepicker.module:1951
 msgid "User uid %d attempted to edit file belonging to user uid %d"
 msgstr ""
 
@@ -598,7 +634,7 @@ msgstr ""
 msgid "Group was successfully inserted"
 msgstr ""
 
-#: filepicker.group.inc:184 filepicker.module:1943
+#: filepicker.group.inc:184 filepicker.module:1927
 msgid "Error while trying to insert your group."
 msgstr ""
 
@@ -658,7 +694,7 @@ msgstr ""
 msgid "!total files found in the filepicker import folder.<br />Selected user is %user"
 msgstr ""
 
-#: filepicker.import.inc:90 filepicker.upload.inc:61 filepicker.module:1219;1869
+#: filepicker.import.inc:90 filepicker.upload.inc:69 filepicker.module:1203;1853
 msgid "Your Groups"
 msgstr ""
 
@@ -666,7 +702,7 @@ msgstr ""
 msgid "Select a group to add this import to."
 msgstr ""
 
-#: filepicker.import.inc:110;129 filepicker.module:254;269
+#: filepicker.import.inc:110;129 filepicker.module:263;278
 msgid "Import"
 msgstr ""
 
@@ -678,7 +714,7 @@ msgstr ""
 msgid "Processed @current out of @total."
 msgstr ""
 
-#: filepicker.import.inc:163 filepicker.upload.inc:169
+#: filepicker.import.inc:163 filepicker.upload.inc:177
 msgid "Unable to create a directory structure for your files."
 msgstr ""
 
@@ -724,91 +760,95 @@ msgid_plural "@count files processed."
 msgstr[0] ""
 msgstr[1] ""
 
-#: filepicker.theme.inc:312
+#: filepicker.theme.inc:306
 msgid "Return to page"
 msgstr ""
 
-#: filepicker.theme.inc:332
-msgid "Size"
-msgstr ""
-
-#: filepicker.theme.inc:338
-msgid "Edit file details"
-msgstr ""
-
-#: filepicker.theme.inc:393
-msgid "Choose the settings you want, place the cursor in the Body box above and Insert file."
-msgstr ""
-
-#: filepicker.theme.inc:551;561 filepicker.module:857;868;877
+#: filepicker.theme.inc:324;382;549;559 filepicker.module:842;853;862
 msgid "Title"
 msgstr ""
 
-#: filepicker.theme.inc:552 filepicker.module:858
+#: filepicker.theme.inc:325
+msgid "Size"
+msgstr ""
+
+#: filepicker.theme.inc:331
+msgid "Edit details for %f"
+msgstr ""
+
+#: filepicker.theme.inc:380
+msgid "Choose the settings you want, place the cursor in the Body box above and Insert file."
+msgstr ""
+
+#: filepicker.theme.inc:550 filepicker.module:843
 msgid "User"
 msgstr ""
 
-#: filepicker.theme.inc:553;562 filepicker.module:859;869;878
+#: filepicker.theme.inc:551;560 filepicker.module:844;854;863
 msgid "Date"
 msgstr ""
 
-#: filepicker.theme.inc:606
+#: filepicker.theme.inc:604
 msgid "No files available."
 msgstr ""
 
-#: filepicker.theme.inc:639
+#: filepicker.theme.inc:637
 msgid "You have selected %c to be deleted"
 msgstr ""
 
-#: filepicker.theme.inc:647
+#: filepicker.theme.inc:645
 msgid "You have selected %c to be grouped"
 msgstr ""
 
-#: filepicker.upload.inc:19;29
+#: filepicker.upload.inc:19
 msgid "Upload files. You can give them a title and description"
 msgstr ""
 
-#: filepicker.upload.inc:43
+#: filepicker.upload.inc:29
+msgid "Upload files. You can give them a Link text"
+msgstr ""
+
+#: filepicker.upload.inc:51
 msgid "File"
 msgstr ""
 
-#: filepicker.upload.inc:44
-msgid "Browse your computer for a file"
+#: filepicker.upload.inc:52
+msgid "Browse your computer for a file, Max. %max"
 msgstr ""
 
-#: filepicker.upload.inc:52
+#: filepicker.upload.inc:60
 msgid "The text to use for a link. The default is the filename"
 msgstr ""
 
-#: filepicker.upload.inc:62
+#: filepicker.upload.inc:70
 msgid "Select a group to add your file to."
 msgstr ""
 
-#: filepicker.upload.inc:81;114 filepicker.module:54;220;297
+#: filepicker.upload.inc:89;122 filepicker.module:56;229;306
 msgid "Upload"
 msgstr ""
 
-#: filepicker.upload.inc:97
+#: filepicker.upload.inc:105
 msgid " file upload field is required."
 msgstr ""
 
-#: filepicker.upload.inc:100 filepicker.user.inc:239
+#: filepicker.upload.inc:108 filepicker.user.inc:239
 msgid "Error while uploading file."
 msgstr ""
 
-#: filepicker.upload.inc:103
+#: filepicker.upload.inc:111
 msgid "Illegal file."
 msgstr ""
 
-#: filepicker.upload.inc:144
+#: filepicker.upload.inc:152
 msgid "File was successfully uploaded."
 msgstr ""
 
-#: filepicker.upload.inc:160
+#: filepicker.upload.inc:168
 msgid "Error while saving information to database for uploaded file."
 msgstr ""
 
-#: filepicker.upload.inc:164
+#: filepicker.upload.inc:172
 msgid "Error while moving uploaded file to its destination."
 msgstr ""
 
@@ -820,7 +860,7 @@ msgstr ""
 msgid "Save configuration"
 msgstr ""
 
-#: filepicker.user.inc:208 filepicker.module:2455
+#: filepicker.user.inc:208 filepicker.module:2371
 msgid "Reset"
 msgstr ""
 
@@ -840,411 +880,415 @@ msgstr ""
 msgid "Configuration settings reset"
 msgstr ""
 
-#: filepicker.module:20
+#: filepicker.module:22
 msgid "Adds an advanced file upload form under the node body part."
 msgstr ""
 
-#: filepicker.module:520;536;47
+#: filepicker.module:530;546;49
 msgid "File picker"
 msgstr ""
 
-#: filepicker.module:625
+#: filepicker.module:635
 msgid "Insert file"
 msgstr ""
 
-#: filepicker.module:710
+#: filepicker.module:721
 msgid "File was successfully deleted"
 msgstr ""
 
-#: filepicker.module:713
+#: filepicker.module:725
 msgid "Error while trying to delete your file from database."
 msgstr ""
 
-#: filepicker.module:915
+#: filepicker.module:900
 msgid "List All Public Files"
 msgstr ""
 
-#: filepicker.module:925
+#: filepicker.module:910
 msgid "List All Private Files"
 msgstr ""
 
-#: filepicker.module:998
+#: filepicker.module:983
 msgid "Bulk operations"
 msgstr ""
 
-#: filepicker.module:1013
+#: filepicker.module:998
 msgid "Update"
 msgstr ""
 
-#: filepicker.module:1128
+#: filepicker.module:1112
 msgid "No files selected"
 msgstr ""
 
-#: filepicker.module:1164
+#: filepicker.module:1148
 msgid "Bulk delete"
 msgstr ""
 
-#: filepicker.module:1165
+#: filepicker.module:1149
 msgid "Delete all the selected files."
 msgstr ""
 
-#: filepicker.module:1171
+#: filepicker.module:1155
 msgid "Delete All"
 msgstr ""
 
-#: filepicker.module:1193
+#: filepicker.module:1177
 msgid "%c deleted"
 msgstr ""
 
-#: filepicker.module:1211
+#: filepicker.module:1195
 msgid "Bulk groups management"
 msgstr ""
 
-#: filepicker.module:1212
+#: filepicker.module:1196
 msgid "Add/Remove all the selected files from groups."
 msgstr ""
 
-#: filepicker.module:1223
+#: filepicker.module:1207
 msgid "Add"
 msgstr ""
 
-#: filepicker.module:1223
+#: filepicker.module:1207
 msgid "Remove"
 msgstr ""
 
-#: filepicker.module:1224
+#: filepicker.module:1208
 msgid "Action"
 msgstr ""
 
-#: filepicker.module:1225
+#: filepicker.module:1209
 msgid "Add or Remove selected files to one or more selected groups."
 msgstr ""
 
-#: filepicker.module:1229
+#: filepicker.module:1213
 msgid "Add/Remove All"
 msgstr ""
 
-#: filepicker.module:1245
+#: filepicker.module:1229
 msgid "You did not select any groups."
 msgstr ""
 
-#: filepicker.module:1291
+#: filepicker.module:1275
 msgid "%c "
 msgstr ""
 
-#: filepicker.module:1291
+#: filepicker.module:1275
 msgid "added"
 msgstr ""
 
-#: filepicker.module:1291
+#: filepicker.module:1275
 msgid "removed"
 msgstr ""
 
-#: filepicker.module:1384
+#: filepicker.module:1368
 msgid "Your search for %searchs found nothing"
 msgstr ""
 
-#: filepicker.module:1393
+#: filepicker.module:1377
 msgid "There are no !status files"
 msgstr ""
 
-#: filepicker.module:1729
+#: filepicker.module:1713
 msgid "Group"
 msgstr ""
 
-#: filepicker.module:1804
+#: filepicker.module:1788
 msgid "Public Group"
 msgstr ""
 
-#: filepicker.module:1873
+#: filepicker.module:1857
 msgid "Save group settings"
 msgstr ""
 
-#: filepicker.module:1934
+#: filepicker.module:1918
 msgid "Error while trying to delete your group."
 msgstr ""
 
-#: filepicker.module:2111
+#: filepicker.module:2027
 msgid "Group statistics"
 msgstr ""
 
-#: filepicker.module:2112
+#: filepicker.module:2028
 msgid "File statistics"
 msgstr ""
 
-#: filepicker.module:2118
+#: filepicker.module:2034
 msgid "Public groups"
 msgstr ""
 
-#: filepicker.module:2118
+#: filepicker.module:2034
 msgid "Public files"
 msgstr ""
 
-#: filepicker.module:2119
+#: filepicker.module:2035
 msgid "Private groups"
 msgstr ""
 
-#: filepicker.module:2119
+#: filepicker.module:2035
 msgid "Private files"
 msgstr ""
 
-#: filepicker.module:2120;2129
+#: filepicker.module:2036;2045
 msgid "Grouped files"
 msgstr ""
 
-#: filepicker.module:2121;2130
+#: filepicker.module:2037;2046
 msgid "Ungrouped files"
 msgstr ""
 
-#: filepicker.module:2122;2131
+#: filepicker.module:2038;2047
 msgid "Space used"
 msgstr ""
 
-#: filepicker.module:2145
+#: filepicker.module:2061
 msgid "All"
 msgstr ""
 
-#: filepicker.module:2153
+#: filepicker.module:2069
 msgid "Show"
 msgstr ""
 
-#: filepicker.module:2237
+#: filepicker.module:2153
 msgid "Unlimited"
 msgstr ""
 
-#: filepicker.module:2238
+#: filepicker.module:2154
 msgid "1 Meg"
 msgstr ""
 
-#: filepicker.module:2239
+#: filepicker.module:2155
 msgid "5 Meg"
 msgstr ""
 
-#: filepicker.module:2240
+#: filepicker.module:2156
 msgid "10 Meg"
 msgstr ""
 
-#: filepicker.module:2241
+#: filepicker.module:2157
 msgid "25 Meg"
 msgstr ""
 
-#: filepicker.module:2242
+#: filepicker.module:2158
 msgid "50 Meg"
 msgstr ""
 
-#: filepicker.module:2243
+#: filepicker.module:2159
 msgid "100 Meg"
 msgstr ""
 
-#: filepicker.module:2244
+#: filepicker.module:2160
 msgid "250 Meg"
 msgstr ""
 
-#: filepicker.module:2245
+#: filepicker.module:2161
 msgid "500 Meg"
 msgstr ""
 
-#: filepicker.module:2246
+#: filepicker.module:2162
 msgid "750 Meg"
 msgstr ""
 
-#: filepicker.module:2247
+#: filepicker.module:2163
 msgid "1 Gig"
 msgstr ""
 
-#: filepicker.module:2248
+#: filepicker.module:2164
 msgid "2 Gig"
 msgstr ""
 
-#: filepicker.module:2249
+#: filepicker.module:2165
 msgid "5 Gig"
 msgstr ""
 
-#: filepicker.module:2344
+#: filepicker.module:2260
 msgid "The quota for %name is %quotaprint and has used %pused percent, or %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2347
+#: filepicker.module:2263
 msgid "Your quota is %quotaprint and you have used %pused percent, or %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2353
+#: filepicker.module:2269
 msgid "The quota for %name is %quotaprint and has used %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2356
+#: filepicker.module:2272
 msgid "Your quota is %quotaprint and you have used %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2362
+#: filepicker.module:2278
 msgid "%name has used %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2365
+#: filepicker.module:2281
 msgid "You have used %usedbytesprint in %pl"
 msgstr ""
 
-#: filepicker.module:2370
+#: filepicker.module:2286
 msgid "%name has used all of quota, please delete some files to make some room."
 msgstr ""
 
-#: filepicker.module:2373
+#: filepicker.module:2289
 msgid "You have used all of your quota, please delete some files to make some room."
 msgstr ""
 
-#: filepicker.module:2430
+#: filepicker.module:2346
 msgid "Search"
 msgstr ""
 
-#: filepicker.module:2436
+#: filepicker.module:2352
 msgid "By Name"
 msgstr ""
 
-#: filepicker.module:2441
+#: filepicker.module:2357
 msgid "By Description"
 msgstr ""
 
-#: filepicker.module:2446
+#: filepicker.module:2362
 msgid "By Title"
 msgstr ""
 
-#: filepicker.module:29
+#: filepicker.module:2654
+msgid "!eta left at !speed/sec"
+msgstr ""
+
+#: filepicker.module:31
 msgid "administer filepicker"
 msgstr ""
 
-#: filepicker.module:29
+#: filepicker.module:31
 msgid "use filepicker"
 msgstr ""
 
-#: filepicker.module:29
+#: filepicker.module:31
 msgid "access own filepicker"
 msgstr ""
 
-#: filepicker.module:29
+#: filepicker.module:31
 msgid "use public filepicker"
 msgstr ""
 
-#: filepicker.module:29
-msgid "create public groups"
+#: filepicker.module:31
+msgid "create public filepicker groups"
 msgstr ""
 
-#: filepicker.module:60;82;211;307
+#: filepicker.module:62;84;220;316
 msgid "List"
 msgstr ""
 
-#: filepicker.module:67;318
+#: filepicker.module:69;327
 msgid "List Public"
 msgstr ""
 
-#: filepicker.module:103 filepicker.info:0
+#: filepicker.module:112 filepicker.info:0
 msgid "Filepicker"
 msgstr ""
 
-#: filepicker.module:104
+#: filepicker.module:113
 msgid "Filepicker settings and administration."
 msgstr ""
 
-#: filepicker.module:112
+#: filepicker.module:121
 msgid "General"
 msgstr ""
 
-#: filepicker.module:113
+#: filepicker.module:122
 msgid "Filepicker settings."
 msgstr ""
 
-#: filepicker.module:124;133;151
+#: filepicker.module:133;142;160
 msgid "Show user groups."
 msgstr ""
 
-#: filepicker.module:141;159;229;338
+#: filepicker.module:150;168;238;347
 msgid "Stats"
 msgstr ""
 
-#: filepicker.module:142
+#: filepicker.module:151
 msgid "Show user group stats."
 msgstr ""
 
-#: filepicker.module:160;230
+#: filepicker.module:169;239
 msgid "Show user stats."
 msgstr ""
 
-#: filepicker.module:174
+#: filepicker.module:183
 msgid "Stats All"
 msgstr ""
 
-#: filepicker.module:175
+#: filepicker.module:184
 msgid "Show user statistics."
 msgstr ""
 
-#: filepicker.module:185
+#: filepicker.module:194
 msgid "Show user files."
 msgstr ""
 
-#: filepicker.module:193
+#: filepicker.module:202
 msgid "List All"
 msgstr ""
 
-#: filepicker.module:194;212
+#: filepicker.module:203;221
 msgid "List user files."
 msgstr ""
 
-#: filepicker.module:203
+#: filepicker.module:212
 msgid "List users."
 msgstr ""
 
-#: filepicker.module:221
+#: filepicker.module:230
 msgid "Upload user files."
 msgstr ""
 
-#: filepicker.module:239
+#: filepicker.module:248
 msgid "List user groups."
 msgstr ""
 
-#: filepicker.module:255
+#: filepicker.module:264
 msgid "Manage bulk imports."
 msgstr ""
 
-#: filepicker.module:270
+#: filepicker.module:279
 msgid "Import files."
 msgstr ""
 
-#: filepicker.module:279;359
+#: filepicker.module:288;368
 msgid "Bulk Operations"
 msgstr ""
 
-#: filepicker.module:287
+#: filepicker.module:296
 msgid "My filepicker"
 msgstr ""
 
-#: filepicker.module:288
+#: filepicker.module:297
 msgid "Manage your filepicker files."
 msgstr ""
 
-#: filepicker.module:298
+#: filepicker.module:307
 msgid "Upload files."
 msgstr ""
 
-#: filepicker.module:308
+#: filepicker.module:317
 msgid "List your filepicker files."
 msgstr ""
 
-#: filepicker.module:319
+#: filepicker.module:328
 msgid "List public filepicker files."
 msgstr ""
 
-#: filepicker.module:329
+#: filepicker.module:338
 msgid "Manage your filepicker groups."
 msgstr ""
 
-#: filepicker.module:339
+#: filepicker.module:348
 msgid "View your filepicker statistics."
 msgstr ""
 
-#: filepicker.module:348
+#: filepicker.module:357
 msgid "Config"
 msgstr ""
 
-#: filepicker.module:349
+#: filepicker.module:358
 msgid "Administer user configuration."
 msgstr ""
 
@@ -1260,7 +1304,7 @@ msgstr ""
 msgid "The primary file identifier."
 msgstr ""
 
-#: filepicker.install:42;79
+#: filepicker.install:42;81
 msgid "The user identifier."
 msgstr ""
 
@@ -1276,39 +1320,39 @@ msgstr ""
 msgid "The file date"
 msgstr ""
 
-#: filepicker.install:71
+#: filepicker.install:73
 msgid "The groups table"
 msgstr ""
 
-#: filepicker.install:74
+#: filepicker.install:76
 msgid "The primary group identifier."
 msgstr ""
 
-#: filepicker.install:85
+#: filepicker.install:87
 msgid "The group name."
 msgstr ""
 
-#: filepicker.install:91
+#: filepicker.install:93
 msgid "The group description."
 msgstr ""
 
-#: filepicker.install:97
+#: filepicker.install:99
 msgid "The currently selected group."
 msgstr ""
 
-#: filepicker.install:104
+#: filepicker.install:106
 msgid "The public flag."
 msgstr ""
 
-#: filepicker.install:111
+#: filepicker.install:113
 msgid "List of roles that may view this group."
 msgstr ""
 
-#: filepicker.install:126
+#: filepicker.install:128
 msgid "The group identifier."
 msgstr ""
 
-#: filepicker.install:132
+#: filepicker.install:134
 msgid "The file identifier."
 msgstr ""
 

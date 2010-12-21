@@ -213,6 +213,37 @@ function filepicker_settings_form(&$form_state) {
     '#default_value' => variable_get('filepicker_upload_progress_message', t('Processing form... please wait.')),
   );
 
+  $vok = FALSE;
+  $extok = FALSE;
+  if (version_compare(phpversion(), FILEPICKER_UPLOAD_STATUS_MIN_PHP) >= 0 ) {
+    $vok = TRUE;
+    if (extension_loaded('uploadprogress')) {
+      $extok = TRUE;
+    }
+  }
+  if ($vok && $extok) {
+    $form['filepicker_progress']['filepicker_uploadprogress'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Upload Progress Extension'),
+      '#collapsible' => TRUE,
+      '#collapsed' => FALSE,
+    );
+
+    $form['filepicker_progress']['filepicker_uploadprogress']['filepicker_uploadprogress_server'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Enable PECL uploadprogress'),
+      '#default_value' => variable_get('filepicker_uploadprogress_server', ''),
+    );
+    $form['filepicker_progress']['filepicker_uploadprogress']['filepicker_uploadprogress_interval'] = array(
+      '#title' => t('Interval Time'),
+      '#description' => t('The interval between each check.'),
+      '#type' => 'textfield',
+      '#size' => 5,
+      '#default_value' => variable_get('filepicker_uploadprogress_interval', 1),
+      '#field_suffix' => t('seconds'),
+    );
+  }
+
   // Groups
   $form['filepicker_groups'] = array(
     '#type' => 'fieldset',
@@ -304,7 +335,11 @@ function filepicker_settings_form_validate($form, &$form_state) {
   if (! is_numeric($form_state['values']['filepicker_upload_progress_delay']) && $form_state['values']['filepicker_upload_progress_delay'] < 0) {
     form_set_error('filepicker_upload_progress_delay', t('The progress delay must be a positive number or zero'));
   }
-
+  if (isset($form_state['values']['filepicker_uploadprogress_interval'])) {
+    if ( ! is_numeric($form_state['values']['filepicker_uploadprogress_interval']) && $form_state['values']['filepicker_uploadprogress_interval'] < 1) {
+      form_set_error('filepicker_uploadprogress_interval', t('The progress interval must be a positive number'));
+    }
+  }
   if (! is_numeric($form_state['values']['filepicker_import_max']) || ($form_state['values']['filepicker_import_max'] < 1 || $form_state['values']['filepicker_import_max'] > 100 )) {
     form_set_error('filepicker_import_max', t('The Import batch size must be must be a positive number.'));
   }
@@ -423,7 +458,6 @@ function filepicker_admin_view($file_id, $account = FALSE) {
     global $user;
     $userdir = FALSE;
   }
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
   $file = _filepicker_get_file($file_id, FALSE, $user);
   if ($file) {
     $filepath = filepicker_get_file_path($file, 'full', $userdir);
@@ -514,7 +548,7 @@ function filepicker_user_search_form_submit($form, &$form_state) {
     $row = db_fetch_array($result);
     if ($row['uid'] ) {
       variable_set('filepicker_currentuser', $row['uid']);
-      drupal_goto(FILEPICKER_ADMIN_PATH .'/'. $form_state['values']['dir'] .'/user/'. $row['uid']. '/list');
+      drupal_goto(FILEPICKER_ADMIN_PATH .'/'. $form_state['values']['dir'] .'/user/'. $row['uid'] .'/list');
     }
     else {
       variable_del('filepicker_currentuser');
@@ -528,7 +562,6 @@ function filepicker_user_search_form_submit($form, &$form_state) {
 
 function filepicker_admin_groups() {
   drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
   module_load_include('inc', 'filepicker', 'filepicker.group');
   if (! arg(4) ) {
     variable_del('filepicker_currentuser');
@@ -594,7 +627,6 @@ function filepicker_admin_groups() {
 
 function filepicker_admin_files() {
   drupal_add_css(FILEPICKER_PATH .'/filepicker.css');
-  drupal_add_js(FILEPICKER_PATH .'/filepicker.js');
   if (! arg(4) ) {
     variable_del('filepicker_currentuser');
     variable_set('filepicker_currentgroup', 0);

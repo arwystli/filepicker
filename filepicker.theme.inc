@@ -79,11 +79,6 @@ function filepicker_theme() {
         'label' => "",
       ),
     ),
-    'filepicker_upload_progress_message' => array(
-      'arguments' => array(
-        'message' => "",
-      ),
-    ),
     'filepicker_user_config' => array(
       'arguments' => array(
         'form' => array(),
@@ -345,14 +340,6 @@ function theme_filepicker_quota($form, $message, $label) {
   return $output;
 }
 
-function theme_filepicker_upload_progress_message($message) {
-  $output = '<div id="sending" class="progress" style="display: none;">';
-  $output .= '<div class="status">'. $message .'</div>';
-  $output .= '<div class="bar"></div>';
-  $output .= '<a id="filepicker_upload_progress_cancel_link" href="#">' . t('Cancel') . '</a>';
-  $output .= '</div>';
-  return $output;
-}
 
 function theme_filepicker_user_config($form, $label='', $help='', $message1='', $message2='') {
   $output = ($label ? '<fieldset><legend>'. $label .'</legend>' : '');
@@ -533,7 +520,12 @@ function theme_filepicker_settings_form($form) {
 
   $jshide = ($form['filepicker_progress']['filepicker_upload_progress_enabled']['#default_value'] ? '' : ' class="js-hide"');
   $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress"'. $jshide .'>';
-  $form['filepicker_progress']['filepicker_upload_progress_message']['#suffix'] = '</div>';
+  if (version_compare(phpversion(), FILEPICKER_UPLOAD_STATUS_MIN_PHP) >= 0 && extension_loaded('uploadprogress')) {
+    $form['filepicker_progress']['filepicker_uploadprogress']['#suffix'] = '</div>';
+  }
+  else {
+    $form['filepicker_progress']['filepicker_upload_progress_message']['#suffix'] = '</div>';
+  }
 
   $jshide = ($form['filepicker_quotas']['filepicker_quota_byrole']['#default_value'] ? '' : ' class="js-hide"');
   $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap_filepicker_quota_role"'. $jshide .'>';

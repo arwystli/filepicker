@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20010-12-26
+------------------------------------
+by hutch, removed jquery_update check
+
 File Picker for D7 in DRUPAL-7--1, 20010-12-21
 ------------------------------------
 by hutch, added PECL uploadprogress support

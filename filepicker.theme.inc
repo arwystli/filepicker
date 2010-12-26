@@ -202,9 +202,9 @@ function template_preprocess_filepicker(&$variables) {
   $variables['styles'] = drupal_get_css();
   $variables['scripts'] = drupal_get_js();
   // fix jquery version thing in the iframe
-  if (module_exists('jquery_update')) {
-    jquery_update_preprocess_page($variables);
-  }
+#  if (module_exists('jquery_update')) {
+#    jquery_update_preprocess_page($variables);
+#  }
   $tabs = menu_local_tabs();
   $variables['tabs'] = theme('menu_local_tasks', array('primary' => $tabs['#primary']));
   $variables['messages'] = filepicker_strip_messages(theme('status_messages'));

@@ -53,7 +53,7 @@ function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $accoun
  */
 function filepicker_edit_form_cancel($form, &$form_state) {
   $file_id = $form_state['values']['file_id'];
-  if ($form_state['values']['account'] && $form_state['values']['src'] == 'admin') {
+  if (isset($form_state['values']['account']) && $form_state['values']['src'] == 'admin') {
     $user = user_load($form_state['values']['account']);
   }
   else {
@@ -62,7 +62,6 @@ function filepicker_edit_form_cancel($form, &$form_state) {
 
   if ($form_state['values']['src'] == 'admin') {
     $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
-
   }
   elseif ($form_state['values']['src'] == 'account') {
     $outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;

@@ -110,7 +110,7 @@ function filepicker_settings_form($form, &$form_state) {
     '#title' => t('Set Date Format'),
     '#description' => t("Select the Date format to use in tables."),
     '#default_value' => filepicker_variable_get('filepicker_dateformat_default', 'medium'),
-    '#options' => array('small' => t('Small'), 'medium' => t('Medium'), 'large' => t('Long')),
+    '#options' => array('short' => t('Short'), 'medium' => t('Medium'), 'long' => t('Long')),
   );
 
   $form['filepicker_defaults']['filepicker_upload_extensions'] = array(
@@ -300,14 +300,14 @@ function filepicker_settings_form($form, &$form_state) {
   $form['filepicker_import']['filepicker_import_delete'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Bulk import deletion'),
-    '#description' => t('Delete uploaded source files after succesful import into filepicker.'),
+    '#description' => t('Delete uploaded source files after succesful import into filepicker.<br />The files should be writeable by the web server for this option to work.'),
     '#return_value' => 1,
     '#default_value' => filepicker_variable_get('filepicker_import_delete', 0),
   );
   $form['filepicker_import']['filepicker_import_max'] = array(
     '#type' => 'textfield',
     '#title' => t('Default Import Batch size'),
-    '#description' => t('How many files to process at a time. Must be greater than 1 and less than 100.'),
+    '#description' => t('How many files to process at a time. Must be greater than 0 and less than 100.'),
     '#size' => 3,
     '#required' => TRUE,
     '#default_value' => filepicker_variable_get('filepicker_import_max', 5),

@@ -608,8 +608,8 @@ function theme_filepicker_multitask_groups_form($variables) {
 function theme_filepicker_import_form($variables) {
   $form = $variables['form'];
   $output = '';
-  $markup = $form['total']['#value'];
-  $form['total']['#value'] = '<p>' . $markup . '</p>';
+  $markup = $form['total']['#markup'];
+  $form['total']['#markup'] = '<p>' . $markup . '</p>';
   $output .= drupal_render_children($form);
   return $output;
 }

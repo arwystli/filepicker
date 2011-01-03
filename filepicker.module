@@ -1023,6 +1023,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     '#type' => 'value',
     '#value' => $path,
   );
+  $fmt = filepicker_variable_get('filepicker_dateformat_default', 'medium');
   $rowct = 0;
   $options = array();
   // iterate
@@ -1031,7 +1032,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     $file_name = check_plain($row->file_name);
     $file_id = $row->file_id;
     $filelink = l($file_name, $filepath . $file_id);
-    $file_date = format_date($row->file_date, filepicker_variable_get('filepicker_dateformat_default', 'medium'));
+    $file_date = format_date($row->file_date, $fmt);
 
     if ($public && $src == 'admin') {
       $editpath   = $path . '/files/user/' . $row->uid . '/edit/';

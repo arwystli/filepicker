@@ -315,7 +315,7 @@ function filepicker_groups_list($src=FALSE, $account=FALSE, $label="") {
   $sql = "SELECT g.gid, g.group_name, g.group_description, g.public, COUNT(i.file_id) AS ct
     FROM {filepicker_user_groups} g LEFT JOIN {filepicker_group_files} i USING(gid)
     WHERE  g.uid=%d
-    GROUP BY g.gid". tablesort_sql($header);
+    GROUP BY g.gid, g.group_name, g.group_description, g.public". tablesort_sql($header);
 
   $result = pager_query($sql, $how_many, 0, $countsql, array($user->uid));
   $rows = array();

@@ -179,7 +179,8 @@ function filepicker_import_batch(&$form_state, $selected, $options, $account, &$
     $context['sandbox']['files'] = $selected;
   }
   // Process files by groups of 5.
-  $count = min(5, count($context['sandbox']['files']));
+  $max = variable_get('filepicker_import_max', 5);
+  $count = min($max, count($context['sandbox']['files']));
   for ($i = 0; $i < $count; $i++) {
     $index = array_shift($context['sandbox']['files']);
 

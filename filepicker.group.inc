@@ -337,7 +337,10 @@ function filepicker_groups_list($src=FALSE, $account=FALSE, $label="") {
   $query->leftjoin('users', 'u', 'g.uid = u.uid');
   $query->condition('g.uid', $user->uid)
     ->condition('u.status', 1)
-    ->groupBy('g.gid');
+    ->groupBy('g.gid')
+    ->groupBy('g.group_name')
+    ->groupBy('g.group_description')
+    ->groupBy('g.public');
   $result = $query->execute();
 
   $rows = array();

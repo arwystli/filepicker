@@ -248,14 +248,13 @@ function filepicker_import_finished($success, $results, $operations) {
  */
 function filepicker_import_dir_form($form, &$form_state) {
   $readstate = t('readable');
-  if (imagepicker_variable_get('imagepicker_import_delete', 0)) {
+  if (filepicker_variable_get('filepicker_import_delete', 0)) {
     $readstate = t('writeable');
   }
 
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filepicker Import Folder'),
-
     '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload images to, via FTP or rsync.<br />This folder must be !readstate by the webserver.', array('!readstate' => $readstate)),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
@@ -292,7 +291,6 @@ function filepicker_import_dir_form_validate($form, &$form_state) {
       }
     }
     elseif (! file_exists($importdir)) {
-      $errmsg = t('Directory not found or not readable');
       form_set_error('filepicker_import_dir', t('Directory not found or not readable'));
     }
   }

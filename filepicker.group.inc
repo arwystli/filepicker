@@ -264,7 +264,7 @@ function filepicker_role_has_permission($rid) {
 
   $query = db_select('role_permission', 'p');
   $query->addExpression('COUNT(rid)', 'ct');
-  $query->condition('rid', $rid)->condition('permission', '%use public imagepicker%', 'LIKE');
+  $query->condition('rid', $rid)->condition('permission', '%use public filepicker%', 'LIKE');
   $row = $query->execute()->fetchObject();
   return $row->ct;
 }

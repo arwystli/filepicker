@@ -5,7 +5,7 @@
 
 /**
  * @file
- * template for imagepicker iframe
+ * template for filepicker iframe
  */
 
 ?>
@@ -22,7 +22,7 @@
   xmlns:skos="http://www.w3.org/2004/02/skos/core#"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
 <head profile="http://www.w3.org/1999/xhtml/vocab">
-<!-- imagepicker.tpl.php -->
+<!-- filepicker.tpl.php -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
   <title><?php echo $head_title ?></title>

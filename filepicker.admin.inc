@@ -300,7 +300,7 @@ function filepicker_settings_form(&$form_state) {
   $form['filepicker_import']['filepicker_import_delete'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Bulk import deletion'),
-    '#description' => t('Delete uploaded source files after succesful import into filepicker.'),
+    '#description' => t('Delete uploaded source files after succesful import into filepicker.<br />The files should be writeable by the web server for this option to work.'),
     '#return_value' => 1,
     '#default_value' => variable_get('filepicker_import_delete', 0),
   );
@@ -543,8 +543,13 @@ function filepicker_user_search_form(&$form_state, $dir) {
 
 function filepicker_user_search_form_submit($form, &$form_state) {
   if ($form_state['values']['filepicker_currentuser']) {
+    if ($form_state['values']['dir'] == 'import') {
+      $result = db_query("SELECT u.uid FROM {users} u WHERE u.name = '%s'", $form_state['values']['filepicker_currentuser']);
+    }
+    else {
+      $result = db_query("SELECT u.uid FROM {users} u, {filepicker} i WHERE u.name = '%s' AND u.uid=i.uid", $form_state['values']['filepicker_currentuser']);
+    }
 
-    $result = db_query("SELECT u.uid FROM {users} u, {filepicker} i WHERE u.name = '%s' AND u.uid=i.uid", $form_state['values']['filepicker_currentuser']);
     $row = db_fetch_array($result);
     if ($row['uid'] ) {
       variable_set('filepicker_currentuser', $row['uid']);
@@ -864,6 +869,7 @@ function filepicker_admin_import() {
     }
   }
   if ($msg = $_SESSION['filepicker_import_status']) {
+    drupal_get_messages('status', TRUE);
     drupal_set_message($msg);
     unset($_SESSION['filepicker_import_status']);
   }
@@ -876,9 +882,22 @@ function filepicker_admin_import() {
 function filepicker_user_autocomplete($string = '') {
   $matches = array();
   if ($string) {
-    $result = db_query_range("SELECT DISTINCT u.name FROM {users} u, {filepicker} i WHERE LOWER(u.name) LIKE LOWER('%s%%') AND u.uid=i.uid", $string, 0, 10);
-    while ($user = db_fetch_object($result)) {
-      $matches[$user->name] = check_plain($user->name);
+    if (arg(3) == 'import') {
+      $result = db_query_range("SELECT u.uid, u.name FROM {users} u WHERE LOWER(u.name) LIKE LOWER('%s%%')", $string, 0, 10);
+    }
+    else {
+      $result = db_query_range("SELECT DISTINCT u.name FROM {users} u, {filepicker} i WHERE LOWER(u.name) LIKE LOWER('%s%%') AND u.uid=i.uid", $string, 0, 10);
+    }
+    while ($account = db_fetch_object($result)) {
+      if (arg(3) == 'import') {
+        $user = user_load(array('uid' => $account->uid));
+        if (user_access('use filepicker', $user)) {
+          $matches[$account->name] = check_plain($account->name);
+        }
+      }
+      else {
+        $matches[$account->name] = check_plain($account->name);
+      }
     }
   }
   print drupal_to_js($matches);

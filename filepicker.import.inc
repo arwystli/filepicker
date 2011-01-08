@@ -14,41 +14,49 @@
  * @return
  *   Returns the number of files.
  */
-function filepicker_import_dir_check($account = FALSE) {
+function filepicker_import_dir_check($checkonly = FALSE) {
+  $importok = TRUE;
   if (! $importdir = variable_get('filepicker_import_dir', '')) {
+    $importok = FALSE;
+    $errmsg = t('Import Directory not set');
+    $errstatus = 'status';
+  }
+  elseif (variable_get('filepicker_import_delete', 0)) {
+    if (! file_check_directory($importdir, TRUE)) {
+      $importok = FALSE;
+      $errmsg = t('Directory not found or not writable');
+      $errstatus = 'error';
+    }
+  }
+  elseif (! file_exists($importdir)) {
+    $importok = FALSE;
+    $errmsg = t('Directory not found or not readable');
+    $errstatus = 'error';
+  }
+  if (! $importok) {
+    drupal_set_message($errmsg, $errstatus);
     return FALSE;
   }
-  if ($account) {
-    $user = $account;
-  }
-  else {
-    global $user;
-  }
-  if (file_check_directory($importdir, TRUE)) {
 
-    // clear out the noisy 'created' messages
-    drupal_get_messages('status', TRUE);
-    $importlist = file_scan_directory($importdir, ".*", array('.', '..', 'CVS'), 0, FALSE);
-    $checked_importlist = array();
-    $bad_importlist = array();
-    if (count($importlist)) {
-      foreach ($importlist AS $k => $v) {
-        $file = $importlist[$k]->basename;
-        $fullfile = $importlist[$k]->filename;
-        if (filepicker_validate_is_file($file)) {
-          $checked_importlist[] = $file;
-        }
-        else {
-          $bad_importlist[] = $fullfile;
-        }
+  if ($checkonly) {
+    return TRUE;
+  }
+
+  // clear out the noisy 'created' messages
+  drupal_get_messages('status', TRUE);
+  $importlist = file_scan_directory($importdir, ".*", array('.', '..', 'CVS'), 0, FALSE);
+  $checked_importlist = array();
+  $bad_importlist = array();
+  if (count($importlist)) {
+    foreach ($importlist AS $k => $v) {
+      $file = $importlist[$k]->basename;
+      if (filepicker_validate_is_file($file)) {
+        $checked_importlist[] = $file;
       }
     }
-    else {
-      drupal_set_message(t('No files to import.'), 'warning');
-    }
   }
   else {
-    drupal_set_message(t('Unable to create a directory structure for your import folder.'), 'error');
+    drupal_set_message(t('No files to import.'), 'warning');
   }
   return (count($checked_importlist) > 0 ? $checked_importlist : 0);
 }
@@ -115,13 +123,6 @@ function filepicker_import_form(&$form_state, $total, $account=FALSE, $admin = F
 }
 
 /**
- * Validate form
- */
-function filepicker_import_form_validate($form, &$form_state) {
-
-}
-
-/**
  * Submit form
  */
 function filepicker_import_form_submit($form, &$form_state) {
@@ -138,14 +139,13 @@ function filepicker_import_form_submit($form, &$form_state) {
     $sourcedir = variable_get('filepicker_import_dir', '');
 
     if (file_check_directory($destdir, TRUE)
-      && file_check_directory($sourcedir, TRUE)
+      && $selected = filepicker_import_dir_check()
       ) {
       // clear out the noisy 'created' messages
       drupal_get_messages('status', TRUE);
       // Add DIRECTORY_SEPARATORS here because drupals' functions remove trailing slashes
       $options['destdir'] = $destdir . DIRECTORY_SEPARATOR;
       $options['sourcedir'] = $sourcedir;
-      $selected = filepicker_import_dir_check();
 
       $batch = array(
         'title' => t('Importing files'),
@@ -160,12 +160,12 @@ function filepicker_import_form_submit($form, &$form_state) {
       // batch_process();
     }
     else {
-      drupal_set_message(t('Unable to create a directory structure for your files.'), 'error');
+      drupal_set_message(t('Unable to import.'), 'error');
     }
   }
 }
 
-function filepicker_import_batch(&$form_state, $selected, $options, $account, &$context) {
+function filepicker_import_batch($form_state, $selected, $options, $account, &$context) {
   if ($account) {
     $user = $account;
   }
@@ -239,6 +239,7 @@ function filepicker_import_batch(&$form_state, $selected, $options, $account, &$
 function filepicker_import_finished($success, $results, $operations) {
   if ($success) {
     $message = format_plural(count($results), 'One file processed.', '@count files processed.');
+    variable_del('filepicker_import_dir');
   }
   else {
     $message = t('Finished with an error.');
@@ -253,13 +254,17 @@ function filepicker_import_finished($success, $results, $operations) {
  *   Returns the import folder form.
  */
 function filepicker_import_dir_form(&$form_state) {
+  $readstate = t('readable');
+  if (variable_get('filepicker_import_delete', 0)) {
+    $readstate = t('writeable');
+  }
 
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filepicker Import Folder'),
-    '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload files to, via FTP or rsync.'),
+    '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload files to, via FTP or rsync.<br />This folder must be !readstate by the webserver.', array('!readstate' => $readstate)),
     '#collapsible' => TRUE,
-    '#collapsed' => (variable_get('filepicker_import_dir', '') ? TRUE : FALSE),
+    '#collapsed' => FALSE,
   );
   $form['filepicker_import']['filepicker_import_dir'] = array(
     '#type' => 'textfield',
@@ -273,6 +278,10 @@ function filepicker_import_dir_form(&$form_state) {
     '#type' => 'submit',
     '#value' => t('Save'),
   );
+  $form['filepicker_import']['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+  );
 
   return $form;
 }
@@ -282,8 +291,15 @@ function filepicker_import_dir_form(&$form_state) {
  */
 function filepicker_import_dir_form_validate($form, &$form_state) {
   $importdir = $form_state['values']['filepicker_import_dir'];
-  if ($importdir && ! file_check_directory($importdir, TRUE)) {
-    form_set_error('filepicker_import_dir', t('The folder does not exist.'));
+  if ($form_state['values']['op'] == t('Save')) {
+    if (variable_get('filepicker_import_delete', 0)) {
+      if (! file_check_directory($importdir, TRUE)) {
+        form_set_error('filepicker_import_dir', t('Directory not found or not writable'));
+      }
+    }
+    elseif (! file_exists($importdir)) {
+      form_set_error('filepicker_import_dir', t('Directory not found or not readable'));
+    }
   }
 }
 
@@ -291,5 +307,10 @@ function filepicker_import_dir_form_validate($form, &$form_state) {
  * Submit form
  */
 function filepicker_import_dir_form_submit($form, &$form_state) {
-  variable_set('filepicker_import_dir', $form_state['values']['filepicker_import_dir']);
+  if ($form_state['values']['op'] == t('Save')) {
+    variable_set('filepicker_import_dir', $form_state['values']['filepicker_import_dir']);
+  }
+  else {
+    variable_del('filepicker_import_dir');
+  }
 }

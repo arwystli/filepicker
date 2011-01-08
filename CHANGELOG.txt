@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20011-01-08
+------------------------------------
+by hutch, more import fixes
+
 File Picker for D7 in DRUPAL-7--1, 20011-01-03
 ------------------------------------
 by hutch, reworked import

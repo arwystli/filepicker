@@ -326,8 +326,11 @@ function filepicker_settings_form($form, &$form_state) {
  */
 function filepicker_settings_form_validate($form, &$form_state) {
   global $user;
-  if (! is_numeric($form_state['values']['filepicker_advanced_iframe_height'])) {
-    form_set_error('filepicker_advanced_iframe_height', t('The Iframe height must be a number'));
+  if (! is_numeric($form_state['values']['filepicker_rows_per_page']) || $form_state['values']['filepicker_rows_per_page'] < 1 ) {
+    form_set_error('filepicker_rows_per_page', t('The rows per page field must be greater than one.'));
+  }
+  if (! is_numeric($form_state['values']['filepicker_advanced_iframe_height']) || $form_state['values']['filepicker_advanced_iframe_height'] < 1 ) {
+    form_set_error('filepicker_advanced_iframe_height', t('The Iframe height must be a positive number'));
   }
   if (! drupal_strlen($form_state['values']['filepicker_advanced_iframe_width'])) {
     form_set_error('filepicker_advanced_iframe_width', t('You must fill in the Iframe width'));
@@ -335,11 +338,11 @@ function filepicker_settings_form_validate($form, &$form_state) {
   if (! drupal_strlen($form_state['values']['filepicker_advanced_iframe_border'])) {
     form_set_error('filepicker_advanced_iframe_border', t('You must fill in the Iframe border'));
   }
-  if (! is_numeric($form_state['values']['filepicker_upload_progress_delay']) && $form_state['values']['filepicker_upload_progress_delay'] < 0) {
+  if (! is_numeric($form_state['values']['filepicker_upload_progress_delay']) || $form_state['values']['filepicker_upload_progress_delay'] < 0) {
     form_set_error('filepicker_upload_progress_delay', t('The progress delay must be a positive number or zero'));
   }
   if (isset($form_state['values']['filepicker_uploadprogress_interval'])) {
-    if ( ! is_numeric($form_state['values']['filepicker_uploadprogress_interval']) && $form_state['values']['filepicker_uploadprogress_interval'] < 1) {
+    if ( ! is_numeric($form_state['values']['filepicker_uploadprogress_interval']) || $form_state['values']['filepicker_uploadprogress_interval'] < 1) {
       form_set_error('filepicker_uploadprogress_interval', t('The progress interval must be a positive number'));
     }
   }

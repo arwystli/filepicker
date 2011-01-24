@@ -63,7 +63,6 @@ function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
     '#title' => t('Group name'),
     '#size' => 20,
     '#default_value' => (isset($record->group_name) ? $record->group_name : ''),
-    '#description' => t(''),
     '#required' => TRUE
   );
   $form['groupsave']['group_description'] = array(

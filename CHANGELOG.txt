@@ -1,6 +1,10 @@
 // $Id$
 // $Name$
 
+File Picker for D6 in DRUPAL-6--1, 20011-02-17
+------------------------------------
+by hutch, reorganised functions for reduced footprint
+
 File Picker for D6 in DRUPAL-6--1, 20011-01-24
 ------------------------------------
 by hutch, fixed rows per page bug

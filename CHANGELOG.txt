@@ -1,9 +1,14 @@
 // $Id$
 // $Name$
 
+File Picker for D7 in DRUPAL-7--1, 20011-02-22
+------------------------------------
+by hutch, fixed rename bug
+
 File Picker for D7 in DRUPAL-7--1, 20011-02-17
 ------------------------------------
 by hutch, reorganised functions for reduced footprint
+
 
 File Picker for D7 in DRUPAL-7--1, 20011-01-24
 ------------------------------------

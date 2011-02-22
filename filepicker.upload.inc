@@ -208,8 +208,10 @@ function filepicker_copy_uploaded_file($destination, $name) {
       $file = filepicker_get_uploaded_file_name($destination, $name);
       $destination .= $file;
 
-      file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
-      return $file;
+      $file_moved = file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
+      // might be renamed if a file of same name already exists
+      $file_moved = substr($file_moved, strrpos($file_moved, DIRECTORY_SEPARATOR)+1);
+      return $file_moved;
     }
   }
   return FALSE;

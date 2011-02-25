@@ -1,4 +1,3 @@
-// $Id$
 // Original Id: upload_progress.js,v 1.1 2007/11/17 06:47:47 pfournier Exp
 /**
  * @file

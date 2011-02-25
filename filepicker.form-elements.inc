@@ -1,5 +1,4 @@
 <?php
-// $Id$
 // $Name$
 // for D6. Version 2
 /**

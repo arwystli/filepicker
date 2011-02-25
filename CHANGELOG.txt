@@ -1,4 +1,3 @@
-// $Id$
 // $Name$
 
 File Picker for D7 in DRUPAL-7--1, 20011-02-22

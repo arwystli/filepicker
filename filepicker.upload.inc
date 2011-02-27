@@ -1,5 +1,4 @@
 <?php
-// $Name$
 
 /**
  * @file

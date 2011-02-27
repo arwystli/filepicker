@@ -1808,19 +1808,6 @@ function _filepicker_quota_check($src, $account = FALSE) {
   return array($quota_ok, $message1, $message2);
 }
 
-
-function filepicker_get_colorbox_perms() {
-  global $user;
-  if ((module_exists('colorbox')
-    && filepicker_variable_get('filepicker_advanced_colorbox', 0, $user->uid)
-    && filepicker_variable_get('filepicker_advanced_colorbox', 0 )
-    && variable_get('colorbox_load', 0))
-    ) {
-    return TRUE;
-  }
-  return FALSE;
-}
-
 /**
  * Function to display the file search form
  *

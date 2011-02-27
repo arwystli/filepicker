@@ -1,6 +1,4 @@
 <?php
-// $Name$
-// for D7
 
 /**
  * @file

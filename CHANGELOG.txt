@@ -1,5 +1,9 @@
 // $Name$
 
+File Picker for D7 in 7.x-1.x, 20011-02-27
+------------------------------------
+by hutch, removed old cvs keyword
+
 File Picker for D7 in DRUPAL-7--1, 20011-02-22
 ------------------------------------
 by hutch, fixed rename bug

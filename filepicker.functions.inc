@@ -1741,24 +1741,6 @@ function _filepicker_quota_check($src, $account = FALSE) {
   return array($quota_ok, $message1, $message2);
 }
 
-
-function filepicker_get_colorbox_perms() {
-  global $user;
-  if ((module_exists('colorbox')
-    && isset($user->filepicker_advanced_colorbox)
-    && $user->filepicker_advanced_colorbox
-    && variable_get('filepicker_advanced_colorbox', 0 )
-    && variable_get('colorbox_load', 0))
-      || (module_exists('colorbox')
-    && ! isset($user->filepicker_advanced_colorbox)
-    && variable_get('filepicker_advanced_colorbox', 0)
-    && variable_get('colorbox_load', 0))
-    ) {
-    return TRUE;
-  }
-  return FALSE;
-}
-
 /**
  * Function to display the file search form
  *

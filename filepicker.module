@@ -555,3 +555,19 @@ function filepicker_form_alter(&$form, &$form_state, $form_id) {
   }
 }
 
+function filepicker_get_colorbox_perms() {
+  global $user;
+  if ((module_exists('colorbox')
+    && isset($user->filepicker_advanced_colorbox)
+    && $user->filepicker_advanced_colorbox
+    && variable_get('filepicker_advanced_colorbox', 0 )
+    && variable_get('colorbox_load', 0))
+      || (module_exists('colorbox')
+    && ! isset($user->filepicker_advanced_colorbox)
+    && variable_get('filepicker_advanced_colorbox', 0)
+    && variable_get('colorbox_load', 0))
+    ) {
+    return TRUE;
+  }
+  return FALSE;
+}

@@ -1,4 +1,8 @@
-// $Name$
+
+File Picker for D6 in 6.x-1.x, 20011-02-27
+------------------------------------
+by hutch, changed InsertatCursor to filepickerInsertatCursor
+  in filepicker_iframe.js to avoid potential clashes with insert module
 
 File Picker for D6 in DRUPAL-6--1, 20011-02-17
 ------------------------------------
@@ -36,3 +40,4 @@ by hutch, removed colorbox_enable option
 File Picker  for D6 in DRUPAL-6--1, 20010-12-01
 ------------------------------------
 by hutch, fixed imagepicker incompatibility
+

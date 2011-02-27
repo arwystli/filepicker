@@ -112,10 +112,10 @@ if (Drupal.jsEnabled) {
         var nodeBody = win.document.getElementById('edit-body');
         var commentBody = win.document.getElementById('edit-comment');
         if (nodeBody) {
-          insertAtCursor(nodeBody, filepInsertion);
+          filepicker_insertAtCursor(nodeBody, filepInsertion);
         }
         if (commentBody) {
-          insertAtCursor(commentBody, filepInsertion);
+          filepicker_insertAtCursor(commentBody, filepInsertion);
         }
       }
       if (! colorbox_iframe) {
@@ -125,7 +125,7 @@ if (Drupal.jsEnabled) {
   }
 
   // Copy pasted from internet but modified to detect browser
-  function insertAtCursor(myField, myValue) {
+  function filepicker_insertAtCursor(myField, myValue) {
     browser = filepicker_browser_detect();
     if (browser == 'msie') {
       if (document.selection) {

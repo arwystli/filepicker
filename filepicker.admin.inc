@@ -298,7 +298,7 @@ function filepicker_settings_form(&$form_state) {
   $form['filepicker_import']['filepicker_import_delete'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable Bulk import deletion'),
-    '#description' => t('Delete uploaded source files after succesful import into filepicker.<br />The files should be writeable by the web server for this option to work.'),
+    '#description' => t('Delete uploaded source files after successful import into filepicker.<br />The files should be writeable by the web server for this option to work.'),
     '#return_value' => 1,
     '#default_value' => variable_get('filepicker_import_delete', 0),
   );

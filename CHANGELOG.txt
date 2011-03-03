@@ -1,4 +1,8 @@
 
+File Picker for D6 in 6.x-1.x, 20011-03-03
+------------------------------------
+by hutch, added private download support
+
 File Picker for D6 in 6.x-1.x, 20011-02-27
 ------------------------------------
 by hutch, changed InsertatCursor to filepickerInsertatCursor
@@ -30,7 +34,7 @@ by hutch, fixed filesize, pathing in various places
 
 File Picker  for D6 in DRUPAL-6--1, 20010-12-04
 ------------------------------------
-by hutch, fixed $form_state reference bug, 
+by hutch, fixed $form_state reference bug,
   preg_match bug in extension detection
 
 File Picker  for D6 in DRUPAL-6--1, 20010-12-03

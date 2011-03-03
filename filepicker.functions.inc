@@ -182,37 +182,45 @@ function _filepicker_file_delete($file_id, $account=FALSE, $src='iframe', $suppr
 /**
  * some common utilities
  */
-function filepicker_get_path($url = FALSE, $userdir = FALSE) {
-  global $user, $base_url;
+function filepicker_get_path($url = FALSE, $userdir = FALSE, $system = TRUE) {
+  global $base_url;
 
   $dirsep = !$url ? DIRECTORY_SEPARATOR : '/';
 
   if (!$url) {
-    $path = str_replace('/', DIRECTORY_SEPARATOR, getcwd());
-  }
-  elseif (variable_get('filepicker_use_full_url', 0)) {
-    $path = $base_url;
+    $path = filepicker_get_files_directory() . $dirsep;
   }
   else {
-    $path = base_path();
-    $path = preg_replace("/\/$/", "", $path);
+    if (variable_get('filepicker_use_full_url', 0)) {
+      $path = $base_url;
+    }
+    else {
+      $path = base_path();
+      $path = preg_replace("/\/$/", "", $path);
+    }
+    $path .= $dirsep . file_directory_path() . $dirsep . FILEPICKER_FILES_DIR . $dirsep;
   }
-
-  $path .= $dirsep . file_directory_path() . $dirsep . FILEPICKER_FILES_DIR . $dirsep;
 
   if ($userdir) {
-    $useruid = !is_array($userdir) ? $user->uid : $userdir['uid'];
-    $path .= $useruid . $dirsep;
+    $path .= filepicker_get_userpath($userdir, $dirsep);
   }
+  return $path;
+}
 
+function filepicker_get_userpath($userdir, $dirsep = '/') {
+  global $user;
+  $path = '';
+  $useruid = !is_array($userdir) ? $user->uid : $userdir['uid'];
+  $path .= $useruid . $dirsep;
   return $path;
 }
 
 function filepicker_get_file_path($file, $public = FALSE) {
-  $filebasedir = filepicker_get_path(FALSE, (is_array($public) ? $public : TRUE));
+  $userdir = is_array($public) ? $public : TRUE;
+  $filebasedir = filepicker_get_path(FALSE, $userdir);
   $filepath = '';
   if (file_exists($filebasedir . $file['file_name'])) {
-    $filepath = filepicker_get_path(TRUE, (is_array($public) ? $public : TRUE)) . $file['file_name'];
+    $filepath = file_create_url(FILEPICKER_FILES_DIR . '/' . filepicker_get_userpath($userdir) . $file['file_name']);
   }
   return $filepath;
 }
@@ -1377,9 +1385,20 @@ function filepicker_insert_group_file($record) {
   }
 }
 
-function filepicker_get_files_directory() {
-  $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR;
-  $dir = $drupaldir . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
+function filepicker_get_files_directory($system_only = FALSE) {
+  include_once(drupal_get_path('module', 'filepicker') . '/filepicker.module');
+  include_once('./includes/file.inc');
+  $drupal_path = file_directory_path();
+  if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PRIVATE) {
+    $drupaldir = $drupal_path;
+  }
+  else {
+    $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR . $drupal_path;
+  }
+  if ($system_only) {
+    return $drupaldir;
+  }
+  $dir = $drupaldir . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
   return $dir;
 }
 

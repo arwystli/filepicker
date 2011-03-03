@@ -570,3 +570,25 @@ function filepicker_get_colorbox_perms() {
   }
   return FALSE;
 }
+
+/**
+ * Implementation of hook_file_download().
+ */
+function filepicker_file_download($filepath) {
+  $filebasedir = filepicker_get_files_directory(TRUE);
+  $file = $filebasedir . DIRECTORY_SEPARATOR . $filepath;
+  if (file_exists($file) & is_file($file)) {
+    // There is a file, and it's in our directory structure. So send it.
+    $mimetype = file_get_mimetype($filepath);
+    return array('Content-type:' . $mimetype);
+  }
+  else {
+    $path_parts = explode('/', $filepath);
+    if ($path_parts[0] == FILEPICKER_FILES_DIR) {
+      // The file is allegedly in our directory, but doesn't exist.
+      return -1;
+    }
+  }
+  // Not our file; let someone else decide.
+  return NULL;
+}

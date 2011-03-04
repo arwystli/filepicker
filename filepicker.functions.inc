@@ -218,9 +218,20 @@ function filepicker_get_userpath($userdir, $dirsep = '/') {
 function filepicker_get_file_path($file, $public = FALSE) {
   $userdir = is_array($public) ? $public : TRUE;
   $filebasedir = filepicker_get_path(FALSE, $userdir);
+  if (is_object($file)) {
+    $file_name = $file->file_name;
+  }
+  else {
+    $file_name = $file['file_name'];
+  }
   $filepath = '';
-  if (file_exists($filebasedir . $file['file_name'])) {
-    $filepath = file_create_url(FILEPICKER_FILES_DIR . '/' . filepicker_get_userpath($userdir) . $file['file_name']);
+  if (file_exists($filebasedir . $file_name)) {
+    if (variable_get('filepicker_use_full_url', 0) || variable_get('file_downloads', '1') == 2) {
+      $filepath = file_create_url(FILEPICKER_FILES_DIR . '/' . filepicker_get_userpath($userdir) . $file_name);
+    }
+    else {
+      $filepath = filepicker_get_path(TRUE, $userdir) . $file_name;
+    }
   }
   return $filepath;
 }

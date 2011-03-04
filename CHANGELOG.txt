@@ -1,3 +1,6 @@
+File Picker for D6 in 6.x-1.x, 20011-03-04
+------------------------------------
+by hutch, improved private download support
 
 File Picker for D6 in 6.x-1.x, 20011-03-03
 ------------------------------------

@@ -8,7 +8,7 @@
 define('FILEPICKER_FILES_DIR', 'filepicker');
 define('FILEPICKER_ADMIN_PATH', 'admin/config/media/filepicker');
 define('FILEPICKER_PATH', drupal_get_path('module', 'filepicker'));
-define('FILEPICKER_FILE_SCHEME', 'public://');
+define('FILEPICKER_FILE_SCHEME', file_default_scheme() . '://');
 // Minimum PHP version for extension
 define('FILEPICKER_UPLOAD_STATUS_MIN_PHP', '5.2.1');
 define('FILEPICKER_UPLOAD_ID', 'UPLOAD_IDENTIFIER');
@@ -637,4 +637,26 @@ function filepicker_get_colorbox_perms() {
     return TRUE;
   }
   return FALSE;
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function filepicker_file_download($filepath) {
+  $filebasedir = filepicker_get_files_directory(TRUE);
+  $file = $filebasedir . DIRECTORY_SEPARATOR . file_uri_target($filepath);
+  if (file_exists($file) & is_file($file)) {
+    // There is a file, and it's in our directory structure. So send it.
+    $mimetype = file_get_mimetype($filepath);
+    return array('Content-type:' . $mimetype);
+  }
+  else {
+    $path_parts = explode('/', $filepath);
+    if ($path_parts[0] == FILEPICKER_FILES_DIR) {
+      // The file is allegedly in our directory, but doesn't exist.
+      return -1;
+    }
+  }
+  // Not our file; let someone else decide.
+  return NULL;
 }

@@ -253,7 +253,7 @@ function filepicker_import_dir_form($form, &$form_state) {
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
     '#title' => t('Filepicker Import Folder'),
-    '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload images to, via FTP or rsync.<br />This folder must be !readstate by the webserver.', array('!readstate' => $readstate)),
+    '#description' => t('Path of the import folder, relative to the Drupal root or an absolute path.<br />This is where you upload files to, via FTP or rsync.<br />This folder must be !readstate by the webserver.', array('!readstate' => $readstate)),
     '#collapsible' => TRUE,
     '#collapsed' => FALSE,
   );

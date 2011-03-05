@@ -179,42 +179,64 @@ function _filepicker_file_delete($file_id, $account=FALSE, $src='iframe') {
  * some common utilities
  */
 function filepicker_get_path($url = FALSE, $userdir = FALSE, $scheme = FALSE) {
-  global $user, $base_url;
+  global $base_url;
 
   $dirsep = !$url ? DIRECTORY_SEPARATOR : '/';
 
   if (! $url && ! $scheme) {
-    $path = str_replace('/', DIRECTORY_SEPARATOR, getcwd());
-  }
-  elseif (filepicker_variable_get('filepicker_use_full_url', 0)) {
-    $path = $base_url;
+    $path = filepicker_get_files_directory() . $dirsep;
   }
   else {
-    $path = base_path();
-    $path = preg_replace("/\/$/", "", $path);
-  }
+    if (filepicker_variable_get('filepicker_use_full_url', 0)) {
+      $path = $base_url;
+    }
+    else {
+      $path = base_path();
+      $path = preg_replace("/\/$/", "", $path);
+    }
 
-  if ($scheme) {
-    $path = FILEPICKER_FILES_DIR . $dirsep;
-  }
-  else {
-    $path .= $dirsep . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . $dirsep . FILEPICKER_FILES_DIR . $dirsep;
+    if ($scheme) {
+      $path = FILEPICKER_FILES_DIR . $dirsep;
+    }
+    else {
+      $path .= $dirsep . file_stream_wrapper_get_instance_by_scheme(file_default_scheme())->getDirectoryPath() . $dirsep . FILEPICKER_FILES_DIR . $dirsep;
+    }
   }
 
   if ($userdir) {
-    $useruid = !is_array($userdir) ? $user->uid : $userdir['uid'];
-    $path .= $useruid . $dirsep;
+    $path .= filepicker_get_userpath($userdir, $dirsep);
   }
 
   return $path;
 }
 
+function filepicker_get_userpath($userdir, $dirsep = '/') {
+  global $user;
+  $path = '';
+  $useruid = !is_array($userdir) ? $user->uid : $userdir['uid'];
+  $path .= $useruid . $dirsep;
+  return $path;
+}
+
 function filepicker_get_file_path($file, $public = FALSE) {
-  $filebasedir = filepicker_get_path(FALSE, (is_array($public) ? $public : TRUE));
-  $filepath = '';
-  if (file_exists($filebasedir . $file->file_name)) {
-    $filepath = filepicker_get_path(TRUE, (is_array($public) ? $public : TRUE)) . $file->file_name;
+  $userdir = is_array($public) ? $public : TRUE;
+  $filebasedir = filepicker_get_path(FALSE, $userdir);
+  if (is_object($file)) {
+    $file_name = $file->file_name;
   }
+  else {
+    $file_name = $file['file_name'];
+  }
+  $filepath = '';
+  if (file_exists($filebasedir . $file_name)) {
+    if (variable_get('filepicker_use_full_url', 0) || file_default_scheme() == 'private') {
+      $filepath = file_create_url(FILEPICKER_FILE_SCHEME . FILEPICKER_FILES_DIR . '/' . filepicker_get_userpath($userdir) . $file_name);
+    }
+    else {
+      $filepath = filepicker_get_path(TRUE, $userdir) . $file_name;
+    }
+  }
+
   return $filepath;
 }
 
@@ -1409,10 +1431,22 @@ function filepicker_insert_group_file($record) {
   }
 }
 
-function filepicker_get_files_directory() {
+function filepicker_get_files_directory($system_only = FALSE) {
+  include_once(drupal_get_path('module', 'filepicker') . '/filepicker.module');
+  include_once('./includes/file.inc');
+  $file_default_scheme = file_default_scheme();
+  $drupal_path = file_stream_wrapper_get_instance_by_scheme($file_default_scheme)->getDirectoryPath();
+  if ($file_default_scheme == 'private') {
+    $drupaldir = $drupal_path;
+  }
+  else {
+    $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR . $drupal_path;
 
-  $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR;
-  $dir = $drupaldir . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
+  }
+  if ($system_only) {
+    return $drupaldir;
+  }
+  $dir = $drupaldir . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
   return $dir;
 }
 

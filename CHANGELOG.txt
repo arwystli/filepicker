@@ -1,3 +1,7 @@
+File Picker for D6 in 6.x-1.x, 20011-03-06
+------------------------------------
+by hutch, moved some functions back to filepicker.module 
+
 File Picker for D6 in 6.x-1.x, 20011-03-04
 ------------------------------------
 by hutch, improved private download support

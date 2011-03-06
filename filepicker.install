@@ -9,7 +9,7 @@
  * Implementation of hook_install().
  */
 function filepicker_install() {
-  include_once('filepicker.functions.inc');
+  include_once('filepicker.module');
   // Create a directory structure.
   $dir = filepicker_get_files_directory();
 

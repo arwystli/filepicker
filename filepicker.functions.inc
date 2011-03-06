@@ -179,62 +179,6 @@ function _filepicker_file_delete($file_id, $account=FALSE, $src='iframe', $suppr
   return;
 }
 
-/**
- * some common utilities
- */
-function filepicker_get_path($url = FALSE, $userdir = FALSE, $system = TRUE) {
-  global $base_url;
-
-  $dirsep = !$url ? DIRECTORY_SEPARATOR : '/';
-
-  if (!$url) {
-    $path = filepicker_get_files_directory() . $dirsep;
-  }
-  else {
-    if (variable_get('filepicker_use_full_url', 0)) {
-      $path = $base_url;
-    }
-    else {
-      $path = base_path();
-      $path = preg_replace("/\/$/", "", $path);
-    }
-    $path .= $dirsep . file_directory_path() . $dirsep . FILEPICKER_FILES_DIR . $dirsep;
-  }
-
-  if ($userdir) {
-    $path .= filepicker_get_userpath($userdir, $dirsep);
-  }
-  return $path;
-}
-
-function filepicker_get_userpath($userdir, $dirsep = '/') {
-  global $user;
-  $path = '';
-  $useruid = !is_array($userdir) ? $user->uid : $userdir['uid'];
-  $path .= $useruid . $dirsep;
-  return $path;
-}
-
-function filepicker_get_file_path($file, $public = FALSE) {
-  $userdir = is_array($public) ? $public : TRUE;
-  $filebasedir = filepicker_get_path(FALSE, $userdir);
-  if (is_object($file)) {
-    $file_name = $file->file_name;
-  }
-  else {
-    $file_name = $file['file_name'];
-  }
-  $filepath = '';
-  if (file_exists($filebasedir . $file_name)) {
-    if (variable_get('filepicker_use_full_url', 0) || variable_get('file_downloads', '1') == 2) {
-      $filepath = file_create_url(FILEPICKER_FILES_DIR . '/' . filepicker_get_userpath($userdir) . $file_name);
-    }
-    else {
-      $filepath = filepicker_get_path(TRUE, $userdir) . $file_name;
-    }
-  }
-  return $filepath;
-}
 
 // There is not need to inform users, that directory structure has been created
 // and show them all paths... So lets strip these messages if there are any.
@@ -1394,23 +1338,6 @@ function filepicker_insert_group_file($record) {
       drupal_set_message(t('Error while trying to insert your group.'), 'error');
     }
   }
-}
-
-function filepicker_get_files_directory($system_only = FALSE) {
-  include_once(drupal_get_path('module', 'filepicker') . '/filepicker.module');
-  include_once('./includes/file.inc');
-  $drupal_path = file_directory_path();
-  if (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC) == FILE_DOWNLOADS_PRIVATE) {
-    $drupaldir = $drupal_path;
-  }
-  else {
-    $drupaldir = str_replace('/', DIRECTORY_SEPARATOR, getcwd()) . DIRECTORY_SEPARATOR . $drupal_path;
-  }
-  if ($system_only) {
-    return $drupaldir;
-  }
-  $dir = $drupaldir . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR;
-  return $dir;
 }
 
 function _filepicker_get_file($file_id, $checkuser=TRUE, $account = FALSE) {

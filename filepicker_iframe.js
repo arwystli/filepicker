@@ -77,14 +77,14 @@ if (Drupal.jsEnabled) {
           }
         }
         // ckeditor 3.?
-        if (win.CKEDITOR) {
+        else if (win.CKEDITOR) {
           if (win.CKEDITOR.instances[inst]) {
             win.CKEDITOR.instances[inst].insertHtml(filepInsertion);
             jobdone = true;
           }
         }
         // tinyMCE v3
-        if (win.tinyMCE) {
+        else if (win.tinyMCE) {
           if (win.tinyMCE.execInstanceCommand(inst, 'mceInsertContent', false, filepInsertion)){
             jobdone = true;
           }
@@ -95,15 +95,12 @@ if (Drupal.jsEnabled) {
         if (win.Drupal.ckeditorInsertHtml(filepInsertion)) {
           jobdone = true;
         }
-        //else
-        //  return;
       }
 
       //var isTinyMCE = win.document.getElementById('mce_editor_0'); // buggy
       //var isTinyMCE = win.tinyMCE; // Will be undefined if tinyMCE isn't loaded. This isn't a sure-proof way of knowing if tinyMCE is loaded into a field, but it works.
       // tinyMCE v2
-      if (! jobdone && win.tinyMCE) {
-        win.tinyMCE.execCommand('mceInsertContent', false, filepInsertion);
+      if (! jobdone && win.tinyMCE && win.tinyMCE.execCommand('mceInsertContent', false, filepInsertion)) {
         jobdone = true;
       }
 

@@ -1,3 +1,8 @@
+
+File Picker for D6 in 6.x-1.x, 20011-03-17
+------------------------------------
+by hutch, fixed bug in iframe js, added multiple file upload
+
 File Picker for D6 in 6.x-1.x, 20011-03-06
 ------------------------------------
 by hutch, moved some functions back to filepicker.module 

@@ -90,6 +90,15 @@ function filepicker_settings_form(&$form_state) {
     '#default_value' => variable_get('filepicker_use_icons', 1),
     '#description' => t('Setting this option enables icons in tables.'),
   );
+  $max_uploads = range(0, 6);
+  unset($max_uploads[0]);
+  $form['filepicker_settings']['filepicker_max_uploads'] = array(
+    '#type' => 'select',
+    '#title' => t('Multiple Uploads'),
+    '#description' => t('The maximum number of uploads at a time.'),
+    '#default_value' => variable_get('filepicker_max_uploads', 1),
+    '#options' => $max_uploads,
+  );
 
   // default options
   $form['filepicker_defaults'] = array(

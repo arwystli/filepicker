@@ -530,7 +530,7 @@ function filepicker_admin_groups_list($label="") {
 function filepicker_admin_view($file_id, $account = FALSE) {
   if ($account) {
     $user = $account;
-    $userdir = $user->uid;
+    $userdir = array('uid' => $user->uid);
   }
   else {
     global $user;

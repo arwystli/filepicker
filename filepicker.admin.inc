@@ -91,6 +91,15 @@ function filepicker_settings_form($form, &$form_state) {
     '#default_value' => filepicker_variable_get('filepicker_use_icons', 1),
     '#description' => t('Setting this option enables icons in tables.'),
   );
+  $max_uploads = range(0, 6);
+  unset($max_uploads[0]);
+  $form['filepicker_settings']['filepicker_max_uploads'] = array(
+    '#type' => 'select',
+    '#title' => t('Multiple Uploads'),
+    '#description' => t('The maximum number of uploads at a time.'),
+    '#default_value' => filepicker_variable_get('filepicker_max_uploads', 1),
+    '#options' => $max_uploads,
+  );
 
   // default options
   $form['filepicker_defaults'] = array(
@@ -369,6 +378,7 @@ function filepicker_settings_form_submit($form, &$form_state) {
   filepicker_variable_set('filepicker_use_full_url', $form_state['values']['filepicker_use_full_url']);
   filepicker_variable_set('filepicker_use_new_window', $form_state['values']['filepicker_use_new_window']);
   filepicker_variable_set('filepicker_use_icons', $form_state['values']['filepicker_use_icons']);
+  filepicker_variable_set('filepicker_max_uploads', $form_state['values']['filepicker_max_uploads']);
   filepicker_variable_set('filepicker_rows_per_page', $form_state['values']['filepicker_rows_per_page']);
   filepicker_variable_set('filepicker_dateformat_default', $form_state['values']['filepicker_dateformat_default']);
   filepicker_variable_set('filepicker_upload_extensions', $form_state['values']['filepicker_upload_extensions']);
@@ -431,7 +441,7 @@ function filepicker_admin_users_list($dir, $label='') {
   $query->distinct();
   $query->leftjoin('filepicker', 'i', 'i.uid = u.uid');
   $query->condition('u.status', 1)
-    ->groupBy('u.uid');
+    ->groupBy('u.uid')->groupBy('u.name');
   $records = $query->execute();
 
   foreach ($records AS $row) {

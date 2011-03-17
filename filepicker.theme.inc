@@ -285,10 +285,10 @@ function theme_filepicker_quota_message($variables) {
   $help = $variables['help'];
 
   $output = ($label ? '<fieldset><legend>' . $label . '</legend>' : '');
-  $output .= ($message1 ? '<p class="messages">' . $message1 . '</p>' : '') ;
+  $output .= ($message1 ? '<div class="messages">' . $message1 . '</div>' : '') ;
   $output .= ($help ? '<div class="filep_help">' . $help . '</div>' : '');
   $output .= $form;
-  $output .= ($message2 ? '<p class="messages">' . $message2 . '</p>' : '') ;
+  $output .= ($message2 ? '<div class="messages">' . $message2 . '</div>' : '') ;
   $output .= ($label ? '</fieldset>' : '');
   return $output;
 }
@@ -317,7 +317,7 @@ function theme_filepicker_quota($variables) {
   $message = $variables['message'];
   $label = $variables['label'];
   $output = ($label ? '<fieldset><legend>' . $label . '</legend>' : '');
-  $output .= ($message ? '<p class="messages">' . $message . '</p>' : '') ;
+  $output .= ($message ? '<div class="messages">' . $message . '</div>' : '') ;
   $output .= $form;
   $output .= ($label ? '</fieldset>' : '');
   return $output;
@@ -331,9 +331,9 @@ function theme_filepicker_user_config($variables) {
   $message2 = $variables['message2'];
   $output = ($label ? '<fieldset><legend>' . $label . '</legend>' : '');
   $output .= ($help ? '<div class="filep_help">' . $help . '</div>' : '');
-  $output .= ($message1 ? '<p class="messages">' . $message1 . '</p>' : '') ;
+  $output .= ($message1 ? '<div class="messages">' . $message1 . '</div>' : '') ;
   $output .= $form;
-  $output .= ($message2 ? '<p class="messages">' . $message2 . '</p>' : '') ;
+  $output .= ($message2 ? '<div class="messages">' . $message2 . '</div>' : '') ;
   $output .= ($label ? '</fieldset>' : '');
   return $output;
 }
@@ -390,6 +390,21 @@ function theme_filepicker_insert($variables) {
 function theme_filepicker_upload_form($variables) {
   $form = $variables['form'];
   $output = '';
+  $max_uploads = filepicker_variable_get('filepicker_max_uploads', 1);
+  $max_filesize = ini_get('upload_max_filesize');
+
+  $form['maxmsg']['#markup'] = '<div class="messages">' . t('Browse your computer for up to !c, Max %max Total', array('!c' => format_plural($max_uploads, '1 File', '@count Files'), '%max' => $max_filesize) ) . '</div>';
+  for ($ct = 1; $ct <= $max_uploads; $ct++) {
+    $form['file_upload_'. $ct]['#prefix'] = "<div id='filepicker_upload_link_wrapper_$ct'>";
+    $form['title_'. $ct]['#suffix'] = '</div>';
+    if (isset($form['link_' . $ct])) {
+      $form['link_' . $ct]['#markup'] = "<div class='filepicker_upload_link' id='filepicker_upload_link_$ct' style='display:none'>" . l(t('Upload another'), '', array(
+        'attributes' => array(
+          'onClick' => "Drupal.filepicker_upload_link_click($ct); return false;"
+        )
+      )) . '</div>';
+    }
+  }
   $output .= drupal_render_children($form);
   return $output;
 }

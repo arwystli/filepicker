@@ -28,7 +28,13 @@ function filepicker_user_upload() {
   return $content;
 }
 
-function filepicker_upload_form($form, $form_state, $account=FALSE, $admin = FALSE) {
+function filepicker_upload_form($form, &$form_state, $account=FALSE, $admin = FALSE) {
+  // multiple uploads
+  $max_uploads = filepicker_variable_get('filepicker_max_uploads', 1);
+  $settings = array('filepicker_upload_link' => array('max_uploads' => $max_uploads));
+  drupal_add_js(FILEPICKER_PATH .'/filepicker_upload_link.js');
+  drupal_add_js($settings, 'setting');
+
   if ($account) {
     $user = $account;
   }
@@ -43,20 +49,30 @@ function filepicker_upload_form($form, $form_state, $account=FALSE, $admin = FAL
       '#weight' => -50,
     );
   }
-  $max_filesize = ini_get('upload_max_filesize');
-  $form['file_upload'] = array(
-    '#type' => 'file',
-    '#title' => t('File'),
-    '#description' => t('Browse your computer for a file, Max. %max', array('%max' => $max_filesize)),
-    '#required' => TRUE,
-    '#value' => 1,
-    '#size' => 40,
+  $form['maxmsg'] = array(
+    '#markup' => '',
   );
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Link text'),
-    '#description' => t('The text to use for a link. The default is the filename'),
-  );
+  for ($ct = 1; $ct <= $max_uploads; $ct++) {
+    $form['file_upload_'. $ct] = array(
+      '#type' => 'file',
+      '#title' => ($max_uploads == 1 ? t('File') : t('File %ct', array('%ct' => $ct))),
+      '#required' => ($ct == 1 ? TRUE : FALSE),
+      '#value' => 1,
+      '#size' => 50,
+    );
+    $form['title_'. $ct] = array(
+      '#type' => 'textfield',
+      '#title' => ($max_uploads == 1 ? t('Link text') : t('Link text for File %ct', array('%ct' => $ct))),
+      '#description' => t('The text to use for a link. The default is the filename'),
+      '#size' => 50,
+    );
+    if ($ct < $max_uploads) {
+      $form['link_' . $ct] = array(
+        '#markup' => '',
+      );
+    }
+  }
+
   // groups
   if (filepicker_variable_get('filepicker_groups_enabled', 1) && filepicker_variable_get('filepicker_groups_in_upload_enabled', 1)) {
     $grouplist = filepicker_get_groups( ($admin ? $user : FALSE));
@@ -96,19 +112,31 @@ function filepicker_upload_form($form, $form_state, $account=FALSE, $admin = FAL
  * Validate form
  */
 function filepicker_upload_form_validate($form, &$form_state) {
-  foreach ($form_state['values'] as $name => $value) {
-    switch ($name) {
-      case 'file_upload':
-        if (empty($_FILES['files']['name']['file_upload'])) {
+
+  $max_uploads = variable_get('filepicker_max_uploads', 1);
+  for ($ct = 1; $ct <= $max_uploads; $ct++) {
+    foreach ($form_state['values'] as $name => $value) {
+      if ($ct == 1 && $name == 'file_upload_' . $ct) {
+        if (empty($_FILES['files']['name'][$name])) {
           form_set_error($name, t('File upload field is required.'));
         }
-        elseif (!isset($_FILES['files']['tmp_name']['file_upload']) || !file_exists($_FILES['files']['tmp_name']['file_upload'])) {
+        elseif (!isset($_FILES['files']['tmp_name'][$name]) || !file_exists($_FILES['files']['tmp_name'][$name])) {
           form_set_error($name, t('Error while uploading file.'));
         }
-        elseif (!filepicker_get_uploaded_file_extension('file_upload')) {
+        elseif (!filepicker_get_uploaded_file_extension($name)) {
           form_set_error($name, t('Illegal file.'));
         }
-        break;
+      }
+      else {
+        if ($name == 'file_upload_' . $ct && !empty($_FILES['files']['name'][$name])) {
+          if (!isset($_FILES['files']['tmp_name'][$name]) || !file_exists($_FILES['files']['tmp_name'][$name])) {
+            form_set_error($name, t('Error while uploading file.'));
+          }
+          elseif (!filepicker_get_uploaded_file_extension($name)) {
+            form_set_error($name, t('Illegal file.'));
+          }
+        }
+      }
     }
   }
 }
@@ -117,78 +145,83 @@ function filepicker_upload_form_validate($form, &$form_state) {
  * Submit form
  */
 function filepicker_upload_form_submit($form, &$form_state) {
+  $success = 0;
+  $errormsg = '';
   if ($form_state['values']['op'] == t('Upload')) {
     if ( isset($form_state['values']['account']) && isset($form_state['values']['admin'])) {
-      $user = user_load(array('uid' => $form_state['values']['account']));
+      $user = user_load($form_state['values']['account']);
     }
     else {
       global $user;
     }
-    $destdir = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? $user->uid : TRUE));
-    $destdirscheme = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? $user->uid : TRUE), TRUE);
+
+    $destdir = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? array('uid' => $user->uid) : TRUE));
+    $destdirscheme = filepicker_get_path(FALSE, (isset($form_state['values']['admin']) ? array('uid' => $user->uid) : TRUE), TRUE);
 
     if (file_prepare_directory($destdir, FILE_CREATE_DIRECTORY)) {
       // clear out the noisy 'created' messages
       drupal_get_messages('status', TRUE);
-      // Add DIRECTORY_SEPARATORS here because drupals' functions remove trailing slashes
-      $destdir .= DIRECTORY_SEPARATOR;
-      $destination = $destdirscheme;
-
-      $filemoved = filepicker_copy_uploaded_file($destination, 'file_upload');
-      if ($filemoved) {
-        $file = filepicker_get_uploaded_file_name($destination, 'file_upload');
-
-        $title = htmlspecialchars($form_state['values']['title']);
-        $nextfileid = filepicker_insert_file($user->uid, $file, $title);
-        if ($nextfileid) {
-          if ( isset($form_state['values']['grouplist']) && is_array($form_state['values']['grouplist']) && filepicker_variable_get('filepicker_groups_enabled', 1) && filepicker_variable_get('filepicker_groups_in_upload_enabled', 1) ) {
-            $query = db_select('filepicker', 'i');
-            $query->fields('i', array('file_id') );
-            $query->condition('uid', $user->uid)->condition('file_name', $file);
-            $record = $query->execute()->fetchObject();
-            foreach ($form_state['values']['grouplist'] AS $gid) {
-              $record->gid = $gid;
-              filepicker_insert_group_file($record);
+      $max_uploads = filepicker_variable_get('filepicker_max_uploads', 1);
+      for ($ct = 1; $ct <= $max_uploads; $ct++) {
+        $destination = $destdirscheme;
+        foreach ($form_state['values'] as $name => $value) {
+          if ($name == 'file_upload_' . $ct && !empty($_FILES['files']['name'][$name])) {
+            $filemoved = filepicker_copy_uploaded_file($destination, $name);
+            if ($filemoved) {
+              $file = $filemoved;
+              $title = htmlspecialchars($form_state['values']['title_' . $ct]);
+              $nextfileid = filepicker_insert_file($user->uid, $file, $title);
+              if ($nextfileid) {
+                if ( isset($form_state['values']['grouplist']) && is_array($form_state['values']['grouplist']) && filepicker_variable_get('filepicker_groups_enabled', 1) && filepicker_variable_get('filepicker_groups_in_upload_enabled', 1) ) {
+                  $query = db_select('filepicker', 'i');
+                  $query->fields('i', array('file_id') );
+                  $query->condition('uid', $user->uid)->condition('file_name', $file);
+                  $record = $query->execute()->fetchObject();
+                  foreach ($form_state['values']['grouplist'] AS $gid) {
+                    $record->gid = $gid;
+                    filepicker_insert_group_file($record);
+                  }
+                }
+                // external functions
+                #module_invoke_all('filepicker_upload_extra', $nextfileid);
+                $success++;
+              }
+              else {
+                file_unmanaged_delete(FILEPICKER_FILE_SCHEME . $destination . $file);
+                $errormsg = t('Error while saving information to database for uploaded file.');
+              }
+            }
+            else {
+              $errormsg = t('Error while moving uploaded file %ct to its destination.', array('%ct' => $ct));
             }
           }
-          drupal_set_message(t('File was successfully uploaded.'));
-          if (isset($form_state['values']['admin'])) {
-            $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list';
-          }
-          elseif (isset($form_state['values']['account'])) {
-            $outpath = 'user/' . $user->uid . '/filepicker/files/list';
-          }
-          else {
-            $outpath = 'filepicker/list/' . $nextfileid;
-          }
-          // external functions
-          #module_invoke_all('filepicker_upload_extra', $nextfileid);
-          drupal_goto($outpath);
-        }
-        else {
-          file_unmanaged_delete($destdir . $file);
-          drupal_set_message(t('Error while saving information to database for uploaded file.'), 'error');
         }
       }
-      else {
-        drupal_set_message(t('Error while moving uploaded file to its destination.'), 'error');
-      }
-      file_unmanaged_delete($destdir . $file);
     }
     else {
-      drupal_set_message(t('Unable to create a directory structure for your files.'), 'error');
+      $errormsg = t('Unable to create a directory structure for your files.');
     }
   }
-  if (isset($form_state['values']['admin'])) {
-    $outpath = FILEPICKER_ADMIN_PATH . '/files';
-  }
-  elseif (isset($form_state['values']['account'])) {
-    $outpath = 'user/' . $user->uid . '/filepicker';
+  if ($success) {
+    drupal_set_message(t('%c successfully uploaded.', array('%c' => format_plural($success, '1 file', '@count files'))));
+    if (isset($form_state['values']['admin'])) {
+      $outpath = FILEPICKER_ADMIN_PATH .'/files/user/'. $user->uid .'/list';
+    }
+    elseif (isset($form_state['values']['account'])) {
+      $outpath = 'user/'. $user->uid .'/filepicker/files/list';
+    }
+    else {
+      $outpath = 'filepicker/list'. ($success == 1 ? '/' . $nextfileid : '');
+    }
+    drupal_goto($outpath);
   }
   else {
-    $outpath = 'filepicker';
+    if (! $errormsg) {
+      $max_filesize = ini_get('upload_max_filesize');
+      $errormsg = t('No files uploaded. This may be because the files totalled more than %c', array('%c' => $max_filesize));
+    }
+    drupal_set_message($errormsg, 'error');
   }
-  drupal_goto($outpath);
 }
 
 function filepicker_copy_uploaded_file($destination, $name) {
@@ -202,10 +235,8 @@ function filepicker_copy_uploaded_file($destination, $name) {
       // DIRECTORY_SEPARATOR for making directories. This causes problems on
       // Windows machines. Not sure if this is still true in D7
       $newsrc = str_replace('/', DIRECTORY_SEPARATOR, $newsrc);
-
       $file = filepicker_get_uploaded_file_name($destination, $name);
       $destination .= $file;
-
       $file_moved = file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
       // might be renamed if a file of same name already exists
       $file_moved = substr($file_moved, strrpos($file_moved, DIRECTORY_SEPARATOR)+1);

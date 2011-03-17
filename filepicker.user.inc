@@ -158,8 +158,6 @@ function filepicker_user_config_admin_form($form, &$form_state, $account = FALSE
     global $user;
   }
 
-  $form['#attributes']['enctype'] = 'multipart/form-data';
-
   // default options
   $form['filepicker_defaults'] = array(
     '#type' => 'fieldset',
@@ -169,7 +167,6 @@ function filepicker_user_config_admin_form($form, &$form_state, $account = FALSE
     '#weight' => -38,
   );
   $form['filepicker_defaults']['filepicker_rows_per_page'] = filepicker_rows_per_page_elem(filepicker_variable_get('filepicker_rows_per_page', NULL, $user->uid));
-
 
   // Iframe
   $form['filepicker_iframe'] = array(
@@ -225,17 +222,6 @@ function filepicker_user_config_admin_form_validate($form, &$form_state) {
   }
   if (! drupal_strlen($form_state['values']['filepicker_advanced_iframe_border'])) {
     form_set_error('filepicker_advanced_iframe_border', t('You must fill in the Iframe border'));
-  }
-  // also used by the filepicker admin form
-
-  if (! empty($_FILES['files']['name']['file_upload'])) {
-    module_load_include('inc', 'filepicker', 'filepicker.upload');
-    if (!isset($_FILES['files']['tmp_name']['file_upload']) || !file_exists($_FILES['files']['tmp_name']['file_upload'])) {
-      form_set_error('file_upload', t('Error while uploading file.'));
-    }
-    elseif (!filepicker_get_uploaded_file_extension('file_upload')) {
-      form_set_error('file_upload', t('Illegal filetype.'));
-    }
   }
 }
 

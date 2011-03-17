@@ -76,7 +76,7 @@ function filepicker_edit_form_process($form, &$form_state) {
   $file_id = $form_state['values']['file_id'];
   $src = $form_state['values']['src'];
   if (isset($form_state['values']['account']) && $src == 'admin') {
-    $user = user_load(array('uid' => $form_state['values']['account'] ));
+    $user = user_load($form_state['values']['account']);
   }
   else {
     global $user;

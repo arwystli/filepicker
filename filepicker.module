@@ -103,6 +103,13 @@ function filepicker_menu() {
     'access arguments' => array(TRUE),
     'type' => MENU_CALLBACK,
   );
+  // multitask
+  $items['filepicker/multitask/%/%/%'] = array(
+    'title' => 'Bulk Operations',
+    'page callback' => 'filepicker_box',
+    'access callback'  => 'filepicker_access_use',
+    'type' => MENU_CALLBACK,
+  );
 
   // admin settings
   $items[FILEPICKER_ADMIN_PATH] = array(

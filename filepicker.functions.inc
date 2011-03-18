@@ -205,13 +205,14 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
   }
   // paths
   if ($src == 'iframe') {
-    $path = '';
+    $path = 'filepicker';
     $editpath   = "filepicker/edit/";
     $deletepath = "filepicker/delete/";
     $filepath    = 'filepicker/list/';
     if ($public) {
       $filepath    = 'filepicker/list_public/';
     }
+    $returnpath = 'i-'. $user->uid;
   }
   elseif ($src == 'admin') {
     $path = FILEPICKER_ADMIN_PATH;
@@ -703,6 +704,9 @@ function filepicker_multitask_returnpath($returnpath) {
       }
       elseif ($a[0] == 'u') {
         $rpath = 'user/'. $a[1] .'/filepicker/files/list';
+      }
+      elseif ($a[0] == 'i') {
+        $rpath = 'filepicker/list';
       }
     }
   }
@@ -2008,6 +2012,9 @@ function filepicker_box() {
   }
   elseif ($a1 == 'edit') {
     $content = filepicker_file_edit($a2);
+  }
+  elseif ($a1 == 'multitask') {
+    $content = filepicker_multitask(arg(2), arg(3), arg(4));
   }
   else {
     module_load_include('inc', 'filepicker', 'filepicker.upload');

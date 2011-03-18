@@ -127,6 +127,13 @@ function filepicker_menu() {
     'access arguments' => array(TRUE),
     'type' => MENU_CALLBACK,
   );
+  // multitask
+  $items['filepicker/multitask/%/%/%'] = array(
+    'title' => 'Bulk Operations',
+    'page callback' => 'filepicker_box',
+    'access callback'  => 'filepicker_access_use',
+    'type' => MENU_CALLBACK,
+  );
   // admin settings
   $items[FILEPICKER_ADMIN_PATH] = array(
     'title'            => 'Filepicker',
@@ -304,9 +311,10 @@ function filepicker_menu() {
     'weight'           => -3
   );
   // multitask
-  $items[FILEPICKER_ADMIN_PATH . '/multitask'] = array(
+  $items[FILEPICKER_ADMIN_PATH . '/multitask/%/%/%'] = array(
     'title' => 'Bulk Operations',
     'page callback' => 'filepicker_multitask',
+    'page arguments'   => array(5, 6, 7),
     'access callback'  => 'filepicker_access_admin',
     'type' => MENU_CALLBACK,
   );
@@ -383,9 +391,10 @@ function filepicker_menu() {
     'weight'           => -2
   );
   // multitask
-  $items['user/%filepicker_uid/filepicker/multitask'] = array(
+  $items['user/%filepicker_uid/filepicker/multitask/%/%/%'] = array(
     'title' => 'Bulk Operations',
     'page callback' => 'filepicker_multitask',
+    'page arguments'   => array(4, 5, 6),
     'access callback'  => 'filepicker_access_user_pages',
     'type' => MENU_CALLBACK,
   );

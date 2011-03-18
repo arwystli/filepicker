@@ -201,14 +201,14 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
   }
   // paths
   if ($src == 'iframe') {
-    $path = '';
+    $path = 'filepicker';
     $editpath   = "filepicker/edit/";
     $deletepath = "filepicker/delete/";
     $filepath    = 'filepicker/list/';
     if ($public) {
       $filepath    = 'filepicker/list_public/';
     }
-    $returnpath = '';
+    $returnpath = 'i-'. $user->uid;
   }
   elseif ($src == 'admin') {
     $path = FILEPICKER_ADMIN_PATH;
@@ -522,17 +522,7 @@ function filepicker_list_admin_form_submit($form, &$form_state) {
  *
  * Menu callback for filepicker multitask.
  */
-function filepicker_multitask() {
-  if (arg(0) == 'admin') {
-    $mode = arg(5);
-    $sfile_ids = arg(6);
-    $returnpath = arg(7);
-  }
-  elseif (arg(0) == 'user') {
-    $mode = arg(4);
-    $sfile_ids = arg(5);
-    $returnpath = arg(6);
-  }
+function filepicker_multitask($mode = '', $sfile_ids = '', $returnpath = '') {
   $cancelpath = filepicker_multitask_returnpath($returnpath);
   $output = '';
   if ($mode && $sfile_ids) {
@@ -708,6 +698,9 @@ function filepicker_multitask_returnpath($returnpath) {
       }
       elseif ($a[0] == 'u') {
         $rpath = 'user/' . $a[1] . '/filepicker/files/list';
+      }
+      elseif ($a[0] == 'i') {
+        $rpath = 'filepicker/list';
       }
     }
   }
@@ -2053,6 +2046,9 @@ function filepicker_box() {
   }
   elseif ($a1 == 'edit') {
     $content = filepicker_file_edit($a2);
+  }
+  elseif ($a1 == 'multitask') {
+    $content = filepicker_multitask(arg(2), arg(3), arg(4));
   }
   else {
     module_load_include('inc', 'filepicker', 'filepicker.upload');

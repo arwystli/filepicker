@@ -247,7 +247,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     if ($public) {
       $header = array(
         'file_name' => array('data' => t('Name'), 'field' => 'i.file_name'),
-        'file_title' => array('data' => t('Title'), 'field' => 'i.file_title'),
+        'file_title' => array('data' => t('Link text'), 'field' => 'i.file_title'),
         'file_list' => array('data' => t('User'), 'field' => 'n.name'),
         'file_date' => array('data' => t('Date'), 'field' => 'i.file_date'),
         'file_actions' => array('data' => t('Actions')),
@@ -256,7 +256,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     else {
       $header = array(
         'file_name' => array('data' => t('Name'), 'field' => 'i.file_name'),
-        'file_title' => array('data' => t('Title'), 'field' => 'i.file_title'),
+        'file_title' => array('data' => t('Link text'), 'field' => 'i.file_title'),
         'file_date' => array('data' => t('Date'), 'field' => 'i.file_date'),
         'file_actions' => array('data' => t('Actions')),
       );
@@ -266,14 +266,14 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     if ($public) {
       $header = array(
         'file_name' => array('data' => t('Name'), 'field' => 'i.file_name'),
-        'file_title' => array('data' => t('Title'), 'field' => 'i.file_title'),
+        'file_title' => array('data' => t('Link text'), 'field' => 'i.file_title'),
         'file_date' => array('data' => t('Date'), 'field' => 'i.file_date'),
       );
     }
     else {
       $header = array(
         'file_name' => array('data' => t('Name'), 'field' => 'i.file_name'),
-        'file_title' => array('data' => t('Title'), 'field' => 'i.file_title'),
+        'file_title' => array('data' => t('Link text'), 'field' => 'i.file_title'),
         'file_date' => array('data' => t('Date'), 'field' => 'i.file_date'),
         'file_actions' => array('data' => t('Actions')),
       );
@@ -1010,7 +1010,7 @@ function filepicker_get_public_grouplist($account = FALSE, $admin = FALSE) {
   if (is_array($tmp)) {
     for ($ct = 0; $ct < $rowct; $ct++) {
       if (! $admin) {
-        if ($tmp[$ct]['avail_roles'] != 'all') {
+        if ($tmp[$ct]['avail_roles'] != 'all' && filepicker_variable_get('imagepicker_publicroles_enabled', 0)) {
           $role = $tmp[$ct]['avail_roles'];
           if (filepicker_user_has_role($role, $user)) {
             $grouplist[$tmp[$ct]['gid']] = $tmp[$ct]['group_name'];
@@ -1401,6 +1401,7 @@ function _filepicker_get_file($file_id, $checkuser=TRUE, $account = FALSE) {
 function filepicker_group_stats($account = FALSE, $label = '') {
 
   // stats
+  $groupusercount = FALSE;
   $usercount = FALSE;
   $bytecount = 0;
   if ($account) {
@@ -1428,6 +1429,10 @@ function filepicker_group_stats($account = FALSE, $label = '') {
   else {
     // filepicker users
     $query = db_select('filepicker_user_groups');
+    $query->addExpression('COUNT(DISTINCT uid)', 'ct');
+    $row = $query->execute()->fetchAssoc();
+    $groupusercount = $row['ct'];
+    $query = db_select('filepicker');
     $query->addExpression('COUNT(DISTINCT uid)', 'ct');
     $row = $query->execute()->fetchAssoc();
     $usercount = $row['ct'];
@@ -1493,8 +1498,11 @@ function filepicker_group_stats($account = FALSE, $label = '') {
       array(t('Private groups') . ": ", $nopublicgroupcount, t('Private files') . ": ", $nopubliccount),
       array( '', '', t('Grouped files') . ": ", $totcount),
       array( '', '', t('Ungrouped files') . ": ", $allcount-$totcount),
-      array(($usercount ? t('Users') . ": " : ''), ($usercount ? $usercount : ''), t('Space used') . ": ", $bytecount),
+      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
     );
+    if (!$account) {
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+    }
 
   }
   else {
@@ -1502,8 +1510,11 @@ function filepicker_group_stats($account = FALSE, $label = '') {
       array(t('Groups') . ": ", $groupcount, t('Files') . ": ", $allcount),
       array( '', '', t('Grouped files') . ": ", $totcount),
       array( '', '', t('Ungrouped files') . ": ", $allcount-$totcount),
-      array(($usercount ? t('Users') . ": " : ''), ($usercount ? $usercount : ''), t('Space used') . ": ", $bytecount),
+      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
     );
+    if (!$account) {
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+    }
   }
   return theme('filepicker_stats', array('header' => $header, 'rows' => $rows, 'message' => t('No Stats found'), 'pref' => '<div class="filep_groups_info">', 'suff' => '</div>', 'label' => $label));
 }
@@ -1543,7 +1554,7 @@ function filepicker_list_public_form_submit($form, &$form_state) {
 function _filepicker_get_bytes($file_id, $account = FALSE) {
   if ($account) {
     $user = $account;
-    $userdir = $user->uid;
+    $userdir = array('uid' => $user->uid);
   }
   else {
     global $user;
@@ -1793,25 +1804,20 @@ function filepicker_list_search_form($form, &$form_state, $account = FALSE, $adm
     '#title' => t('By Name'),
     '#default_value' => ( is_array($sarr) ? $sarr['name'] : 0),
   );
-  $form['filepicker_list_search_by_desc'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('By Description'),
-    '#default_value' => ( is_array($sarr) ? $sarr['desc'] : 0),
-  );
   $form['filepicker_list_search_by_title'] = array(
     '#type' => 'checkbox',
-    '#title' => t('By Title'),
+    '#title' => t('By Link text'),
     '#default_value' => ( is_array($sarr) ? $sarr['title'] : 0),
   );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Go'),
   );
-    $form['reset'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset'),
-      '#submit' => array('filepicker_list_search_form_reset'),
-    );
+  $form['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('filepicker_list_search_form_reset'),
+  );
 
   return $form;
 }
@@ -1824,7 +1830,6 @@ function filepicker_list_search_form_submit($form, &$form_state) {
   if ($form_state['values']['filepicker_list_search'] != '') {
     $arr = array(
         'name' => $form_state['values']['filepicker_list_search_by_name'],
-        'desc' => $form_state['values']['filepicker_list_search_by_desc'],
         'title' => $form_state['values']['filepicker_list_search_by_title']);
     $search = $form_state['values']['filepicker_list_search'];
     if (isset($form_state['values']['admin'])) {

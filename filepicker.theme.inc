@@ -195,19 +195,13 @@ function template_preprocess_filepicker(&$variables) {
   if (module_exists('admin_menu')) {
     admin_menu_suppress();
   }
-
   $variables['head_title']  = (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'Drupal'));
   $variables['styles'] = drupal_get_css();
   $variables['scripts'] = drupal_get_js();
-  // fix jquery version thing in the iframe
-#  if (module_exists('jquery_update')) {
-#    jquery_update_preprocess_page($variables);
-#  }
   $tabs = menu_local_tabs();
   $variables['tabs'] = theme('menu_local_tasks', array('primary' => $tabs['#primary']));
   $variables['messages'] = filepicker_strip_messages(theme('status_messages'));
   $variables['language'] = $language;
-
 }
 
 // set up the iframe

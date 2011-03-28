@@ -560,7 +560,7 @@ function theme_filepicker_list_admin_form($form) {
     $header = array(
       theme('table_select_header_cell'),
       array('data' => t('Name'), 'field' => 'i.file_name'),
-      array('data' => t('Title'), 'field' => 'i.file_title'),
+      array('data' => t('Link text'), 'field' => 'i.file_title'),
       array('data' => t('User'), 'field' => 'n.name'),
       array('data' => t('Date'), 'field' => 'i.file_date'),
       array('data' => t('Actions'), 'colspan' => 2),
@@ -570,7 +570,7 @@ function theme_filepicker_list_admin_form($form) {
     $header = array(
       ($public ? array() : theme('table_select_header_cell')),
       array('data' => t('Name'), 'field' => 'i.file_name'),
-      array('data' => t('Title'), 'field' => 'i.file_title'),
+      array('data' => t('Link text'), 'field' => 'i.file_title'),
       array('data' => t('Date'), 'field' => 'i.file_date'),
       array('data' => t('Actions'), 'colspan' => 2),
     );

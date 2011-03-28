@@ -22,7 +22,6 @@ function filepicker_list_public($file_id=0) {
     return filepicker_file_select($file_id, FALSE, TRUE);
   }
   else {
-    #return theme('filepicker_iframe', _filepicker_list_public());
     return theme('filepicker_iframe', _filepicker_list_admin('iframe', FALSE, TRUE));
   }
 }
@@ -251,7 +250,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
     $header = array(
       array(),
       array('data' => t('Name'), 'field' => 'i.file_name'),
-      array('data' => t('Title'), 'field' => 'i.file_title'),
+      array('data' => t('Link text'), 'field' => 'i.file_title'),
       array('data' => t('User'), 'field' => 'n.name'),
       array('data' => t('Date'), 'field' => 'i.file_date'),
       array('data' => t('Actions'), 'colspan' => 2),
@@ -262,7 +261,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
     if ($public) {
       $header = array(
         array('data' => t('Name'), 'field' => 'i.file_name'),
-        array('data' => t('Title'), 'field' => 'i.file_title'),
+        array('data' => t('Link text'), 'field' => 'i.file_title'),
         array('data' => t('Date'), 'field' => 'i.file_date'),
         array('data' => t('Actions'), 'colspan' => 2),
       );
@@ -271,7 +270,7 @@ function filepicker_list_admin_form(&$form_state, $src="iframe", $account=FALSE,
       $header = array(
         array(),
         array('data' => t('Name'), 'field' => 'i.file_name'),
-        array('data' => t('Title'), 'field' => 'i.file_title'),
+        array('data' => t('Link text'), 'field' => 'i.file_title'),
         array('data' => t('Date'), 'field' => 'i.file_date'),
         array('data' => t('Actions'), 'colspan' => 2),
       );
@@ -1019,7 +1018,7 @@ function filepicker_get_public_grouplist($account = FALSE, $admin = FALSE) {
   if (is_array($tmp)) {
     for ($ct = 0; $ct < $rowct; $ct++) {
       if (! $admin) {
-        if ($tmp[$ct]['avail_roles'] != 'all') {
+        if ($tmp[$ct]['avail_roles'] != 'all' && variable_get('filepicker_publicroles_enabled', 0)) {
           $role = $tmp[$ct]['avail_roles'];
           if (filepicker_user_has_role($role, $user)) {
             $grouplist[$tmp[$ct]['gid']] = $tmp[$ct]['group_name'];
@@ -1370,6 +1369,7 @@ function _filepicker_get_file($file_id, $checkuser=TRUE, $account = FALSE) {
  */
 function filepicker_group_stats($account = FALSE, $label = '') {
   // stats
+  $groupusercount = FALSE;
   $usercount = FALSE;
   $bytecount = 0;
   if ($account) {
@@ -1397,6 +1397,10 @@ function filepicker_group_stats($account = FALSE, $label = '') {
   else {
     // filepicker users
     $result = db_query("SELECT count(DISTINCT uid) AS ct FROM {filepicker_user_groups}");
+    $row = db_fetch_array($result);
+    $groupusercount = $row['ct'];
+    // filepicker users
+    $result = db_query("SELECT count(DISTINCT uid) AS ct FROM {filepicker}");
     $row = db_fetch_array($result);
     $usercount = $row['ct'];
     // all groups
@@ -1444,17 +1448,22 @@ function filepicker_group_stats($account = FALSE, $label = '') {
       array(t('Private groups') .": ", $nopublicgroupcount, t('Private files') .": ", $nopubliccount),
       array( '', '',                                        t('Grouped files') .": ", $totcount),
       array( '', '',                                        t('Ungrouped files') .": ", $allcount-$totcount),
-      array(($usercount ? t('Users') .": " : ''), ($usercount ? $usercount : ''), t('Space used')  .": ", $bytecount),
+      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
     );
-
+    if (!$account) {
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+    }
   }
   else {
     $rows = array(
       array(t('Groups') .": ", $groupcount, t('Files') .": ", $allcount),
       array( '', '',                        t('Grouped files') .": ", $totcount),
       array( '', '',                        t('Ungrouped files') .": ", $allcount-$totcount),
-      array(($usercount ? t('Users') .": " : ''), ($usercount ? $usercount : ''), t('Space used')  .": ", $bytecount),
+      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
     );
+    if (!$account) {
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+    }
   }
   return theme('filepicker_stats', $header, $rows, '<div class="filep_groups_info">', '</div>', $label);
 }
@@ -1743,25 +1752,20 @@ function filepicker_list_search_form(&$form_state, $account = FALSE, $admin = FA
     '#title' => t('By Name'),
     '#default_value' => ( is_array($sarr) ? $sarr['name'] : 0),
   );
-  $form['filepicker_list_search_by_desc'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('By Description'),
-    '#default_value' => ( is_array($sarr) ? $sarr['desc'] : 0),
-  );
   $form['filepicker_list_search_by_title'] = array(
     '#type' => 'checkbox',
-    '#title' => t('By Title'),
+    '#title' => t('By Link text'),
     '#default_value' => ( is_array($sarr) ? $sarr['title'] : 0),
   );
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Go'),
   );
-    $form['reset'] = array(
-      '#type' => 'submit',
-      '#value' => t('Reset'),
-      '#submit' => array('filepicker_list_search_form_reset'),
-    );
+  $form['reset'] = array(
+    '#type' => 'submit',
+    '#value' => t('Reset'),
+    '#submit' => array('filepicker_list_search_form_reset'),
+  );
 
   return $form;
 }
@@ -1774,7 +1778,6 @@ function filepicker_list_search_form_submit($form, &$form_state) {
   if ($form_state['values']['filepicker_list_search'] != '') {
     $arr = array(
         'name' => $form_state['values']['filepicker_list_search_by_name'],
-        'desc' => $form_state['values']['filepicker_list_search_by_desc'],
         'title' => $form_state['values']['filepicker_list_search_by_title']);
     $search = $form_state['values']['filepicker_list_search'];
     if (isset($form_state['values']['admin'])) {
@@ -1822,51 +1825,22 @@ function _filepicker_search_opts($searchs) {
   if (! isset($search_opts['name'])) {
     $search_opts['name'] = FALSE;
   }
-  if (! isset($search_opts['desc'])) {
-    $search_opts['desc'] = FALSE;
-  }
   if (! isset($search_opts['title'])) {
     $search_opts['title'] = FALSE;
   }
 
   if (   $search_opts['name']
-    && ! $search_opts['desc']
     && ! $search_opts['title']) {
     $s = " AND i.file_name LIKE '%%%s%%' ";
     $sarr = array($searchs);
   }
-  elseif ( $search_opts['name']
-    &&     $search_opts['desc']
-    &&   ! $search_opts['title']) {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_description LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs);
-  }
-  elseif ( $search_opts['name']
-    &&   ! $search_opts['desc']
-    &&     $search_opts['title']) {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
-    $sarr = array($searchs, $searchs);
-  }
   elseif (! $search_opts['name']
-    &&      $search_opts['desc']
     &&      $search_opts['title']) {
-    $s = " AND (i.file_description LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
+    $s = " AND (i.file_title LIKE '%%%s%%') ";
     $sarr = array($searchs, $searchs);
-  }
-  elseif (! $search_opts['name']
-    &&    ! $search_opts['desc']
-    &&      $search_opts['title']) {
-    $s = " AND i.file_title LIKE '%%%s%%' ";
-    $sarr = array($searchs);
-  }
-  elseif (! $search_opts['name']
-    &&      $search_opts['desc']
-    &&    ! $search_opts['title']) {
-    $s = " AND i.file_description LIKE '%%%s%%' ";
-    $sarr = array($searchs);
   }
   else {
-    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_description LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
+    $s = " AND (i.file_name LIKE '%%%s%%' OR i.file_title LIKE '%%%s%%') ";
     $sarr = array($searchs, $searchs, $searchs);
   }
   return (array(0 => $s, 1 => $sarr));

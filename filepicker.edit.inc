@@ -83,15 +83,12 @@ function filepicker_edit_form_process($form, &$form_state) {
   }
 
   if ($src == 'admin') {
-    #$outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list/' . $file_id;
     $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list';
   }
   elseif ($src == 'account') {
-    #$outpath = 'user/' . $user->uid . '/filepicker/files/list/' . $file_id;
     $outpath = 'user/' . $user->uid . '/filepicker/files/list';
   }
   else {
-    #$outpath = 'filepicker/list/' . $file_id;
     $outpath = 'filepicker/list';
   }
 

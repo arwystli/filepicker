@@ -133,6 +133,7 @@ function filepicker_settings_form(&$form_state) {
     '#return_value' => 1,
     '#default_value' => variable_get('filepicker_upload_mimetypes', 0),
   );
+
   // quota
   $form['filepicker_quotas'] = array(
     '#type' => 'fieldset',
@@ -169,6 +170,7 @@ function filepicker_settings_form(&$form_state) {
     '#default_value' => variable_get('filepicker_quota_default', 0),
     '#options' => filepicker_get_quota_list(),
   );
+
   // Iframe
   $form['filepicker_iframe'] = array(
     '#type' => 'fieldset',
@@ -185,7 +187,6 @@ function filepicker_settings_form(&$form_state) {
   $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem(variable_get('filepicker_advanced_iframe_height', "500"));
   $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem(variable_get('filepicker_advanced_iframe_border', "0"));
   $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem(variable_get('filepicker_advanced_collapsed', 0));
-
 
   // progress bar
   $form['filepicker_progress'] = array(
@@ -288,6 +289,7 @@ function filepicker_settings_form(&$form_state) {
     '#return_value' => 1,
     '#default_value' => variable_get('filepicker_groups_in_upload_enabled', 1),
   );
+
   // Import
   $form['filepicker_import'] = array(
     '#type' => 'fieldset',
@@ -754,9 +756,6 @@ function filepicker_admin_files() {
     if ($action == 'stats') {
       $content .= filepicker_group_stats(FALSE, t('Statistics'));
     }
-#    elseif ($action == 'list_all') {
-#      $content .= _filepicker_list_public('admin', variable_get('filepicker_list_public', 0), t('List All Files'));
-#    }
     elseif ($action == 'list_all') {
       $content .= _filepicker_list_admin('admin', FALSE, TRUE, variable_get('filepicker_list_public', 0), t('List All Files'));
     }

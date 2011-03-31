@@ -80,7 +80,6 @@ function filepicker_import_form(&$form_state, $total, $account=FALSE, $admin = F
   }
 
   // provide checkbox list of groups if any
-  // default watermark
   $form['total'] = array(
     '#type' => 'markup',
     '#value' => t('!total files found in the filepicker import folder.<br />Selected user is %user', array('!total' => $total, '%user' => $user->name )),

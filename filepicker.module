@@ -110,7 +110,6 @@ function filepicker_menu() {
     'access callback'  => 'filepicker_access_use',
     'type' => MENU_CALLBACK,
   );
-
   // admin settings
   $items[FILEPICKER_ADMIN_PATH] = array(
     'title'            => 'Filepicker',

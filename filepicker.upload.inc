@@ -229,15 +229,11 @@ function filepicker_copy_uploaded_file($destination, $name) {
   if ($name && isset($_FILES['files']['tmp_name'][$name]) ) {
     $source = $_FILES['files']['tmp_name'][$name];
 
-    $newsrc = file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $destination, FILE_EXISTS_RENAME);
+    $newsrc = filepicker_file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $destination);
     if ($newsrc) {
-      // Fix bug in drupal's file_copy function which uses '/' instead of
-      // DIRECTORY_SEPARATOR for making directories. This causes problems on
-      // Windows machines. Not sure if this is still true in D7
-      $newsrc = str_replace('/', DIRECTORY_SEPARATOR, $newsrc);
       $file = filepicker_get_uploaded_file_name($destination, $name);
       $destination .= $file;
-      $file_moved = file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
+      $file_moved = filepicker_file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
       // might be renamed if a file of same name already exists
       $file_moved = substr($file_moved, strrpos($file_moved, DIRECTORY_SEPARATOR)+1);
       return $file_moved;

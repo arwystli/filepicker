@@ -2099,3 +2099,23 @@ function filepicker_uploadprogress_callback($progress_key='') {
   exit;
 }
 
+function filepicker_file_unmanaged_copy($s, $d, $r = FILE_EXISTS_RENAME) {
+  // file_unmanaged_copy does not check for trailing slashes
+  $d = rtrim($d, DIRECTORY_SEPARATOR);
+  $n = file_unmanaged_copy($s, $d, $r);
+  // Fix bug in drupal's file_copy function which uses '/' instead of
+  // DIRECTORY_SEPARATOR for making directories. This causes problems on
+  // Windows machines. still true in D7
+  $n = str_replace('/', DIRECTORY_SEPARATOR, $n);
+  return $n;
+}
+
+function filepicker_file_unmanaged_move($s, $d, $r = FILE_EXISTS_RENAME) {
+  $d = rtrim($d, DIRECTORY_SEPARATOR);
+  $n = file_unmanaged_move($s, $d, $r);
+  // Fix bug in drupal's file_copy function which uses '/' instead of
+  // DIRECTORY_SEPARATOR for making directories. This causes problems on
+  // Windows machines. still true in D7
+  $n = str_replace('/', DIRECTORY_SEPARATOR, $n);
+  return $n;
+}

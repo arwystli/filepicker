@@ -182,7 +182,7 @@ function filepicker_import_batch($form_state, $selected, $options, $account, &$c
     if ($source_filepath &&  filepicker_validate_is_file($source_filepath)) {
       $source = $source_filepath;
       // copy original
-      if (file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $options['destdirscheme'], FILE_EXISTS_RENAME)) {
+      if (filepicker_file_unmanaged_copy($source, FILEPICKER_FILE_SCHEME . $options['destdirscheme'])) {
         $file = basename($source);
         $orig = $options['destdir'] . $file;
         $nextfileid = filepicker_insert_file($user->uid, $file);

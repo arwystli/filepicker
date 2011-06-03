@@ -229,6 +229,12 @@ function filepicker_theme() {
         'form' => NULL,
       ),
     ),
+    'filepicker_admin_orphans_form' => array(
+      'arguments' => array(
+        'form' => NULL,
+      ),
+    ),
+
   );
 }
 
@@ -545,6 +551,9 @@ function theme_filepicker_settings_form($form) {
   $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap_filepicker_quota_role"'. $jshide .'>';
   $form['filepicker_quotas']['filepicker_quota_role']['#suffix'] = '</div>';
 
+  $form['filepicker_settings']['filepicker_admin_message']['#prefix'] = '<div class="messages">';
+  $form['filepicker_settings']['filepicker_admin_message']['#suffix'] = '</div>';
+
   $output .= drupal_render($form);
   return $output;
 }
@@ -671,6 +680,14 @@ function theme_filepicker_import_form($form) {
 
 function theme_filepicker_import_dir_form($form) {
   $output = '';
+  $output .= drupal_render($form);
+  return $output;
+}
+
+function theme_filepicker_admin_orphans_form($form) {
+  $output = '';
+  $form['msg']['#prefix'] = '<div class="messages">';
+  $form['msg']['#suffix'] = '</div>';
   $output .= drupal_render($form);
   return $output;
 }

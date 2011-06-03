@@ -124,8 +124,7 @@ function filepicker_menu() {
     'title'            => 'General',
     'description'      => 'Filepicker settings.',
     'access callback'  => 'filepicker_access_admin',
-    'page callback'    => 'drupal_get_form',
-    'page arguments'   => array('filepicker_settings_form'),
+    'page callback'    => 'filepicker_settings_page',
     'type'             => MENU_DEFAULT_LOCAL_TASK,
     'file'             => 'filepicker.admin.inc',
     'weight'           => -10
@@ -293,6 +292,21 @@ function filepicker_menu() {
     'page arguments' => array(4, 5, 6),
     'access callback'  => 'filepicker_access_admin',
     'type' => MENU_CALLBACK,
+  );
+  // orphans
+  $items[FILEPICKER_ADMIN_PATH . '/orphans'] = array(
+    'title'            => 'Orphaned files',
+    'description'      => 'Manage orphaned files.',
+    'page callback'    => 'filepicker_admin_orphans',
+    'access callback'  => 'filepicker_access_admin',
+    'type'             => MENU_CALLBACK,
+    'file'             => 'filepicker.admin.inc',
+  );
+  $items[FILEPICKER_ADMIN_PATH .'/orphans/autocomplete'] = array(
+    'access callback'  => 'filepicker_access_admin',
+    'page callback'    => 'filepicker_user_autocomplete',
+    'type'             => MENU_CALLBACK,
+    'file'             => 'filepicker.admin.inc'
   );
   // My filepicker
   $items['user/%filepicker_uid/filepicker'] = array(

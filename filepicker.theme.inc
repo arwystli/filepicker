@@ -186,6 +186,10 @@ function filepicker_theme() {
     'filepicker_import_dir_form' => array(
       'render element' => 'form'
     ),
+    'filepicker_admin_orphans_form' => array(
+      'render element' => 'form',
+    ),
+
   );
 }
 
@@ -554,6 +558,10 @@ function theme_filepicker_settings_form($variables) {
   $jshide = ($form['filepicker_quotas']['filepicker_quota_byrole']['#default_value'] ? '' : ' class="js-hide"');
   $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap-filepicker-quota-role"'. $jshide .'>';
   $form['filepicker_quotas']['filepicker_quota_role']['#suffix'] = '</div>';
+  if (isset($form['filepicker_settings']['filepicker_admin_message'])) {
+    $form['filepicker_settings']['filepicker_admin_message']['#prefix'] = '<div class="messages">';
+    $form['filepicker_settings']['filepicker_admin_message']['#suffix'] = '</div>';
+  }
 
   $output .= drupal_render_children($form);
   return $output;
@@ -624,6 +632,16 @@ function theme_filepicker_import_form($variables) {
 function theme_filepicker_import_dir_form($variables) {
   $form = $variables['form'];
   $output = '';
+  $output .= drupal_render_children($form);
+  return $output;
+}
+
+function theme_filepicker_admin_orphans_form($variables) {
+
+  $form = $variables['form'];
+  $output = '';
+  $form['msg']['#prefix'] = '<div class="messages">';
+  $form['msg']['#suffix'] = '</div>';
   $output .= drupal_render_children($form);
   return $output;
 }

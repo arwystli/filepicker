@@ -1,3 +1,7 @@
+File Picker for D7 in 7.x-1.x, 20011-06-03
+------------------------------------
+by hutch, added reallocate feature
+
 File Picker for D7 in 7.x-1.x, 20011-04-02
 ------------------------------------
 by hutch, fixed doubleslash bug

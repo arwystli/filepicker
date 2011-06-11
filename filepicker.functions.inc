@@ -1102,6 +1102,16 @@ function filepicker_get_enabled_group($account = FALSE) {
   return FALSE;
 }
 
+function filepicker_group_exists($gid) {
+  $result = db_query("SELECT gid FROM {filepicker_user_groups} WHERE gid = :gid", array(':gid' => $gid));
+  if ($row = $result->fetchAssoc()) {
+    if ($row['gid']) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 /**
  * all the groups for the current user which have files attached
  */
@@ -1116,9 +1126,19 @@ function filepicker_list_groups_form($form, &$form_state, $account = FALSE) {
   $grouplist = filepicker_get_grouplist($user);
   if ($account) {
     $enabledlist = filepicker_variable_get('filepicker_currentgroup', 0);
+    // check it
+    if (! filepicker_group_exists($enabledlist)) {
+      filepicker_variable_del("filepicker_currentgroup");
+      $enabledlist = '';
+    }
   }
   else {
     $enabledlist = filepicker_get_enabled_group($user);
+    // check it
+    if (! filepicker_group_exists($enabledlist)) {
+      filepicker_variable_del("filepicker_currentgroup", $user->uid);
+      $enabledlist = '';
+    }
   }
 
   $form['gid'] = array(
@@ -1194,9 +1214,19 @@ function filepicker_list_public_groups_form($form, &$form_state, $account = FALS
   $grouplist = filepicker_get_public_grouplist($user, $admin);
   if ($admin) {
     $enabledlist = filepicker_variable_get('filepicker_public_currentgroup', 0);
+    // check it
+    if (! filepicker_group_exists($enabledlist)) {
+      filepicker_variable_del("filepicker_public_currentgroup");
+      $enabledlist = '';
+    }
   }
   else {
     $enabledlist = filepicker_variable_get('filepicker_public_currentgroup', 0, $user->uid);
+    // check it
+    if (! filepicker_group_exists($enabledlist)) {
+      filepicker_variable_del("filepicker_public_currentgroup", $user->uid);
+      $enabledlist = '';
+    }
   }
 
   $form['gid'] = array(

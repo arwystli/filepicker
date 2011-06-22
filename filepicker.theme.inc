@@ -393,8 +393,8 @@ function theme_filepicker_upload_form($variables) {
 
   $form['maxmsg']['#markup'] = '<div class="messages">' . t('Browse your computer for up to !c, Max %max Total', array('!c' => format_plural($max_uploads, '1 File', '@count Files'), '%max' => $max_filesize) ) . '</div>';
   for ($ct = 1; $ct <= $max_uploads; $ct++) {
-    $form['file_upload_'. $ct]['#prefix'] = "<div id='filepicker_upload_link_wrapper_$ct'>";
-    $form['title_'. $ct]['#suffix'] = '</div>';
+    $form['file_upload_' . $ct]['#prefix'] = "<div id='filepicker_upload_link_wrapper_$ct'>";
+    $form['title_' . $ct]['#suffix'] = '</div>';
     if (isset($form['link_' . $ct])) {
       $form['link_' . $ct]['#markup'] = "<div class='filepicker_upload_link' id='filepicker_upload_link_$ct' style='display:none'>" . l(t('Upload another'), '', array(
         'attributes' => array(
@@ -539,15 +539,15 @@ function theme_filepicker_settings_form($variables) {
   $output = '';
 
   $jshide = ($form['filepicker_import']['filepicker_import_enabled']['#default_value'] ? '' : ' class="js-hide"');
-  $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import"'. $jshide .'>';
+  $form['filepicker_import']['filepicker_import_delete']['#prefix'] = '<div id="wrap-filepicker-import"' . $jshide . '>';
   $form['filepicker_import']['filepicker_import_max']['#suffix'] = '</div>';
 
   $jshide = ($form['filepicker_groups']['filepicker_groups_enabled']['#default_value'] ? '' : ' class="js-hide"');
-  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups"'. $jshide .'>';
+  $form['filepicker_groups']['filepicker_public_enabled']['#prefix'] = '<div id="wrap-filepicker-groups"' . $jshide . '>';
   $form['filepicker_groups']['filepicker_groups_in_upload_enabled']['#suffix'] = '</div>';
 
   $jshide = ($form['filepicker_progress']['filepicker_upload_progress_enabled']['#default_value'] ? '' : ' class="js-hide"');
-  $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress"'. $jshide .'>';
+  $form['filepicker_progress']['filepicker_upload_progress_delay']['#prefix'] = '<div id="wrap-filepicker-upload-progress"' . $jshide . '>';
   if (version_compare(phpversion(), FILEPICKER_UPLOAD_STATUS_MIN_PHP) >= 0 && extension_loaded('uploadprogress')) {
     $form['filepicker_progress']['filepicker_uploadprogress']['#suffix'] = '</div>';
   }
@@ -556,7 +556,7 @@ function theme_filepicker_settings_form($variables) {
   }
 
   $jshide = ($form['filepicker_quotas']['filepicker_quota_byrole']['#default_value'] ? '' : ' class="js-hide"');
-  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap-filepicker-quota-role"'. $jshide .'>';
+  $form['filepicker_quotas']['filepicker_quota_role']['#prefix'] = '<div id="wrap-filepicker-quota-role"' . $jshide . '>';
   $form['filepicker_quotas']['filepicker_quota_role']['#suffix'] = '</div>';
   if (isset($form['filepicker_settings']['filepicker_admin_message'])) {
     $form['filepicker_settings']['filepicker_admin_message']['#prefix'] = '<div class="messages">';

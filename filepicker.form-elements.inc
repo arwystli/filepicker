@@ -63,3 +63,11 @@ function filepicker_rows_per_page_elem($default = NULL) {
     '#default_value' => ($default != NULL ? $default : filepicker_variable_get('filepicker_rows_per_page', 25)),
   );
 }
+function filepicker_use_admin_theme_elem($default = NULL) {
+  return array(
+    '#type' => 'checkbox',
+    '#title' => t('Use the administration theme for Filepicker Iframe'),
+    '#return_value' => 1,
+    '#default_value' => (is_numeric($default) ? $default : filepicker_variable_get('filepicker_use_admin_theme', 0)),
+  );
+}

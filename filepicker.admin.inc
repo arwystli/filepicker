@@ -203,7 +203,7 @@ function filepicker_settings_form($form, &$form_state, $info) {
   $form['filepicker_iframe']['filepicker_advanced_iframe_height'] = filepicker_iframe_height_elem(filepicker_variable_get('filepicker_advanced_iframe_height', "500"));
   $form['filepicker_iframe']['filepicker_advanced_iframe_border'] = filepicker_iframe_border_elem(filepicker_variable_get('filepicker_advanced_iframe_border', "0"));
   $form['filepicker_iframe']['filepicker_advanced_collapsed'] = filepicker_collapsed_elem(filepicker_variable_get('filepicker_advanced_collapsed', 0));
-
+  $form['filepicker_iframe']['filepicker_use_admin_theme'] = filepicker_use_admin_theme_elem(filepicker_variable_get('filepicker_use_admin_theme', 0));
 
   // progress bar
   $form['filepicker_progress'] = array(
@@ -411,6 +411,7 @@ function filepicker_settings_form_submit($form, &$form_state) {
   filepicker_variable_set('filepicker_advanced_iframe_height', $form_state['values']['filepicker_advanced_iframe_height']);
   filepicker_variable_set('filepicker_advanced_iframe_border', $form_state['values']['filepicker_advanced_iframe_border']);
   filepicker_variable_set('filepicker_advanced_collapsed', $form_state['values']['filepicker_advanced_collapsed']);
+  filepicker_variable_set('filepicker_use_admin_theme', $form_state['values']['filepicker_use_admin_theme']);
   filepicker_variable_set('filepicker_upload_progress_enabled', $form_state['values']['filepicker_upload_progress_enabled']);
   filepicker_variable_set('filepicker_upload_progress_delay', $form_state['values']['filepicker_upload_progress_delay']);
   filepicker_variable_set('filepicker_upload_progress_message', $form_state['values']['filepicker_upload_progress_message']);
@@ -729,7 +730,7 @@ function filepicker_admin_orphans_form($form_state) {
       '#type' => 'textfield',
       '#title' => t('Reallocate to'),
       '#description' => t('Select a user who will own these files.'),
-      '#autocomplete_path' => FILEPICKER_ADMIN_PATH .'/orphans/autocomplete',
+      '#autocomplete_path' => FILEPICKER_ADMIN_PATH . '/orphans/autocomplete',
       '#default_value' => '',
       '#maxlength' => 30,
       '#size' => 25,

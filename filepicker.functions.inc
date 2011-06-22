@@ -210,7 +210,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
     if ($public) {
       $filepath    = 'filepicker/list_public/';
     }
-    $returnpath = 'i-'. $user->uid;
+    $returnpath = 'i-' . $user->uid;
   }
   elseif ($src == 'admin') {
     $path = FILEPICKER_ADMIN_PATH;
@@ -1530,10 +1530,10 @@ function filepicker_group_stats($account = FALSE, $label = '') {
       array(t('Private groups') . ": ", $nopublicgroupcount, t('Private files') . ": ", $nopubliccount),
       array( '', '', t('Grouped files') . ": ", $totcount),
       array( '', '', t('Ungrouped files') . ": ", $allcount-$totcount),
-      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
+      array(($groupusercount ? t('Group Users') . ": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used') . ": ", $bytecount),
     );
     if (!$account) {
-      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') . ": " : ''), ($usercount ? $usercount : ''), '', '')));
     }
 
   }
@@ -1542,10 +1542,10 @@ function filepicker_group_stats($account = FALSE, $label = '') {
       array(t('Groups') . ": ", $groupcount, t('Files') . ": ", $allcount),
       array( '', '', t('Grouped files') . ": ", $totcount),
       array( '', '', t('Ungrouped files') . ": ", $allcount-$totcount),
-      array(($groupusercount ? t('Group Users') .": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used')  .": ", $bytecount),
+      array(($groupusercount ? t('Group Users') . ": " : ''), ($groupusercount ? $groupusercount : ''), t('Space used') . ": ", $bytecount),
     );
     if (!$account) {
-      $rows = array_merge($rows, array(array(($usercount ? t('All Users') .": " : ''), ($usercount ? $usercount : ''), '', '')));
+      $rows = array_merge($rows, array(array(($usercount ? t('All Users') . ": " : ''), ($usercount ? $usercount : ''), '', '')));
     }
   }
   return theme('filepicker_stats', array('header' => $header, 'rows' => $rows, 'message' => t('No Stats found'), 'pref' => '<div class="filep_groups_info">', 'suff' => '</div>', 'label' => $label));

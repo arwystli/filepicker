@@ -77,7 +77,8 @@ function filepicker_menu() {
     'page callback'    => 'filepicker_box',
     'access callback'  => 'filepicker_access_use',
     'type'             => MENU_CALLBACK,
-    'file'             => 'filepicker.upload.inc'
+    'file'             => 'filepicker.upload.inc',
+    'theme callback'   => 'filepicker_access_theme',
   );
   $items['filepicker/upload'] = array(
     'title'            => 'Upload',
@@ -326,7 +327,7 @@ function filepicker_menu() {
     'type'             => MENU_CALLBACK,
     'file'             => 'filepicker.admin.inc',
   );
-  $items[FILEPICKER_ADMIN_PATH .'/orphans/autocomplete'] = array(
+  $items[FILEPICKER_ADMIN_PATH . '/orphans/autocomplete'] = array(
     'access callback'  => 'filepicker_access_admin',
     'page callback'    => 'filepicker_user_autocomplete',
     'type'             => MENU_CALLBACK,
@@ -511,6 +512,18 @@ function filepicker_access_use_group() {
     return TRUE;
   }
   return FALSE;
+}
+
+function filepicker_access_theme() {
+  global $custom_theme;
+  if (filepicker_variable_get('filepicker_use_admin_theme', 0)) {
+    $theme = variable_get('admin_theme');
+    $custom_theme = $theme;
+  }
+  else {
+    $custom_theme = '';
+  }
+  return $custom_theme;
 }
 
 /**

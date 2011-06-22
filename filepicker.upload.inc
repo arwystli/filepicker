@@ -32,7 +32,7 @@ function filepicker_upload_form($form, &$form_state, $account=FALSE, $admin = FA
   // multiple uploads
   $max_uploads = filepicker_variable_get('filepicker_max_uploads', 1);
   $settings = array('filepicker_upload_link' => array('max_uploads' => $max_uploads));
-  drupal_add_js(FILEPICKER_PATH .'/filepicker_upload_link.js');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker_upload_link.js');
   drupal_add_js($settings, 'setting');
 
   if ($account) {
@@ -53,14 +53,14 @@ function filepicker_upload_form($form, &$form_state, $account=FALSE, $admin = FA
     '#markup' => '',
   );
   for ($ct = 1; $ct <= $max_uploads; $ct++) {
-    $form['file_upload_'. $ct] = array(
+    $form['file_upload_' . $ct] = array(
       '#type' => 'file',
       '#title' => ($max_uploads == 1 ? t('File') : t('File %ct', array('%ct' => $ct))),
       '#required' => ($ct == 1 ? TRUE : FALSE),
       '#value' => 1,
       '#size' => 50,
     );
-    $form['title_'. $ct] = array(
+    $form['title_' . $ct] = array(
       '#type' => 'textfield',
       '#title' => ($max_uploads == 1 ? t('Link text') : t('Link text for File %ct', array('%ct' => $ct))),
       '#description' => t('The text to use for a link. The default is the filename'),
@@ -205,13 +205,13 @@ function filepicker_upload_form_submit($form, &$form_state) {
   if ($success) {
     drupal_set_message(t('%c successfully uploaded.', array('%c' => format_plural($success, '1 file', '@count files'))));
     if (isset($form_state['values']['admin'])) {
-      $outpath = FILEPICKER_ADMIN_PATH .'/files/user/'. $user->uid .'/list';
+      $outpath = FILEPICKER_ADMIN_PATH . '/files/user/' . $user->uid . '/list';
     }
     elseif (isset($form_state['values']['account'])) {
-      $outpath = 'user/'. $user->uid .'/filepicker/files/list';
+      $outpath = 'user/' . $user->uid . '/filepicker/files/list';
     }
     else {
-      $outpath = 'filepicker/list'. ($success == 1 ? '/' . $nextfileid : '');
+      $outpath = 'filepicker/list' . ($success == 1 ? '/' . $nextfileid : '');
     }
     drupal_goto($outpath);
   }
@@ -235,7 +235,7 @@ function filepicker_copy_uploaded_file($destination, $name) {
       $destination .= $file;
       $file_moved = filepicker_file_unmanaged_move($newsrc, FILEPICKER_FILE_SCHEME . $destination);
       // might be renamed if a file of same name already exists
-      $file_moved = substr($file_moved, strrpos($file_moved, DIRECTORY_SEPARATOR)+1);
+      $file_moved = drupal_substr($file_moved, strrpos($file_moved, DIRECTORY_SEPARATOR)+1);
       return $file_moved;
     }
   }
@@ -297,7 +297,7 @@ function filepicker_upload_progress_get_script($delay) {
     );
   }
 
-  drupal_add_js(FILEPICKER_PATH .'/filepicker_upload.js');
+  drupal_add_js(FILEPICKER_PATH . '/filepicker_upload.js');
   drupal_add_js($settings, 'setting');
 }
 

@@ -515,15 +515,11 @@ function filepicker_access_use_group() {
 }
 
 function filepicker_access_theme() {
-  global $custom_theme;
-  if (filepicker_variable_get('filepicker_use_admin_theme', 0)) {
-    $theme = variable_get('admin_theme');
-    $custom_theme = $theme;
+
+  if (filepicker_variable_get('filepicker_use_admin_theme', 0) && variable_get('node_admin_theme', 0)) {
+    return variable_get('admin_theme');
   }
-  else {
-    $custom_theme = '';
-  }
-  return $custom_theme;
+  return FALSE;
 }
 
 /**

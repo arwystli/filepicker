@@ -1,3 +1,7 @@
+File Picker for D6 in 6.x-1.x, 20011-07-21
+------------------------------------
+by hutch, changed function names containing '_process'
+
 File Picker for D6 in 6.x-1.x, 20011-06-11
 ------------------------------------
 by hutch, fixed currentgroup bug, #1185406

@@ -198,11 +198,11 @@ function filepicker_delete_user_group($gid) {
     && db_query("DELETE FROM {filepicker_group_files} WHERE gid=%d", array($gid)) ) {
     drupal_set_message(t('Group was successfully deleted'));
     $pgid = variable_get('filepicker_public_currentgroup', 0);
-    if($pgid == $gid) {
+    if ($pgid == $gid) {
       variable_del("filepicker_public_currentgroup");
     }
     $pgid = variable_get('filepicker_currentgroup', 0);
-    if($pgid == $gid) {
+    if ($pgid == $gid) {
       variable_del("filepicker_currentgroup");
     }
   }

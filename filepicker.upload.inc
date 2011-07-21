@@ -169,7 +169,7 @@ function filepicker_upload_form_submit($form, &$form_state) {
           if ($name == 'file_upload_' . $ct && !empty($_FILES['files']['name'][$name])) {
             $filemoved = filepicker_copy_uploaded_file($destination, $name);
             if ($filemoved) {
-              $file = substr($destination, strrpos($destination, DIRECTORY_SEPARATOR)+1);
+              $file = drupal_substr($destination, strrpos($destination, DIRECTORY_SEPARATOR)+1);
               $title = htmlspecialchars($form_state['values']['title_' . $ct]);
               $nextfileid = filepicker_insert_file($user->uid, $file, $title);
               if ($nextfileid) {

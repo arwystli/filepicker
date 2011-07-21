@@ -36,7 +36,7 @@ function filepicker_edit_form($form, &$form_state, $file, $src='iframe', $accoun
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    '#submit' => array('filepicker_edit_form_process'),
+    '#submit' => array('filepicker_edit_form_do'),
   );
   $form['cancel'] = array(
     '#type' => 'submit',
@@ -72,7 +72,7 @@ function filepicker_edit_form_cancel($form, &$form_state) {
 }
 
 
-function filepicker_edit_form_process($form, &$form_state) {
+function filepicker_edit_form_do($form, &$form_state) {
   $file_id = $form_state['values']['file_id'];
   $src = $form_state['values']['src'];
   if (isset($form_state['values']['account']) && $src == 'admin') {

@@ -1,3 +1,7 @@
+File Picker for D7 in 7.x-1.x, 20011-07-21
+------------------------------------
+by hutch, changed function names containing '_process'
+
 File Picker for D7 in 7.x-1.x, 20011-06-23
 ------------------------------------
 by hutch, added admin theme option

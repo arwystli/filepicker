@@ -10,6 +10,7 @@
  */
 // iframe
 function filepicker_upload() {
+  $content = '';
   filepicker_variable_del('filepicker_advanced_browser_pagestart');
   if (filepicker_variable_get('filepicker_upload_progress_enabled', 1)) {
     $content = filepicker_upload_progress_get_script(filepicker_variable_get('filepicker_upload_progress_delay', 0));
@@ -20,6 +21,7 @@ function filepicker_upload() {
 // account
 function filepicker_user_upload() {
   global $user;
+  $content = '';
   filepicker_variable_del('filepicker_advanced_browser_pagestart');
   if (filepicker_variable_get('filepicker_upload_progress_enabled', 1)) {
     $content = filepicker_upload_progress_get_script(filepicker_variable_get('filepicker_upload_progress_delay', 0));

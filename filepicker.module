@@ -552,7 +552,7 @@ function filepicker_form_alter(&$form, &$form_state, $form_id) {
         $insert_type = 'node';
       }
     }
-    elseif (module_exists('comment') && filepicker_variable_get('filepicker_comment_enabled', 0) && preg_match('/comment_form$/i', $form_id) ) {
+    elseif (module_exists('comment') && filepicker_variable_get('filepicker_comment_enabled', 0) && preg_match('/comment.*_form$/i', $form_id) ) {
       $insert_type = 'comment';
     }
     elseif (( $form_id == 'block_add_block_form' || $form_id == 'block_admin_configure' ) && filepicker_variable_get('filepicker_blocks_enabled', 0)) {

@@ -228,6 +228,7 @@ function filepicker_list_admin_form($form, &$form_state, $src="iframe", $account
   }
 
   // if there are groups
+  $gid = FALSE;
   if (filepicker_variable_get('filepicker_groups_enabled', 1)) {
     $gid = 0;
     if (! $public) {

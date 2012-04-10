@@ -42,7 +42,7 @@ function filepickerInsert(button) {
     var filepInsertion;
     // build a link
     if (filepFilePath) {
-      filepInsertion = "<a href='" + filepFilePath + "' "+ (filepFileNewWindow ? 'target="_blank"' : '') + " >" + (filepFileTitle ? filepFileTitle : filepFileName) + "</a>";
+      filepInsertion = '<a href="' + filepFilePath + '"' + (filepFileNewWindow ? ' target="_blank"' : '') + '>' + (filepFileTitle ? filepFileTitle : filepFileName) + '</a>';
     }
 
     // Get the parent window of filepicker iframe
@@ -90,6 +90,17 @@ function filepickerInsert(button) {
           jobdone = true;
         }
       }
+
+      // Wysiwyg API
+      if (! jobdone && typeof(win.Drupal.wysiwyg.instances[inst].editor) !== "undefined") {
+        if (win.Drupal.wysiwyg.instances[inst].editor !== "none") {
+          if (typeof(win.Drupal.wysiwyg.instances[inst].insert) !== "undefined") {
+            win.Drupal.wysiwyg.instances[inst].insert(filepInsertion);
+            jobdone = true;
+          }
+        }
+      }
+
     }
     // older ckeditor
     if (! jobdone && win.Drupal.ckeditorInstance && win.Drupal.ckeditorInsertHtml) {

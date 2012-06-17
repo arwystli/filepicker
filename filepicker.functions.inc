@@ -39,12 +39,7 @@ function filepicker_file_select($file_id, $showgroup=TRUE, $public = FALSE, $acc
   if ($file) {
     $form1 = '';
     if ($user->uid == $file->uid || $public) {
-      if (filepicker_variable_get('filepicker_use_full_url', 0)) {
-        $filepath = $base_url . DIRECTORY_SEPARATOR . file_directory_path() . DIRECTORY_SEPARATOR . FILEPICKER_FILES_DIR . DIRECTORY_SEPARATOR . $file->uid . DIRECTORY_SEPARATOR . $file->file_name;
-      }
-      else {
-        $filepath = filepicker_get_file_path($file, ($public ? array('uid' => $file->uid) : FALSE ));
-      }
+      $filepath = filepicker_get_file_path($file, ($public ? array('uid' => $file->uid) : FALSE ));
       $form1 = render(drupal_get_form('filepicker_file_form', $file, $filepath, $public));
     }
 

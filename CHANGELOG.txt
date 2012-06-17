@@ -1,9 +1,18 @@
-commit ae237a7
+commit 68e07f0
+Author: hutch <hutch@midwales.net>
+Date:   Sun Jun 17 08:15:52 2012 +0100
+
+    removed file_directory_path()
+
+filepicker.functions.inc
+
+commit 35bc956
 Author: hutch <hutch@midwales.net>
 Date:   Tue Apr 10 21:46:13 2012 +0100
 
     improved Wysiwyg API support
 
+CHANGELOG.txt
 filepicker_iframe.js
 
 commit 5cdbd58

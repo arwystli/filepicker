@@ -45,7 +45,8 @@ function filepicker_user_page($uid, $path="", $func="", $id=0) {
       $content .= filepicker_user_groups();
     }
     elseif ($func == 'delete') {
-      $content .= render(drupal_get_form('filepicker_group_delete_form', $id));
+      $f = drupal_get_form('filepicker_group_delete_form', $id);
+      $content .= render($f);
     }
   }
   elseif ($path == 'stats') {
@@ -79,12 +80,14 @@ function filepicker_user_view($file_id) {
     $filepath = filepicker_get_file_path($file);
     $info = filepicker_get_info($file);
     $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
-    $form1 = render(drupal_get_form('filepicker_user_file_form', $file_id));
+    $f = drupal_get_form('filepicker_user_file_form', $file_id);
+    $form1 = render($f);
     $form2 = '';
     $form3 = '';
     // group form
     if (_filepicker_has_groups()) {
-      $form3 = render(drupal_get_form('filepicker_group_files_form', $file_id));
+      $f = drupal_get_form('filepicker_group_files_form', $file_id);
+      $form3 = render($f);
     }
     $content = theme('filepicker_user_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
@@ -143,7 +146,8 @@ function filepicker_user_file_form_edit($form, &$form_state) {
  * Menu callback; presents the configuration settings form for filepicker user.
  */
 function filepicker_user_config_admin() {
-  $form = render(drupal_get_form('filepicker_user_config_admin_form'));
+  $f = drupal_get_form('filepicker_user_config_admin_form');
+  $form = render($f);
   return theme('filepicker_user_config', array('form' => $form, 'label' => '', 'help' => t('Filepicker configuration page.'), 'message1' => '', 'message2' => ''));
 }
 

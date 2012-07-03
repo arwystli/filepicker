@@ -11,14 +11,17 @@ function filepicker_groups() {
   // from iframe
   if (! arg(2)) {
     $content = filepicker_groups_list();
-    $content .= render(drupal_get_form('filepicker_groups_form'));
+    $f = drupal_get_form('filepicker_groups_form');
+    $content .= render($f);
   }
   elseif ( arg(2) == 'edit') {
     $record = filepicker_get_user_group(arg(3));
-    $content .= render(drupal_get_form('filepicker_groups_form', $record));
+    $f = drupal_get_form('filepicker_groups_form', $record);
+    $content .= render($f);
   }
   elseif (arg(2) == 'delete') {
-    $content .= render(drupal_get_form('filepicker_group_delete_form', arg(3)));
+    $f = drupal_get_form('filepicker_group_delete_form', arg(3));
+    $content .= render($f);
   }
   elseif ( is_numeric(arg(2)) && arg(2) > 0 ) {
     filepicker_set_user_group_state(1, arg(2));
@@ -36,14 +39,17 @@ function filepicker_user_groups($mode="", $gid=0) {
   // $mode is edit, delete or empty
   if (empty($mode)) {
     $content .= filepicker_groups_list('account');
-    $content .= render(drupal_get_form('filepicker_groups_form'));
+    $f = drupal_get_form('filepicker_groups_form');
+    $content .= render($f);
   }
   elseif ($mode == 'edit') {
     $record = filepicker_get_user_group($gid);
-    $content .= render(drupal_get_form('filepicker_groups_form', $record));
+    $f = drupal_get_form('filepicker_groups_form', $record);
+    $content .= render($f);
   }
   elseif ($mode == 'delete') {
-    $content .= render(drupal_get_form('filepicker_group_delete_form', $gid));
+    $f = drupal_get_form('filepicker_group_delete_form', $gid);
+    $content .= render($f);
   }
   return $content;
 }
@@ -230,7 +236,8 @@ function filepicker_delete_user_group($gid) {
 
 function filepicker_group_edit($gid) {
   $record = filepicker_get_user_group($gid);
-  $content .= render(drupal_get_form('filepicker_groups_form', $record));
+  $f = drupal_get_form('filepicker_groups_form', $record);
+  $content .= render($f);
   return $content;
 }
 

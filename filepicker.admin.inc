@@ -565,10 +565,12 @@ function filepicker_admin_view($file_id, $account = FALSE) {
     $filepath = filepicker_get_file_path($file, 'full', $userdir);
     $info = filepicker_get_info($file);
     $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
-    $form1 = render(drupal_get_form('filepicker_admin_file_form', $file_id, $user));
+    $form1 = drupal_get_form('filepicker_admin_file_form', $file_id, $user);
+    $form1 = render($form1);
     // group form
     if (_filepicker_has_groups($user)) {
-      $form3 = render(drupal_get_form('filepicker_group_files_form', $file_id, $user));
+      $form3 = drupal_get_form('filepicker_group_files_form', $file_id, $user);
+      $form3 = render($form3);
     }
     $content = theme('filepicker_admin_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
@@ -901,17 +903,20 @@ function filepicker_admin_groups() {
     $name = $account->name;
   }
   if (filepicker_variable_get('filepicker_groups_enabled', 1)) {
-    $content .= render(drupal_get_form('filepicker_group_search_form', 'groups'));
+    $form = drupal_get_form('filepicker_group_search_form', 'groups');
+    $content .= render($form);
     $content .= '<p>' . t('Managing groups for !n', array('!n' => ($name ? l($name, "user/$uid") : t('All')))) . '</p>';
     if ($uid) {
       // show groups for $uid
       if ($gid) {
         if ($gidaction == 'edit') {
           $record = filepicker_get_user_group($gid);
-          $content .= render(drupal_get_form('filepicker_groups_form', $record));
+          $form = drupal_get_form('filepicker_groups_form', $record);
+          $content .= render($form);
         }
         elseif ($gidaction == 'delete') {
-          $content .= render(drupal_get_form('filepicker_group_delete_form', $gid));
+          $form = drupal_get_form('filepicker_group_delete_form', $gid);
+          $content .= render($form);
         }
       }
       elseif (arg(6) == 'stats') {
@@ -919,7 +924,8 @@ function filepicker_admin_groups() {
       }
       else {
         $content .= filepicker_groups_list('admin', $account, t('Groups for %name', array('%name' => $name)));
-        $content .= render(drupal_get_form('filepicker_groups_form', 0, $account));
+        $form = drupal_get_form('filepicker_groups_form', 0, $account);
+        $content .= render($form);
       }
     }
     else {
@@ -981,7 +987,8 @@ function filepicker_admin_files() {
     $account = user_load($uid);
     $name = $account->name;
   }
-  $content .= render(drupal_get_form('filepicker_user_search_form', 'files'));
+  $form = drupal_get_form('filepicker_user_search_form', 'files');
+  $content .= render($form);
   $content .= '<p>' . t('Managing files for !n', array('!n' => ($name ? l($name, "user/$uid") : t('All')))) . '</p>';
 
   if ($uid) {
@@ -991,7 +998,8 @@ function filepicker_admin_files() {
         $file =  _filepicker_get_file($file_id, FALSE, $account);
         $filesrc = filepicker_get_file_path($file, array('uid' => $account->uid , 'name' => $account->name) );
         $content .= theme('filepicker_file_edit_header', array('file' => $file, 'source' => $filesrc));
-        $content .= render(drupal_get_form('filepicker_edit_form', $file, 'admin', $account));
+        $form = drupal_get_form('filepicker_edit_form', $file, 'admin', $account);
+        $content .= render($form);
       }
       elseif ($fileaction == 'delete') {
         filepicker_file_delete($file_id, $account, 'admin');
@@ -1035,7 +1043,8 @@ function filepicker_admin_files() {
         $message = t('User %name has used %usedbytesprint and has %pl.', array('%name' => $name, '%usedbytesprint' => $usedbytesprint, '%pl' => $pl));
       }
       if (! filepicker_variable_get('filepicker_quota_byrole', 0) ) {
-        $form = render(drupal_get_form('filepicker_quota_form', $account));
+        $form = drupal_get_form('filepicker_quota_form', $account);
+        $form = render($form);
       }
       else {
         $form = "";
@@ -1166,13 +1175,16 @@ function filepicker_admin_import() {
   if (! $importdir = filepicker_variable_get('filepicker_import_dir', '')) {
     drupal_set_message(t('You need to set the import folder'));
   }
-  $content = render(drupal_get_form('filepicker_import_dir_form'));
+  $form = drupal_get_form('filepicker_import_dir_form');
+  $content = render($form);
   if ($importdir) {
     if ($import_files = filepicker_import_dir_check()) {
-      $content .= render(drupal_get_form('filepicker_user_search_form', 'import'));
+      $form = drupal_get_form('filepicker_user_search_form', 'import');
+      $content .= render($form);
       if ($uid) {
         $account = user_load($uid);
-        $content .= render(drupal_get_form('filepicker_import_form', count($import_files), $account, TRUE));
+        $form = drupal_get_form('filepicker_import_form', count($import_files), $account, TRUE);
+        $content .= render($form);
       }
       else {
         drupal_set_message(t('Please select a user. You have %total files to be imported', array('%total' => count($import_files)) ));

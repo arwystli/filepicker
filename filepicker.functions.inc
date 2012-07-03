@@ -40,13 +40,15 @@ function filepicker_file_select($file_id, $showgroup=TRUE, $public = FALSE, $acc
     $form1 = '';
     if ($user->uid == $file->uid || $public) {
       $filepath = filepicker_get_file_path($file, ($public ? array('uid' => $file->uid) : FALSE ));
-      $form1 = render(drupal_get_form('filepicker_file_form', $file, $filepath, $public));
+      $form1 = drupal_get_form('filepicker_file_form', $file, $filepath, $public);
+      $form1 = render($form1);
     }
 
     // groups
     $form2 = '';
     if (_filepicker_has_groups() && $showgroup) {
-      $form2 = render(drupal_get_form('filepicker_group_files_form', $file_id));
+      $form2 = drupal_get_form('filepicker_group_files_form', $file_id);
+      $form2 = render($form2);
     }
 
     $content = theme('filepicker_insert', array('file' => $file, 'public' => $public, 'form1' => $form1, 'form2' => $form2));
@@ -527,12 +529,14 @@ function filepicker_multitask($mode = '', $sfile_ids = '', $returnpath = '') {
     switch ($mode) {
       case 'delete':
         // really delete?, auto themed
-        $output .= render(drupal_get_form('filepicker_multitask_delete_form', $sfile_ids, $returnpath));
+        $form = drupal_get_form('filepicker_multitask_delete_form', $sfile_ids, $returnpath);
+        $output .= render($form);
         $output .= l(t('Cancel'), $cancelpath);
         break;
       case 'groups':
         // select some groups
-        $output .= render(drupal_get_form('filepicker_multitask_groups_form', $sfile_ids, $returnpath));
+        $form = drupal_get_form('filepicker_multitask_groups_form', $sfile_ids, $returnpath);
+        $output .= render($form);
         $output .= l(t('Cancel'), $cancelpath);
         break;
     }
@@ -722,36 +726,44 @@ function _filepicker_list_admin($src="iframe", $account=FALSE, $public=FALSE, $r
   $forms['list_admin'] = '';
 
   if ( $src == 'admin' && ! $account && filepicker_variable_get('filepicker_groups_enabled', 1)) {
-    $forms['list_public'] = render(drupal_get_form('filepicker_list_public_form'));
+    $f = drupal_get_form('filepicker_list_public_form');
+    $forms['list_public'] = render($f);
   }
   // if there are groups
   if (filepicker_variable_get('filepicker_groups_enabled', 1)) {
     if ( _filepicker_has_public_groups($user, ($src=='admin' ? TRUE : FALSE)) && $src == 'admin' ) {
       // add groups select here
-      $forms['list_public_groups'] = render(drupal_get_form('filepicker_list_public_groups_form', $user, ($src=='admin' ? TRUE : FALSE)));
+      $f = drupal_get_form('filepicker_list_public_groups_form', $user, ($src=='admin' ? TRUE : FALSE));
+      $forms['list_public_groups'] = render($f);
     }
     if (! $public && _filepicker_has_groups( ($src == 'admin' ? $user : FALSE) ) && filepicker_has_grouplist(($src == 'admin' ? $user : FALSE))) {
       // add groups select here
-      $forms['list_groups'] = render(drupal_get_form('filepicker_list_groups_form', ($src == 'admin' ? $user : FALSE)));
+      $f = drupal_get_form('filepicker_list_groups_form', ($src == 'admin' ? $user : FALSE));
+      $forms['list_groups'] = render($f);
     }
   }
 
   if ($src != 'admin' && filepicker_variable_get('filepicker_show_list_search_form', filepicker_variable_get('filepicker_show_list_search_form', 1), $user->uid) ) {
-    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form'));
+    $f = drupal_get_form('filepicker_list_search_form');
+    $forms['list_search'] = render($f);
   }
   elseif (filepicker_variable_get('filepicker_show_list_search_form', 1)) {
-    $forms['list_search'] = render(drupal_get_form('filepicker_list_search_form', FALSE, TRUE));
+    $f = drupal_get_form('filepicker_list_search_form', FALSE, TRUE);
+    $forms['list_search'] = render($f);
   }
 
-  $forms['list_admin'] = render(drupal_get_form('filepicker_list_admin_form', $src, $account, $public, $range));
+  $f = drupal_get_form('filepicker_list_admin_form', $src, $account, $public, $range);
+  $forms['list_admin'] = render($f);
   $pref = '<div class="filep_files_list">';
   $suff = '</div>';
   #if ($public && $src == 'admin') {
   if ($public) {
-    $content .= render(drupal_get_form('filepicker_list_public_form'));
+    $f = drupal_get_form('filepicker_list_public_form');
+    $content .= render($f);
     if ( filepicker_variable_get('filepicker_groups_enabled', 1) && _filepicker_has_public_groups($user, ($src=='admin' ? TRUE : FALSE))) {
       // add groups select here
-      $forms['list_public_groups'] = render(drupal_get_form('filepicker_list_public_groups_form', $user, TRUE));
+      $f = drupal_get_form('filepicker_list_public_groups_form', $user, TRUE);
+      $forms['list_public_groups'] = render($f);
     }
   }
   return theme('filepicker_list_admin', array('forms' => $forms, 'pref' => $pref, 'suff' => $suff, 'label' => $label));
@@ -1702,14 +1714,17 @@ function filepicker_quota_ok($src, $account = FALSE, $label="", $help="") {
   if ($quota_ok) {
     if ($account) {
       if ($src == 'admin') {
-        $form = render(drupal_get_form('filepicker_upload_form', $user, TRUE));
+        $form = drupal_get_form('filepicker_upload_form', $user, TRUE);
+        $form = render($form);
       }
       elseif ($src == 'user') {
-        $form = render(drupal_get_form('filepicker_upload_form', $user));
+        $form = drupal_get_form('filepicker_upload_form', $user);
+        $form = render($form);
       }
     }
     else {
-      $form = render(drupal_get_form('filepicker_upload_form'));
+      $form = drupal_get_form('filepicker_upload_form');
+      $form = render($form);
     }
   }
   return theme('filepicker_quota_message', array('message1' => $message1, 'message2' => $message2, 'form' => $form, 'label' => $label, 'help' => $help));

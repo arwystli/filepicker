@@ -1,9 +1,32 @@
-commit 68e07f0
+commit 7247a8c
+Author: hutch <hutch@midwales.net>
+Date:   Tue Aug 14 09:47:26 2012 +0100
+
+    fixed hook clash, #1729498
+
+filepicker.admin.inc
+filepicker.functions.inc
+filepicker.user.inc
+
+commit 54b07c8
+Author: hutch <hutch@midwales.net>
+Date:   Tue Jul 3 23:51:44 2012 +0100
+
+    avoid render strict warnings
+
+filepicker.admin.inc
+filepicker.edit.inc
+filepicker.functions.inc
+filepicker.group.inc
+filepicker.user.inc
+
+commit 437faed
 Author: hutch <hutch@midwales.net>
 Date:   Sun Jun 17 08:15:52 2012 +0100
 
     removed file_directory_path()
 
+CHANGELOG.txt
 filepicker.functions.inc
 
 commit 35bc956

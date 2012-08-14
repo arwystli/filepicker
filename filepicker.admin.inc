@@ -611,7 +611,7 @@ function filepicker_admin_file_form($form, &$form_state, $file_id, $account = FA
 function filepicker_admin_file_form_submit($form, &$form_state) {
   if ($form_state['values']['op'] == t('Delete file')) {
     $account = user_load($form_state['values']['account']);
-    filepicker_file_delete($form_state['values']['file_id'], $account, 'admin');
+    filepicker_delete_file($form_state['values']['file_id'], $account, 'admin');
   }
   elseif ($form_state['values']['op'] == t('Edit file')) {
     drupal_goto(FILEPICKER_ADMIN_PATH . '/files/user/' . $form_state['values']['account'] . '/edit/' . $form_state['values']['file_id']);
@@ -1002,7 +1002,7 @@ function filepicker_admin_files() {
         $content .= render($form);
       }
       elseif ($fileaction == 'delete') {
-        filepicker_file_delete($file_id, $account, 'admin');
+        filepicker_delete_file($file_id, $account, 'admin');
       }
       else {
         $content .= filepicker_admin_view($file_id, $account);

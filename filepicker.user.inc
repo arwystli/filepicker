@@ -29,7 +29,7 @@ function filepicker_user_page($uid, $path="", $func="", $id=0) {
       $content .= filepicker_user_list_admin();
     }
     elseif ($func == 'delete' && is_numeric($id) && $id > 0) {
-      filepicker_file_delete($id, FALSE, 'account');
+      filepicker_delete_file($id, FALSE, 'account');
     }
   }
   elseif (variable_get('filepicker_groups_enabled', 1) && $path == 'groups') {
@@ -134,7 +134,7 @@ function filepicker_user_file_form($form, &$form_state, $file_id) {
 }
 
 function filepicker_user_file_form_delete($form, &$form_state) {
-  filepicker_file_delete($form_state['values']['file_id'] , FALSE, 'account');
+  filepicker_delete_file($form_state['values']['file_id'] , FALSE, 'account');
 }
 
 function filepicker_user_file_form_edit($form, &$form_state) {

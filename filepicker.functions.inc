@@ -116,14 +116,14 @@ function filepicker_file_form($form, &$form_state, $file, $filepath, $public = F
  * Submit form functions
  */
 function filepicker_file_form_delete($form, &$form_state) {
-  filepicker_file_delete($form_state['values']['file_id']);
+  filepicker_delete_file($form_state['values']['file_id']);
 }
 
 function filepicker_file_form_edit($form, &$form_state) {
   drupal_goto('filepicker/edit/' . $form_state['values']['file_id']);
 }
 
-function filepicker_file_delete($file_id, $account=FALSE, $src='iframe') {
+function filepicker_delete_file($file_id, $account=FALSE, $src='iframe') {
   if ($account) {
     $user = $account;
   }
@@ -139,11 +139,11 @@ function filepicker_file_delete($file_id, $account=FALSE, $src='iframe') {
   else {
     $outpath ='filepicker/list';
   }
-  _filepicker_file_delete($file_id, $account, $src);
+  _filepicker_delete_file($file_id, $account, $src);
   drupal_goto($outpath);
 }
 
-function _filepicker_file_delete($file_id, $account=FALSE, $src='iframe', $suppress = FALSE) {
+function _filepicker_delete_file($file_id, $account=FALSE, $src='iframe', $suppress = FALSE) {
   if ($account) {
     $user = $account;
     $userdir = $user->uid;
@@ -574,7 +574,7 @@ function filepicker_multitask_delete_form_submit($form, &$form_state) {
 
   $file_ids = explode('-', $sfile_ids);
   foreach ($file_ids AS $file_id) {
-    _filepicker_file_delete($file_id, FALSE, 'admin');
+    _filepicker_delete_file($file_id, FALSE, 'admin');
   }
 
   drupal_set_message(t('%c deleted', array('%c' => format_plural( count($file_ids), '1 file', '@count files'))));

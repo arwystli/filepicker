@@ -1,9 +1,18 @@
-commit 7247a8c
+commit d9fba76
+Author: hutch <hutch@midwales.net>
+Date:   Sat Oct 27 17:35:48 2012 +0100
+
+    fixed bug when public is not enabled
+
+filepicker.group.inc
+
+commit a0dcc5a
 Author: hutch <hutch@midwales.net>
 Date:   Tue Aug 14 09:47:26 2012 +0100
 
     fixed hook clash, #1729498
 
+CHANGELOG.txt
 filepicker.admin.inc
 filepicker.functions.inc
 filepicker.user.inc

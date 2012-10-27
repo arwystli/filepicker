@@ -108,6 +108,9 @@ function filepicker_groups_form(&$form_state, $record=0, $account=FALSE) {
       }
     }
   }
+  else {
+    $form['groupsave']['group_public'] = array('#type' => 'value', '#value' => 0);
+  }
 
   if ($account) {
     $form['groupsave']['account'] = array(

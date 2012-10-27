@@ -1,78 +1,402 @@
-File Picker for D6 in 6.x-1.x, 20011-07-21
-------------------------------------
-by hutch, changed function names containing '_process'
+commit c768c19
+Author: hutch <hutch@midwales.net>
+Date:   Sat Oct 27 17:36:54 2012 +0100
 
-File Picker for D6 in 6.x-1.x, 20011-06-11
-------------------------------------
-by hutch, fixed currentgroup bug, #1185406
+    fixed bug when public is not enabled
 
-File Picker for D6 in 6.x-1.x, 20011-06-03
-------------------------------------
-by hutch, added reallocate feature
+filepicker.group.inc
 
-File Picker for D6 in 6.x-1.x, 20011-03-31
-------------------------------------
-by hutch, cleanup for new release
+commit 72dc5ca
+Author: hutch <hutch@midwales.net>
+Date:   Sat Jul 30 08:53:01 2011 +0100
 
-File Picker for D6 in 6.x-1.x, 20011-03-18
-------------------------------------
-by hutch, fixed bug in iframe multitask
+    added some notice avoidance
 
-File Picker for D6 in 6.x-1.x, 20011-03-17
-------------------------------------
-by hutch, fixed bug in iframe js, added multiple file upload
+filepicker.upload.inc
 
-File Picker for D6 in 6.x-1.x, 20011-03-06
-------------------------------------
-by hutch, moved some functions back to filepicker.module
+commit c001425
+Author: hutch <hutch@midwales.net>
+Date:   Thu Jul 21 11:02:03 2011 +0100
 
-File Picker for D6 in 6.x-1.x, 20011-03-04
-------------------------------------
-by hutch, improved private download support
+    changed function names containing '_process'
 
-File Picker for D6 in 6.x-1.x, 20011-03-03
-------------------------------------
-by hutch, added private download support
+CHANGELOG.txt
+filepicker.edit.inc
+filepicker.group.inc
+filepicker.upload.inc
 
-File Picker for D6 in 6.x-1.x, 20011-02-27
-------------------------------------
-by hutch, changed InsertatCursor to filepickerInsertatCursor
-  in filepicker_iframe.js to avoid potential clashes with insert module
+commit 656b67e
+Author: hutch <hutch@midwales.net>
+Date:   Sat Jun 11 15:39:48 2011 +0100
 
-File Picker for D6 in DRUPAL-6--1, 20011-02-17
-------------------------------------
-by hutch, reorganised functions for reduced footprint
+    fixed currentgroup bug #1185406
 
-File Picker for D6 in DRUPAL-6--1, 20011-01-24
-------------------------------------
-by hutch, fixed rows per page bug
+CHANGELOG.txt
+filepicker.functions.inc
+filepicker.group.inc
 
-File Picker for D6 in DRUPAL-6--1, 20011-01-06
-------------------------------------
-by hutch, fixed group by bug, #1015874
+commit 26aa9a7
+Author: hutch <hutch@midwales.net>
+Date:   Fri Jun 3 08:17:20 2011 +0100
 
-File Picker for D6 in DRUPAL-6--1, 20010-12-21
-------------------------------------
-by hutch  added PECL uploadprogress support
+    added reallocate feature
 
-File Picker for D6 in DRUPAL-6--1, 20010-12-13
-------------------------------------
-by hutch  fixed upload progress
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.module
+filepicker.theme.inc
 
-File Picker for D6 in DRUPAL-6--1, 20010-12-05
-------------------------------------
-by hutch, fixed filesize, pathing in various places
+commit 346ca76
+Author: hutch <hutch@midwales.net>
+Date:   Thu Mar 31 11:40:54 2011 +0100
 
-File Picker  for D6 in DRUPAL-6--1, 20010-12-04
-------------------------------------
-by hutch, fixed $form_state reference bug,
-  preg_match bug in extension detection
+    cleanup for new release
 
-File Picker  for D6 in DRUPAL-6--1, 20010-12-03
-------------------------------------
-by hutch, removed colorbox_enable option
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.import.inc
+filepicker.module
 
-File Picker  for D6 in DRUPAL-6--1, 20010-12-01
-------------------------------------
-by hutch, fixed imagepicker incompatibility
+commit d772eb2
+Author: hutch <hutch@midwales.net>
+Date:   Mon Mar 28 11:39:07 2011 +0100
 
+    fixed iframe tinymce, fixed public roles bug
+
+filepicker.functions.inc
+filepicker.theme.inc
+
+commit 5da5559
+Author: hutch <hutch@midwales.net>
+Date:   Fri Mar 18 09:53:16 2011 +0000
+
+    fixed bug in iframe multitask
+
+CHANGELOG.txt
+filepicker.functions.inc
+filepicker.module
+
+commit 343db27
+Author: hutch <hutch@midwales.net>
+Date:   Thu Mar 17 09:27:29 2011 +0000
+
+    fixed bug in iframe js, added multiple file upload
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.css
+filepicker.theme.inc
+filepicker.upload.inc
+filepicker.user.inc
+filepicker_iframe.js
+filepicker_upload_link.js
+
+commit b200276
+Author: hutch <hutch@midwales.net>
+Date:   Mon Mar 14 17:14:46 2011 +0000
+
+    fixed wysiwyg bug in iframe js
+
+filepicker_iframe.js
+
+commit 9c4659f
+Author: hutch <hutch@midwales.net>
+Date:   Sun Mar 6 12:17:41 2011 +0000
+
+    moved some functions back to filepicker.module
+
+CHANGELOG.txt
+filepicker.functions.inc
+filepicker.install
+filepicker.module
+
+commit 84ba86a
+Author: hutch <hutch@midwales.net>
+Date:   Fri Mar 4 19:48:20 2011 +0000
+
+    improved private upload support
+
+CHANGELOG.txt
+filepicker.functions.inc
+
+commit c12b93f
+Author: hutch <hutch@midwales.net>
+Date:   Thu Mar 3 14:18:55 2011 +0000
+
+    added private download support
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.functions.inc
+filepicker.install
+filepicker.module
+
+commit 87f587f
+Author: hutch <hutch@midwales.net>
+Date:   Sun Feb 27 15:03:39 2011 +0000
+
+    removed unwanted cvs keyword
+
+filepicker.admin.inc
+filepicker.css
+filepicker.edit.inc
+filepicker.form-elements.inc
+filepicker.functions.inc
+filepicker.group.inc
+filepicker.import.inc
+filepicker.install
+filepicker.module
+filepicker.theme.inc
+filepicker.tpl.php
+filepicker.upload.inc
+filepicker.user.inc
+filepicker_iframe.js
+
+commit 2dae8cd
+Author: hutch <hutch@midwales.net>
+Date:   Sun Feb 27 14:40:14 2011 +0000
+
+    changed InsertatCursor to filepickerInsertatCursor
+
+CHANGELOG.txt
+filepicker_iframe.js
+
+commit 6e9c2c5
+Author: hutch <hutch@midwales.net>
+Date:   Sun Feb 27 00:01:53 2011 +0000
+
+    moved filepicker_get_colorbox_perms() to filepicker.module
+
+filepicker.functions.inc
+filepicker.module
+
+commit 7724952
+Author: The Great Git Migration <tggm@no-reply.drupal.org>
+Date:   Fri Feb 25 02:14:45 2011 +0000
+
+    Removing translation directories
+
+translations/filepicker-module.pot
+
+commit a9bd8df
+Author: The Great Git Migration <tggm@no-reply.drupal.org>
+Date:   Fri Feb 25 02:14:45 2011 +0000
+
+    Stripping CVS keywords
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.css
+filepicker.edit.inc
+filepicker.form-elements.inc
+filepicker.functions.inc
+filepicker.group.inc
+filepicker.import.inc
+filepicker.info
+filepicker.install
+filepicker.js
+filepicker.module
+filepicker.theme.inc
+filepicker.tpl.php
+filepicker.upload.inc
+filepicker.user.inc
+filepicker_iframe.js
+filepicker_upload.js
+translations/filepicker-module.pot
+
+commit 254316d
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Thu Feb 17 15:05:43 2011 +0000
+
+    reorganised functions for reduced footprint
+
+CHANGELOG.txt
+filepicker.functions.inc
+filepicker.module
+
+commit 3e617f6
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Mon Jan 24 17:05:29 2011 +0000
+
+    fixed rows per page bug
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.group.inc
+
+commit 861a723
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sat Jan 8 22:09:56 2011 +0000
+
+    more import fixes
+
+filepicker.admin.inc
+filepicker.import.inc
+
+commit 9f11168
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Thu Jan 6 11:33:17 2011 +0000
+
+    fixed group by bug, #1015874
+
+CHANGELOG.txt
+filepicker.group.inc
+filepicker.import.inc
+
+commit 511dd0f
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Tue Dec 21 22:00:29 2010 +0000
+
+    added PECL uploadprogress support
+
+filepicker.module
+filepicker.upload.inc
+filepicker_upload.js
+
+commit 963e6e9
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Tue Dec 21 16:25:03 2010 +0000
+
+    added PECL uploadprogress support
+
+filepicker.module
+
+commit 20ab35e
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Tue Dec 21 14:39:59 2010 +0000
+
+    added PECL uploadprogress support
+
+filepicker.module
+
+commit bd081b8
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Tue Dec 21 13:46:53 2010 +0000
+
+    added PECL uploadprogress support
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.js
+filepicker.module
+filepicker.theme.inc
+filepicker.upload.inc
+filepicker_upload.js
+translations/filepicker-module.pot
+
+commit 1122ce3
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Mon Dec 13 20:19:45 2010 +0000
+
+    fixed upload_progress
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.module
+filepicker.theme.inc
+
+commit 4118d7c
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Dec 12 18:17:18 2010 +0000
+
+    fixed upload_progress
+
+filepicker.js
+filepicker.theme.inc
+
+commit 85656da
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Dec 5 19:03:28 2010 +0000
+
+    fixed filesize, pathing in various places
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.css
+filepicker.edit.inc
+filepicker.import.inc
+filepicker.module
+filepicker.theme.inc
+filepicker.upload.inc
+
+commit 3d71f9e
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sat Dec 4 17:09:44 2010 +0000
+
+    fixed $form_state reference bug,  preg_match bug in extension detection
+
+CHANGELOG.txt
+filepicker.module
+
+commit 2fc1b5e
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Fri Dec 3 14:19:08 2010 +0000
+
+    removed colorbox_enable option
+
+CHANGELOG.txt
+filepicker.admin.inc
+
+commit 8f8e7ce
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Wed Dec 1 20:48:17 2010 +0000
+
+    fixed imagepicker incompatibility
+
+CHANGELOG.txt
+filepicker.group.inc
+filepicker.module
+
+commit 955b157
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Nov 7 22:00:16 2010 +0000
+
+    added date format
+
+filepicker.admin.inc
+filepicker.module
+
+commit dd35d8b
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Nov 7 13:58:55 2010 +0000
+
+    fixed incompatibility with imagepicker in hook_form_alter
+
+filepicker.module
+
+commit 9a71032
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Nov 7 13:30:32 2010 +0000
+
+    changed file_date field to int
+
+filepicker.edit.inc
+filepicker.install
+filepicker.module
+filepicker.upload.inc
+
+commit 55a57b9
+Author: Bob Hutchinson <hutch@midwales.net>
+Date:   Sun Nov 7 12:06:09 2010 +0000
+
+    initial commit of filepicker to drupal cvs
+
+CHANGELOG.txt
+filepicker.admin.inc
+filepicker.css
+filepicker.edit.inc
+filepicker.form-elements.inc
+filepicker.group.inc
+filepicker.import.inc
+filepicker.info
+filepicker.install
+filepicker.js
+filepicker.module
+filepicker.theme.inc
+filepicker.tpl.php
+filepicker.upload.inc
+filepicker.user.inc
+filepicker_iframe.js
+images/delete.png
+images/edit.png
+translations/filepicker-module.pot

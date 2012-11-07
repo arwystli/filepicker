@@ -1,9 +1,19 @@
-commit d9fba76
+commit b1ec9f3
+Author: hutch <hutch@midwales.net>
+Date:   Wed Nov 7 19:23:15 2012 +0000
+
+    moved all theme functions to filepicker.module
+
+filepicker.module
+filepicker.theme.inc
+
+commit bff6c5b
 Author: hutch <hutch@midwales.net>
 Date:   Sat Oct 27 17:35:48 2012 +0100
 
     fixed bug when public is not enabled
 
+CHANGELOG.txt
 filepicker.group.inc
 
 commit a0dcc5a

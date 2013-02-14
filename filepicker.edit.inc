@@ -142,7 +142,7 @@ function _filepicker_edit_file($file_id, $src='iframe', $account=FALSE) {
   if ($file) {
     $filesrc = filepicker_get_file_path($file, 'browser', $userdir);
     $content .= theme('filepicker_file_edit_header', array('file' => $file, 'source' => $filesrc));
-    $form = drupal_get_form('filepicker_edit_form', $file, $src, $account)
+    $form = drupal_get_form('filepicker_edit_form', $file, $src, $account);
     $content .= render($form);
   }
   else {

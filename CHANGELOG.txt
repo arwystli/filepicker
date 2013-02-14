@@ -1,9 +1,18 @@
-commit b1ec9f3
+commit 177f801
+Author: hutch <hutch@midwales.net>
+Date:   Thu Feb 14 10:20:14 2013 +0000
+
+    fixed bug in _filepicker_edit_file()
+
+filepicker.edit.inc
+
+commit 1cfdccc
 Author: hutch <hutch@midwales.net>
 Date:   Wed Nov 7 19:23:15 2012 +0000
 
     moved all theme functions to filepicker.module
 
+CHANGELOG.txt
 filepicker.module
 filepicker.theme.inc
 

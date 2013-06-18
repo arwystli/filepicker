@@ -546,7 +546,7 @@ function filepicker_admin_groups_list($label="") {
 
 }
 
-function filepicker_admin_view($file_id, $account = FALSE) {
+function filepicker_adminview($file_id, $account = FALSE) {
   if ($account) {
     $user = $account;
     $userdir = array('uid' => $user->uid);
@@ -564,7 +564,7 @@ function filepicker_admin_view($file_id, $account = FALSE) {
   if ($file) {
     $filepath = filepicker_get_file_path($file, 'full', $userdir);
     $info = filepicker_get_info($file);
-    $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
+    $view = theme('filepicker_fview', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
     $form1 = drupal_get_form('filepicker_admin_file_form', $file_id, $user);
     $form1 = render($form1);
     // group form
@@ -572,7 +572,7 @@ function filepicker_admin_view($file_id, $account = FALSE) {
       $form3 = drupal_get_form('filepicker_group_files_form', $file_id, $user);
       $form3 = render($form3);
     }
-    $content = theme('filepicker_admin_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
+    $content = theme('filepicker_adminview', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');
@@ -1005,7 +1005,7 @@ function filepicker_admin_files() {
         filepicker_delete_file($file_id, $account, 'admin');
       }
       else {
-        $content .= filepicker_admin_view($file_id, $account);
+        $content .= filepicker_adminview($file_id, $account);
       }
     }
     elseif ($fileaction == 'upload') {

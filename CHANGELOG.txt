@@ -1,9 +1,20 @@
-commit 177f801
+commit 7bc0ab2
+Author: hutch <hutch@midwales.net>
+Date:   Tue Jun 18 23:15:45 2013 +0100
+
+    fixed hook clash see #2022629
+
+filepicker.admin.inc
+filepicker.module
+filepicker.user.inc
+
+commit c34a7a6
 Author: hutch <hutch@midwales.net>
 Date:   Thu Feb 14 10:20:14 2013 +0000
 
     fixed bug in _filepicker_edit_file()
 
+CHANGELOG.txt
 filepicker.edit.inc
 
 commit 1cfdccc

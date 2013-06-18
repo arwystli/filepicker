@@ -11,7 +11,7 @@ function filepicker_user_page($uid, $path="", $func="", $id=0) {
   // path/func/id
   if ($path == 'files') {
     if ($func == 'list' && is_numeric($id) && $id > 0) {
-      $content .= filepicker_user_view($id);
+      $content .= filepicker_userview($id);
     }
     elseif ($func == 'edit' && is_numeric($id) && $id > 0) {
       module_load_include('inc', 'filepicker', 'filepicker.edit');
@@ -72,14 +72,14 @@ function filepicker_user_list_admin() {
   return $content;
 }
 
-function filepicker_user_view($file_id) {
+function filepicker_userview($file_id) {
   drupal_add_js(FILEPICKER_PATH . '/filepicker.js');
 
   $file = _filepicker_get_file($file_id);
   if ($file) {
     $filepath = filepicker_get_file_path($file);
     $info = filepicker_get_info($file);
-    $view = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
+    $view = theme('filepicker_fview', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
     $f = drupal_get_form('filepicker_user_file_form', $file_id);
     $form1 = render($f);
     $form2 = '';
@@ -89,7 +89,7 @@ function filepicker_user_view($file_id) {
       $f = drupal_get_form('filepicker_group_files_form', $file_id);
       $form3 = render($f);
     }
-    $content = theme('filepicker_user_view', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
+    $content = theme('filepicker_userview', array('view' => $view, 'form1' => $form1, 'form2' => $form2, 'form3' => $form3));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');
@@ -106,7 +106,7 @@ function filepicker_user_view_public($file_id) {
     $user = user_load($file->uid);
     $filepath = filepicker_get_file_path($file);
     $info = filepicker_get_info($file->file_name);
-    $content = theme('filepicker_view', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
+    $content = theme('filepicker_fview', array('file' => $file, 'filepath' => $filepath, 'info' => $info));
   }
   else {
     drupal_set_message(t('File not found.'), 'error');

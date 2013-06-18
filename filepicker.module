@@ -832,7 +832,7 @@ function filepicker_theme() {
         'help' => "",
       ),
     ),
-    'filepicker_view' => array(
+    'filepicker_fview' => array(
       'variables' => array(
         'file' => array(),
         'filepath' => "",
@@ -861,7 +861,7 @@ function filepicker_theme() {
         'message2' => "",
       ),
     ),
-    'filepicker_user_view' => array(
+    'filepicker_userview' => array(
       'variables' => array(
         'view' => "",
         'form1' => NULL,
@@ -869,7 +869,7 @@ function filepicker_theme() {
         'form3' => NULL,
       ),
     ),
-    'filepicker_admin_view' => array(
+    'filepicker_adminview' => array(
       'variables' => array(
         'view' => "",
         'form1' => NULL,
@@ -1065,7 +1065,7 @@ function theme_filepicker_quota_message($variables) {
   return $output;
 }
 
-function theme_filepicker_view($variables) {
+function theme_filepicker_fview($variables) {
   $file = $variables['file'];
   $filepath = $variables['filepath'];
   $info = $variables['info'];
@@ -1110,7 +1110,7 @@ function theme_filepicker_user_config($variables) {
   return $output;
 }
 
-function theme_filepicker_user_view($variables) {
+function theme_filepicker_userview($variables) {
   $view = $variables['view'];
   $form1 = $variables['form1'];
   $form2 = $variables['form2'];
@@ -1126,7 +1126,7 @@ function theme_filepicker_user_view($variables) {
   return $output;
 }
 
-function theme_filepicker_admin_view($variables) {
+function theme_filepicker_adminview($variables) {
   $view = $variables['view'];
   $form1 = $variables['form1'];
   $form2 = $variables['form2'];

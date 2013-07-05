@@ -1,9 +1,18 @@
-commit 7bc0ab2
+commit b9bbd3b
+Author: hutch <hutch@midwales.net>
+Date:   Fri Jul 5 14:46:24 2013 +0100
+
+    mad name protection #2035537
+
+filepicker.upload.inc
+
+commit 55f5ee1
 Author: hutch <hutch@midwales.net>
 Date:   Tue Jun 18 23:15:45 2013 +0100
 
     fixed hook clash see #2022629
 
+CHANGELOG.txt
 filepicker.admin.inc
 filepicker.module
 filepicker.user.inc

@@ -259,7 +259,8 @@ function filepicker_get_uploaded_file_name($destination, $name) {
     $filename = $_FILES['files']['name'][$name];
   }
   // see #2035537
-  $filename = preg_replace('/[ $!#$%&\'()*+,\/:;=?@\[\]\\\\]/', '_', $filename);
+  #$filename = preg_replace('/[ $!#$%&\'()*+,\/:;=?@\[\]\\\\]/', '_', $filename);
+  $filename = preg_replace('/[^A-Za-z0-9-]/', '_', $filename);
   $file = $filename . '.' . $fileext;
   $i = 0;
   while (file_exists($destination . $file)) {

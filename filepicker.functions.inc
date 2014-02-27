@@ -2098,6 +2098,9 @@ function filepicker_box() {
   elseif ($a1 == 'multitask') {
     $content = filepicker_multitask(arg(2), arg(3), arg(4));
   }
+  elseif ($a1 == 'delete') {
+    $content = filepicker_delete_file($a2);
+  }
   else {
     module_load_include('inc', 'filepicker', 'filepicker.upload');
     $content = filepicker_upload();

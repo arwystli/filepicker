@@ -1,9 +1,26 @@
-commit b9bbd3b
+commit 3591aa2
+Author: hutch <hutch@midwales.net>
+Date:   Thu Feb 27 16:54:07 2014 +0000
+
+    fixed delete bug #2206769
+
+filepicker.functions.inc
+
+commit da62951
+Author: hutch <hutch@midwales.net>
+Date:   Thu Feb 27 16:53:07 2014 +0000
+
+    better regex
+
+filepicker.upload.inc
+
+commit 821f872
 Author: hutch <hutch@midwales.net>
 Date:   Fri Jul 5 14:46:24 2013 +0100
 
     mad name protection #2035537
 
+CHANGELOG.txt
 filepicker.upload.inc
 
 commit 55f5ee1

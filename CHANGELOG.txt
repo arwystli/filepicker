@@ -1,9 +1,18 @@
-commit 3591aa2
+commit f41df30
+Author: hutch <hutch@arwystli.net>
+Date:   Tue Mar 1 16:37:53 2016 +0000
+
+    added LICENSE.txt
+
+LICENSE.txt
+
+commit 4ef3d0a
 Author: hutch <hutch@midwales.net>
 Date:   Thu Feb 27 16:54:07 2014 +0000
 
     fixed delete bug #2206769
 
+CHANGELOG.txt
 filepicker.functions.inc
 
 commit da62951
